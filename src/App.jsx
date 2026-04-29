@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { QuestionBlocks } from "./components/QuestionBlocks.jsx";
+import { EnglishQuestionViewer } from "./components/EnglishQuestionViewer.jsx";
 import { RichText } from "./components/RichText.jsx";
 import { questionBank } from "./data/questionBank.js";
+import { cet6QuestionBank } from "./data/cet6QuestionBank.js";
 import { cx } from "./lib/cx.js";
 import topicFunctionIcon from "./assets/topic-function.png";
 import topicInequalityIcon from "./assets/topic-inequality.png";
@@ -1010,9 +1012,11 @@ function HomePage({
 }
 
 function App() {
+  const [subject, setSubject] = useState("math"); // "math" | "english"
   const [view, setView] = useState("home"); // "home", "map", or "quiz"
   const [pageId, setPageId] = useState(getInitialPage);
   const [questionId, setQuestionId] = useState(questionBank.pages[0]?.questions[0]?.id || "");
+  const activeBank = subject === "english" ? cet6QuestionBank : questionBank;
   const [keyword, setKeyword] = useState("");
   const [collapsedTopics, setCollapsedTopics] = useState(getInitialCollapsedTopics);
   const [records, setRecords] = useState(loadSolvingRecords);
@@ -1034,30 +1038,30 @@ function App() {
   const dragSessionRef = useRef(null);
 
   const filteredPages = useMemo(() => {
-    return questionBank.pages
+    return activeBank.pages
       .map((page) => ({
         ...page,
         questions: page.questions.filter((question) => matchesKeyword(page, question, normalizedKeyword)),
       }))
       .filter((page) => page.questions.length > 0);
-  }, [normalizedKeyword]);
+  }, [normalizedKeyword, activeBank]);
   const directory = useMemo(() => groupPagesBySection(filteredPages), [filteredPages]);
   const topicDirectory = useMemo(() => groupSectionsByTopic(directory), [directory]);
-  const topicStats = useMemo(() => groupSectionsByTopic(groupPagesBySection(questionBank.pages)), []);
+  const topicStats = useMemo(() => groupSectionsByTopic(groupPagesBySection(activeBank.pages)), [activeBank]);
   const { topics: solarTopics, canvasW: MAP_W, canvasH: CANVAS_H } = useMemo(
-    () => computeSolarMap(questionBank.pages),
-    []
+    () => computeSolarMap(activeBank.pages),
+    [activeBank]
   );
   const totalQuestions = useMemo(
-    () => questionBank.pages.reduce((sum, page) => sum + page.questions.length, 0),
-    []
+    () => activeBank.pages.reduce((sum, page) => sum + page.questions.length, 0),
+    [activeBank]
   );
 
   const activePage =
     filteredPages.find((page) => page.id === pageId) ||
     filteredPages[0] ||
-    (!normalizedKeyword ? questionBank.pages.find((page) => page.id === pageId) : null) ||
-    (!normalizedKeyword ? questionBank.pages[0] : null);
+    (!normalizedKeyword ? activeBank.pages.find((page) => page.id === pageId) : null) ||
+    (!normalizedKeyword ? activeBank.pages[0] : null);
 
   const visibleQuestions = activePage?.questions || [];
   const activeQuestion =
@@ -1488,6 +1492,30 @@ function App() {
             </div>
 
             <nav className="flex flex-col gap-0 px-2">
+              {/* Subject switcher */}
+              {view !== "quiz" && (
+                <div className="mb-3 flex rounded-xl bg-background p-1">
+                  <button
+                    onClick={() => { setSubject("math"); setPageId(questionBank.pages[0]?.id || ""); setQuestionId(questionBank.pages[0]?.questions[0]?.id || ""); }}
+                    className={cx(
+                      "flex-1 rounded-lg py-2 text-[12px] font-black transition-all",
+                      subject === "math" ? "bg-white text-primary shadow-sm" : "text-muted hover:text-text-main"
+                    )}
+                  >
+                    数学
+                  </button>
+                  <button
+                    onClick={() => { setSubject("english"); setPageId(cet6QuestionBank.pages[0]?.id || ""); setQuestionId(cet6QuestionBank.pages[0]?.questions[0]?.id || ""); }}
+                    className={cx(
+                      "flex-1 rounded-lg py-2 text-[12px] font-black transition-all",
+                      subject === "english" ? "bg-white text-blue-600 shadow-sm" : "text-muted hover:text-text-main"
+                    )}
+                  >
+                    英语六级
+                  </button>
+                </div>
+              )}
+
               {/* Home button */}
               <button
                 onClick={() => setView("home")}
@@ -1984,7 +2012,11 @@ function App() {
                         onKeyUp={handleQuestionSelection}
                         className="rounded-2xl bg-background p-8 pt-12 shadow-float"
                       >
-                        <QuestionBlocks blocks={activeQuestion?.blocks || []} />
+                        {subject === "english" ? (
+                          <EnglishQuestionViewer question={activeQuestion} />
+                        ) : (
+                          <QuestionBlocks blocks={activeQuestion?.blocks || []} />
+                        )}
                       </div>
                     </div>
 
