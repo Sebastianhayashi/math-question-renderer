@@ -70,13 +70,56 @@ const ENG_TOPIC_ICON_SRC = {
   reading: topicInequalityIcon,
   translation: topicFunctionIcon,
 };
+const SUBJECT_CONFIG = {
+  math: {
+    appName: "Astro Math",
+    appSubtitle: "Toybox Edition",
+    homeTitle: "Homepage",
+    homeSubtitle: "选择你的学习目标",
+    courseTitle: "高中数学必修一",
+    courseSubtitle: "集合 / 基本不等式 / 函数",
+    topicPrefix: "高中数学",
+    mainIcon: "function",
+    searchPlaceholder: "搜索题库、章节、题型...",
+    pathLabel: "练习路径",
+    mapTitle: "Learning Map",
+    mapSubtitle: "章节路径",
+    continueFallback: "集合",
+    notesTitle: "本题条件",
+    notesEmpty: "先把题目翻译成一两条条件。",
+    noteTags: [
+      { id: "known", label: "已知", icon: "rule", hint: "记录题目已经给出的条件" },
+      { id: "target", label: "目标", icon: "flag", hint: "记录这一步要证明或求什么" },
+      { id: "assumption", label: "假设", icon: "psychology_alt", hint: "记录临时假设或默认共识" },
+      { id: "translate", label: "转化", icon: "sync_alt", hint: "把题目翻译成数学语言" },
+    ],
+  },
+  english: {
+    appName: "Astro English",
+    appSubtitle: "CET-6 Edition",
+    homeTitle: "CET-6 Home",
+    homeSubtitle: "选择真题套卷与题型",
+    courseTitle: "大学英语六级真题",
+    courseSubtitle: "写作 / 听力 / 阅读 / 翻译",
+    topicPrefix: "英语六级",
+    mainIcon: "reading",
+    searchPlaceholder: "搜索套卷、题型、关键词...",
+    pathLabel: "真题路径",
+    mapTitle: "CET-6 Map",
+    mapSubtitle: "按题型组织",
+    continueFallback: "真题练习",
+    notesTitle: "本题笔记",
+    notesEmpty: "记录生词、定位句或选项判断。",
+    noteTags: [
+      { id: "known", label: "生词", icon: "translate", hint: "记录不熟悉的词组或表达" },
+      { id: "target", label: "定位", icon: "my_location", hint: "记录原文定位句或段落" },
+      { id: "assumption", label: "推断", icon: "psychology_alt", hint: "记录推断依据或排除理由" },
+      { id: "translate", label: "翻译", icon: "sync_alt", hint: "把英文句子翻译成中文" },
+    ],
+  },
+};
 const SOLVING_RECORDS_KEY = "astro-math-solving-records-v1";
-const NOTE_TAGS = [
-  { id: "known", label: "已知", icon: "rule", hint: "记录题目已经给出的条件" },
-  { id: "target", label: "目标", icon: "flag", hint: "记录这一步要证明或求什么" },
-  { id: "assumption", label: "假设", icon: "psychology_alt", hint: "记录临时假设或默认共识" },
-  { id: "translate", label: "转化", icon: "sync_alt", hint: "把题目翻译成数学语言" },
-];
+const NOTE_TAGS = SUBJECT_CONFIG.math.noteTags;
 const MARK_TAGS = [
   { id: "unknown", label: "不知道", icon: "help" },
   { id: "unfamiliar", label: "不熟悉", icon: "priority_high" },
@@ -98,9 +141,11 @@ function getInitialPage() {
   return questionBank.pages[0]?.id;
 }
 
-function getInitialCollapsedTopics() {
-  const initialType = getTopicType(questionBank.pages[0]);
-  return Object.fromEntries(TOPIC_ORDER.map((type) => [type, type !== initialType]));
+function getInitialCollapsedTopics(subject = "math") {
+  const order = subject === "english" ? ENG_TOPIC_ORDER : TOPIC_ORDER;
+  const bank = subject === "english" ? cet6QuestionBank : questionBank;
+  const initialType = getTopicType(bank.pages[0], subject);
+  return Object.fromEntries(order.map((type) => [type, type !== initialType]));
 }
 
 function createId(prefix) {
@@ -306,9 +351,10 @@ function getTopicType(pageOrSection, subject = "math") {
     .join(" ");
 
   if (subject === "english") {
-    if (/Part I|Writing|写作/.test(text)) return "writing";
-    if (/Part II|Listening|听力|听写|长对话|短对话|短文/.test(text)) return "listening";
-    if (/Part IV|Translation|翻译/.test(text)) return "translation";
+    if (/Part\s+IV|Translation|翻译/.test(text)) return "translation";
+    if (/Part\s+III|Reading|阅读|选词填空|长篇阅读|仔细阅读/.test(text)) return "reading";
+    if (/Part\s+II|Listening|听力|听写|长对话|短对话|短文/.test(text)) return "listening";
+    if (/Part\s+I(?![IVX])|Writing|写作/.test(text)) return "writing";
     return "reading"; // Part III Reading
   }
 
@@ -342,7 +388,7 @@ function TopicIcon({ type = "sets", size = 24, className }) {
 }
 
 function collectQuestionText(question) {
-  const blockText = question.blocks
+  const blockText = (question.blocks || [])
     .flatMap((block) => {
       if (block.content) return block.content;
       if (block.options) return block.options.flatMap((option) => option.content);
@@ -358,6 +404,10 @@ function collectQuestionText(question) {
     question.source,
     question.typeLabel,
     ...question.tags,
+    question.stemMarkdown,
+    question.materialMarkdown,
+    question.blankContextMarkdown,
+    ...(question.options || []).map((option) => `${option.label} ${option.text}`),
     blockText,
   ]
     .filter(Boolean)
@@ -418,9 +468,9 @@ function groupSectionsByTopic(sections, subject = "math") {
 
 function computeSolarMap(pages, subject = "math") {
   const topics = groupSectionsByTopic(groupPagesBySection(pages), subject);
-  const TOPIC_GAP = 700;
-  const LEFT_PADDING = 360;
-  const CANVAS_H = 760;
+  const TOPIC_GAP = subject === "english" ? 920 : 700;
+  const LEFT_PADDING = subject === "english" ? 420 : 360;
+  const CANVAS_H = subject === "english" ? 820 : 760;
   const CANVAS_W = Math.max(980, LEFT_PADDING * 2 + TOPIC_GAP * Math.max(0, topics.length - 1));
 
   const solarTopics = topics.map((topic, topicIndex) => {
@@ -473,6 +523,9 @@ function SolvingToolPanel({
   onAddNote,
   onRemoveNote,
   onRemoveMark,
+  noteTags = NOTE_TAGS,
+  notesTitle = "本题条件",
+  notesEmpty = "先把题目翻译成一两条条件。",
   toolModules,
   onToggleToolModule,
   record,
@@ -584,6 +637,7 @@ function SolvingToolPanel({
             <div className="flex items-center gap-1">
               {TOOL_MODULES.map((module) => {
                 const isActive = toolModules?.[module.id];
+                const moduleLabel = module.id === "notes" ? notesTitle.replace(/^本题/, "") : module.label;
                 return (
                   <button
                     key={module.id}
@@ -596,11 +650,11 @@ function SolvingToolPanel({
                         : "bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-600",
                       module.locked && "cursor-default"
                     )}
-                    title={module.locked ? "核心功能保持开启" : isActive ? `隐藏${module.label}` : `添加${module.label}`}
+                    title={module.locked ? "核心功能保持开启" : isActive ? `隐藏${moduleLabel}` : `添加${moduleLabel}`}
                     aria-pressed={isActive}
                   >
                     <span className="material-symbols-outlined text-[15px]">{module.icon}</span>
-                    {module.label}
+                    {moduleLabel}
                   </button>
                 );
               })}
@@ -613,7 +667,7 @@ function SolvingToolPanel({
             <p className="text-[11px] font-black uppercase tracking-wider text-muted">快速标签</p>
           </div>
           <div className="grid grid-cols-4 gap-2">
-            {NOTE_TAGS.map((tag) => (
+            {noteTags.map((tag) => (
               <button
                 key={tag.id}
                 onClick={() => onActiveTagChange(tag.id)}
@@ -635,13 +689,13 @@ function SolvingToolPanel({
           <form onSubmit={onAddNote} className="mt-3 flex items-center gap-2 rounded-2xl bg-white p-2 shadow-inner">
             <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
               <span className="material-symbols-outlined text-[18px]">
-                {NOTE_TAGS.find((tag) => tag.id === activeTag)?.icon || "edit_note"}
+                {noteTags.find((tag) => tag.id === activeTag)?.icon || "edit_note"}
               </span>
             </span>
             <input
               value={noteDraft}
               onChange={(event) => onNoteDraftChange(event.target.value)}
-              placeholder={`${NOTE_TAGS.find((tag) => tag.id === activeTag)?.label || "记录"}：写一句就好`}
+              placeholder={`${noteTags.find((tag) => tag.id === activeTag)?.label || "记录"}：写一句就好`}
               className="min-w-0 flex-1 bg-transparent text-[13px] font-bold text-slate-700 outline-none placeholder:text-slate-300"
             />
             <button
@@ -656,7 +710,7 @@ function SolvingToolPanel({
 
         <section className="mt-4">
           <div className="mb-2 flex items-center justify-between">
-            <p className="text-[11px] font-black uppercase tracking-wider text-muted">本题条件</p>
+            <p className="text-[11px] font-black uppercase tracking-wider text-muted">{notesTitle}</p>
             <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-black text-muted">
               {record?.notes?.length || 0}
             </span>
@@ -664,7 +718,7 @@ function SolvingToolPanel({
           <div className="grid gap-2">
             {record?.notes?.length ? (
               record.notes.map((note) => {
-                const tag = NOTE_TAGS.find((item) => item.id === note.type) || NOTE_TAGS[0];
+                const tag = noteTags.find((item) => item.id === note.type) || noteTags[0];
                 return (
                   <div key={note.id} className="group flex gap-2 rounded-2xl border border-slate-100 bg-white p-3 shadow-sm">
                     <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
@@ -688,7 +742,7 @@ function SolvingToolPanel({
               })
             ) : (
               <p className="rounded-2xl border border-dashed border-slate-200 bg-white/60 px-3 py-5 text-center text-[12px] font-bold text-muted">
-                先把题目翻译成一两条条件。
+                {notesEmpty}
               </p>
             )}
           </div>
@@ -854,6 +908,8 @@ function FloatingConditionCard({ card, onPointerDown, onRemove }) {
 }
 
 function HomePage({
+  subject,
+  subjectConfig,
   currentPage,
   onContinue,
   onOpenMap,
@@ -864,19 +920,20 @@ function HomePage({
   totalQuestions,
   reviewCount,
 }) {
+  const config = subjectConfig || SUBJECT_CONFIG.math;
   const progress = 42;
   const courseCards = [
     {
-      id: "math-required-1",
-      title: "高中数学必修一",
-      subtitle: "集合 / 函数 / 指数",
-      icon: "function",
+      id: `${subject}-course`,
+      title: config.courseTitle,
+      subtitle: config.courseSubtitle,
+      icon: config.mainIcon,
       count: totalQuestions,
       action: onContinue,
     },
     ...topicStats.map((topic) => ({
       id: topic.type,
-      title: `高中数学 · ${topic.title}`,
+      title: `${config.topicPrefix} · ${topic.title}`,
       subtitle: topic.subtitle,
       icon: topic.type,
       count: topic.questionsCount,
@@ -912,8 +969,8 @@ function HomePage({
       <header className="shrink-0 px-10 pb-5 pt-8">
         <div className="flex items-start justify-between gap-6">
           <div>
-            <h2 className="font-display text-[34px] font-bold leading-tight text-slate-900">Homepage</h2>
-            <p className="mt-2 text-sm font-bold text-muted">选择你的学习目标</p>
+            <h2 className="font-display text-[34px] font-bold leading-tight text-slate-900">{config.homeTitle}</h2>
+            <p className="mt-2 text-sm font-bold text-muted">{config.homeSubtitle}</p>
           </div>
           <div className="flex items-center gap-3 rounded-full border-b-[4px] border-[#CBD5E1] bg-surface p-2 pr-5 shadow-float">
             <div className="flex items-center gap-2 rounded-full border-2 border-background bg-background px-3 py-1">
@@ -940,7 +997,7 @@ function HomePage({
           <input
             value={keyword}
             onChange={(event) => onKeywordChange(event.target.value)}
-            placeholder="搜索题库、章节、题型..."
+            placeholder={config.searchPlaceholder}
             className="min-w-0 flex-1 bg-transparent text-[15px] font-bold text-slate-700 outline-none placeholder:text-slate-400"
           />
         </form>
@@ -951,10 +1008,12 @@ function HomePage({
           <h3 className="text-[18px] font-black text-slate-900">继续学习</h3>
           <div className="mt-5 flex items-center gap-6">
             <div className="grid size-24 shrink-0 place-items-center overflow-hidden rounded-2xl bg-primary/10">
-              <TopicIcon type={getTopicType(currentPage)} size={86} />
+              <TopicIcon type={getTopicType(currentPage, subject)} size={86} />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[20px] font-black text-slate-900">高中数学必修一 · {currentPage?.sectionTitle || "集合"}</p>
+              <p className="truncate text-[20px] font-black text-slate-900">
+                {config.courseTitle} · {currentPage?.sectionTitle || config.continueFallback}
+              </p>
               <div className="mt-3 flex items-center gap-3">
                 <span className="text-sm font-bold text-muted">学习进度</span>
                 <span className="text-sm font-black text-slate-500">{progress}%</span>
@@ -1012,7 +1071,7 @@ function HomePage({
                     进入题库
                   </button>
                   <button
-                    onClick={() => onOpenMap(card.id === "math-required-1" ? undefined : card.id)}
+                    onClick={() => onOpenMap(card.id === `${subject}-course` ? undefined : card.id)}
                     className="node-button flex items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-[12px] font-black text-slate-600 shadow-sm"
                   >
                     <span className="material-symbols-outlined text-[16px]">map</span>
@@ -1065,6 +1124,7 @@ function App() {
   const [pageId, setPageId] = useState(getInitialPage);
   const [questionId, setQuestionId] = useState(questionBank.pages[0]?.questions[0]?.id || "");
   const activeBank = subject === "english" ? cet6QuestionBank : questionBank;
+  const subjectConfig = SUBJECT_CONFIG[subject] || SUBJECT_CONFIG.math;
   const [keyword, setKeyword] = useState("");
   const [collapsedTopics, setCollapsedTopics] = useState(getInitialCollapsedTopics);
   const [records, setRecords] = useState(loadSolvingRecords);
@@ -1194,9 +1254,20 @@ function App() {
     setQuestionId(page.questions[0]?.id || "");
     setCollapsedTopics((previous) => ({
       ...previous,
-      [getTopicType(page)]: false,
+      [getTopicType(page, subject)]: false,
     }));
     setView("quiz");
+  }
+
+  function switchSubject(nextSubject) {
+    const nextBank = nextSubject === "english" ? cet6QuestionBank : questionBank;
+    setSubject(nextSubject);
+    setPageId(nextBank.pages[0]?.id || "");
+    setQuestionId(nextBank.pages[0]?.questions[0]?.id || "");
+    setKeyword("");
+    setCollapsedTopics(getInitialCollapsedTopics(nextSubject));
+    setSelectionMenu(null);
+    setFloatingCards([]);
   }
 
   function goNextQuestion() {
@@ -1533,8 +1604,8 @@ function App() {
               <div className="size-10 shrink-0 rounded-full border-2 border-background bg-primary shadow-sm" />
               {view !== "quiz" && (
                 <div className="flex flex-col min-w-0">
-                  <h1 className="font-display text-[17px] font-bold leading-tight truncate">Astro Math</h1>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted truncate">Toybox Edition</p>
+                  <h1 className="font-display text-[17px] font-bold leading-tight truncate">{subjectConfig.appName}</h1>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted truncate">{subjectConfig.appSubtitle}</p>
                 </div>
               )}
             </div>
@@ -1544,7 +1615,7 @@ function App() {
               {view !== "quiz" && (
                 <div className="mb-3 flex rounded-xl bg-background p-1">
                   <button
-                    onClick={() => { setSubject("math"); setPageId(questionBank.pages[0]?.id || ""); setQuestionId(questionBank.pages[0]?.questions[0]?.id || ""); }}
+                    onClick={() => switchSubject("math")}
                     className={cx(
                       "flex-1 rounded-lg py-2 text-[12px] font-black transition-all",
                       subject === "math" ? "bg-white text-primary shadow-sm" : "text-muted hover:text-text-main"
@@ -1553,7 +1624,7 @@ function App() {
                     数学
                   </button>
                   <button
-                    onClick={() => { setSubject("english"); setPageId(cet6QuestionBank.pages[0]?.id || ""); setQuestionId(cet6QuestionBank.pages[0]?.questions[0]?.id || ""); }}
+                    onClick={() => switchSubject("english")}
                     className={cx(
                       "flex-1 rounded-lg py-2 text-[12px] font-black transition-all",
                       subject === "english" ? "bg-white text-blue-600 shadow-sm" : "text-muted hover:text-text-main"
@@ -1786,6 +1857,8 @@ function App() {
       <div className="relative flex-1 overflow-hidden min-w-0">
         {view === "home" ? (
           <HomePage
+            subject={subject}
+            subjectConfig={subjectConfig}
             currentPage={activePage || activeBank.pages[0]}
             onContinue={() => startQuiz(activePage || activeBank.pages[0])}
             onOpenMap={openMap}
@@ -1801,9 +1874,9 @@ function App() {
             {/* Map Header */}
             <header className="flex shrink-0 items-center justify-between px-8 py-5 bg-surface border-b-2 border-background shadow-sm">
               <div className="min-w-0">
-                <h2 className="font-display text-[28px] font-bold leading-tight">Learning Map</h2>
+                <h2 className="font-display text-[28px] font-bold leading-tight">{subjectConfig.mapTitle}</h2>
                 <p className="mt-1 text-xs font-bold text-muted">
-                  {questionBank.pages.length} 个练习路径 · {totalQuestions} 道题
+                  {activeBank.pages.length} 个{subjectConfig.pathLabel} · {totalQuestions} 道题 · {subjectConfig.mapSubtitle}
                 </p>
               </div>
               <div className="flex items-center gap-3 rounded-full border-b-[4px] border-[#CBD5E1] bg-surface p-2 pr-5 shadow-float">
@@ -2128,6 +2201,9 @@ function App() {
                   onAddNote={addNote}
                   onRemoveNote={removeNote}
                   onRemoveMark={removeMark}
+                  noteTags={subjectConfig.noteTags}
+                  notesTitle={subjectConfig.notesTitle}
+                  notesEmpty={subjectConfig.notesEmpty}
                   toolModules={toolModules}
                   onToggleToolModule={updateToolModule}
                   record={activeRecord}

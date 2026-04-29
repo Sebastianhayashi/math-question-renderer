@@ -7,7 +7,7 @@ import { cx } from "../lib/cx.js";
 function normalizeText(value) {
   if (!value) return "";
   return String(value)
-    .replace(/\\n(?![A-Za-z])/g, "\n")
+    .replace(/\\n/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
@@ -28,13 +28,20 @@ const TYPE_LABEL = {
 
 // ─── Passage / Material block ────────────────────────────────────────────────
 
-function PassageBlock({ text }) {
+function PassageBlock({ text, label = "Passage" }) {
   const [expanded, setExpanded] = useState(false);
   const normalized = normalizeText(text);
-  const lines = normalized.split("\n").filter(Boolean);
+  const paragraphs = normalized.split(/\n+/).map((line) => line.trim()).filter(Boolean);
   const PREVIEW_LINES = 6;
-  const needsToggle = lines.length > PREVIEW_LINES;
-  const displayed = !expanded && needsToggle ? lines.slice(0, PREVIEW_LINES) : lines;
+  const PREVIEW_CHARS = 980;
+  const isLongSingleBlock = paragraphs.length <= 2 && normalized.length > PREVIEW_CHARS;
+  const needsToggle = paragraphs.length > PREVIEW_LINES || isLongSingleBlock;
+  const displayed =
+    !expanded && needsToggle
+      ? isLongSingleBlock
+        ? [`${normalized.slice(0, PREVIEW_CHARS).trim()}...`]
+        : paragraphs.slice(0, PREVIEW_LINES)
+      : paragraphs;
 
   return (
     <div className="rounded-2xl border border-blue-100 bg-blue-50/60 p-5 shadow-inner">
@@ -49,7 +56,7 @@ function PassageBlock({ text }) {
           </svg>
         </span>
         <span className="text-[11px] font-black uppercase tracking-widest text-blue-700">
-          Passage
+          {label}
         </span>
       </div>
       <div className="space-y-2">
@@ -67,7 +74,7 @@ function PassageBlock({ text }) {
           <span className="material-symbols-outlined text-[15px]">
             {expanded ? "unfold_less" : "unfold_more"}
           </span>
-          {expanded ? "收起原文" : `展开全文（共 ${lines.length} 行）`}
+          {expanded ? "收起原文" : "展开全文"}
         </button>
       )}
     </div>
@@ -104,23 +111,26 @@ function BlankContextBlock({ text }) {
 
 // ─── Word bank options (Section A: A–O word list) ────────────────────────────
 
-function WordBankOptions({ options }) {
+function OptionBank({ options, label = "Word Bank", compact = false }) {
   if (!options?.length) return null;
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-4">
       <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-slate-400">
-        Word Bank
+        {label}
       </p>
-      <div className="flex flex-wrap gap-2">
+      <div className={cx("gap-2", compact ? "grid sm:grid-cols-2" : "flex flex-wrap")}>
         {options.map((opt) => (
           <span
             key={opt.label}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-[13px] font-bold text-slate-700"
+            className={cx(
+              "inline-flex gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-[13px] font-bold text-slate-700",
+              compact ? "items-start" : "items-center"
+            )}
           >
             <span className="min-w-[14px] text-[11px] font-black text-slate-400">
               {opt.label}.
             </span>
-            {opt.text}
+            <span className={compact ? "line-clamp-3 leading-relaxed" : ""}>{opt.text || "待补录"}</span>
           </span>
         ))}
       </div>
@@ -157,9 +167,21 @@ function ChoiceOption({ label, text }) {
 }
 
 function ChoiceBlock({ options }) {
+  const normalizedOptions = options.filter((option) => option.text?.trim());
+
+  if (normalizedOptions.length < options.length) {
+    return (
+      <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+        <p className="text-[13px] font-bold leading-relaxed text-amber-800">
+          当前选项文本还没有完全拆开，先保留题面与原文；建议后续补录原始 A-D 选项。
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-2.5">
-      {options.map((opt) => (
+      {normalizedOptions.map((opt) => (
         <ChoiceOption key={opt.label} label={opt.label} text={opt.text} />
       ))}
     </div>
@@ -232,12 +254,35 @@ function SolutionReveal({ answer, analysis, solution }) {
 const LISTENING_PLACEHOLDER =
   "根据录音内容作答。当前文档未能稳定拆出该题的完整听力题面与选项，需结合音频、原题扫描页或更稳定文本再补录。";
 
-function StemBlock({ text }) {
-  if (!text || text === LISTENING_PLACEHOLDER) return null;
+function StemBlock({ text, fallback }) {
+  const content = normalizeText(text) || normalizeText(fallback);
+  if (!content || content === LISTENING_PLACEHOLDER) return null;
   return (
     <p className="text-[17px] font-bold leading-relaxed text-slate-800">
-      <RichText content={[normalizeText(text)]} />
+      <RichText content={[content]} />
     </p>
+  );
+}
+
+function TaskCard({ question }) {
+  const isTranslation = /翻译|Translation/i.test(question.group || question.title || "");
+  if (!question.stemMarkdown || question.materialMarkdown) return null;
+
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="mb-3 flex items-center gap-2">
+        <span className="grid size-8 place-items-center rounded-xl bg-blue-50 text-blue-600">
+          <span className="material-symbols-outlined text-[18px]">{isTranslation ? "translate" : "edit"}</span>
+        </span>
+        <div>
+          <p className="text-[12px] font-black text-slate-800">{isTranslation ? "Translation Task" : "Writing Task"}</p>
+          <p className="text-[10px] font-bold text-slate-400">{question.source}</p>
+        </div>
+      </div>
+      <p className="whitespace-pre-line text-[16px] font-bold leading-relaxed text-slate-800">
+        <RichText content={[normalizeText(question.stemMarkdown)]} />
+      </p>
+    </div>
   );
 }
 
@@ -263,10 +308,12 @@ export function EnglishQuestionViewer({ question }) {
 
   const status = STATUS_BADGE[question.status] || STATUS_BADGE.incomplete;
   const typeLabel = TYPE_LABEL[question.type] || question.type;
-  const isWordBank =
-    question.options?.length >= 10 && !!question.materialMarkdown;
-  const isChoice = question.options?.length > 0 && !isWordBank;
+  const isMatching = /长篇阅读匹配/.test(question.group || "");
+  const isWordBank = /选词填空|听写填空|复合式听写/.test(question.group || "") && question.options?.length >= 10;
+  const isChoice = question.options?.length > 0 && !isWordBank && !isMatching;
   const isIncomplete = question.status === "incomplete";
+  const isTask = question.type === "short-answer" && !question.materialMarkdown;
+  const passageLabel = isMatching ? "Article" : /听写|Listening/i.test(question.group || "") ? "Script" : "Passage";
 
   return (
     <div className="grid gap-5">
@@ -293,14 +340,16 @@ export function EnglishQuestionViewer({ question }) {
 
       {/* Passage */}
       {question.materialMarkdown && (
-        <PassageBlock text={question.materialMarkdown} />
+        <PassageBlock text={question.materialMarkdown} label={passageLabel} />
       )}
 
       {/* Stem or warning */}
       {isIncomplete ? (
         <IncompleteWarning />
+      ) : isTask ? (
+        <TaskCard question={question} />
       ) : (
-        <StemBlock text={question.stemMarkdown} />
+        <StemBlock text={question.stemMarkdown} fallback={question.title} />
       )}
 
       {/* Blank context */}
@@ -309,7 +358,11 @@ export function EnglishQuestionViewer({ question }) {
       )}
 
       {/* Word bank */}
-      {isWordBank && <WordBankOptions options={question.options} />}
+      {isWordBank && <OptionBank options={question.options} label="Word Bank" />}
+
+      {isMatching && (
+        <OptionBank options={question.options} label="Paragraph Bank" compact />
+      )}
 
       {/* Choice options */}
       {isChoice && !isIncomplete && <ChoiceBlock options={question.options} />}
