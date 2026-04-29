@@ -126,6 +126,23 @@ summary::-webkit-details-marker {
   display: none;
 }
 
+::selection {
+  background: rgba(46, 103, 248, 0.16);
+}
+
+::highlight(study-mark) {
+  background: rgba(46, 103, 248, 0.14);
+  color: inherit;
+}
+
+.study-inline-highlight {
+  border-radius: 4px;
+  background: rgba(46, 103, 248, 0.12);
+  box-shadow: inset 0 -2px 0 rgba(46, 103, 248, 0.16);
+  color: inherit;
+  padding: 0 0.04em;
+}
+
 .question-visual {
   color: var(--color-text-main);
   min-height: 110px;
