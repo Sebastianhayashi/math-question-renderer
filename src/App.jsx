@@ -35,6 +35,41 @@ const TOPIC_ICON_SRC = {
   inequality: topicInequalityIcon,
   function: topicFunctionIcon,
 };
+
+// ── English CET-6 topic constants ──────────────────────────────────────────
+const ENG_TOPIC_ORDER = ["writing", "listening", "reading", "translation"];
+const ENG_TOPIC_META = {
+  writing: {
+    title: "Writing",
+    subtitle: "Part I 写作",
+    accent: "#7c3aed",
+    soft: "rgba(124,58,237,0.10)",
+  },
+  listening: {
+    title: "Listening",
+    subtitle: "Part II 听力",
+    accent: "#0891b2",
+    soft: "rgba(8,145,178,0.10)",
+  },
+  reading: {
+    title: "Reading",
+    subtitle: "Part III 阅读",
+    accent: "#059669",
+    soft: "rgba(5,150,105,0.10)",
+  },
+  translation: {
+    title: "Translation",
+    subtitle: "Part IV 翻译",
+    accent: "#d97706",
+    soft: "rgba(217,119,6,0.10)",
+  },
+};
+const ENG_TOPIC_ICON_SRC = {
+  writing: topicFunctionIcon,
+  listening: topicSetsIcon,
+  reading: topicInequalityIcon,
+  translation: topicFunctionIcon,
+};
 const SOLVING_RECORDS_KEY = "astro-math-solving-records-v1";
 const NOTE_TAGS = [
   { id: "known", label: "已知", icon: "rule", hint: "记录题目已经给出的条件" },
@@ -260,7 +295,7 @@ function getSelectionMarkdown(selection) {
   return normalizeMarkdownCopy(fragments.join("\n"));
 }
 
-function getTopicType(pageOrSection) {
+function getTopicType(pageOrSection, subject = "math") {
   const text = [
     pageOrSection?.chapterTitle,
     pageOrSection?.sectionTitle,
@@ -269,6 +304,13 @@ function getTopicType(pageOrSection) {
   ]
     .filter(Boolean)
     .join(" ");
+
+  if (subject === "english") {
+    if (/Part I|Writing|写作/.test(text)) return "writing";
+    if (/Part II|Listening|听力|听写|长对话|短对话|短文/.test(text)) return "listening";
+    if (/Part IV|Translation|翻译/.test(text)) return "translation";
+    return "reading"; // Part III Reading
+  }
 
   if (/不等式|二次函数|方程|第二章|2\./.test(text)) return "inequality";
   if (/函数|映射|3\.1/.test(text)) return "function";
@@ -280,9 +322,11 @@ function getTopicMeta(type) {
 }
 
 function TopicIcon({ type = "sets", size = 24, className }) {
+  const iconSrc =
+    ENG_TOPIC_ICON_SRC[type] || TOPIC_ICON_SRC[type] || TOPIC_ICON_SRC.sets;
   return (
     <img
-      src={TOPIC_ICON_SRC[type] || TOPIC_ICON_SRC.sets}
+      src={iconSrc}
       alt=""
       aria-hidden="true"
       width={size}
@@ -350,16 +394,20 @@ function groupPagesBySection(pages) {
   }, []);
 }
 
-function groupSectionsByTopic(sections) {
-  const grouped = TOPIC_ORDER.map((type) => ({
+function groupSectionsByTopic(sections, subject = "math") {
+  const order = subject === "english" ? ENG_TOPIC_ORDER : TOPIC_ORDER;
+  const meta = subject === "english" ? ENG_TOPIC_META : TOPIC_META;
+
+  const grouped = order.map((type) => ({
     type,
-    ...getTopicMeta(type),
+    ...(meta[type] || {}),
     sections: [],
     questionsCount: 0,
   }));
 
   sections.forEach((section) => {
-    const topic = grouped.find((item) => item.type === getTopicType(section)) || grouped[0];
+    const topicType = getTopicType(section, subject);
+    const topic = grouped.find((item) => item.type === topicType) || grouped[0];
     const questionsCount = section.pages.reduce((sum, page) => sum + page.questions.length, 0);
     topic.sections.push(section);
     topic.questionsCount += questionsCount;
@@ -368,8 +416,8 @@ function groupSectionsByTopic(sections) {
   return grouped.filter((topic) => topic.sections.length > 0);
 }
 
-function computeSolarMap(pages) {
-  const topics = groupSectionsByTopic(groupPagesBySection(pages));
+function computeSolarMap(pages, subject = "math") {
+  const topics = groupSectionsByTopic(groupPagesBySection(pages), subject);
   const TOPIC_GAP = 700;
   const LEFT_PADDING = 360;
   const CANVAS_H = 760;
@@ -1046,11 +1094,11 @@ function App() {
       .filter((page) => page.questions.length > 0);
   }, [normalizedKeyword, activeBank]);
   const directory = useMemo(() => groupPagesBySection(filteredPages), [filteredPages]);
-  const topicDirectory = useMemo(() => groupSectionsByTopic(directory), [directory]);
-  const topicStats = useMemo(() => groupSectionsByTopic(groupPagesBySection(activeBank.pages)), [activeBank]);
+  const topicDirectory = useMemo(() => groupSectionsByTopic(directory, subject), [directory, subject]);
+  const topicStats = useMemo(() => groupSectionsByTopic(groupPagesBySection(activeBank.pages), subject), [activeBank, subject]);
   const { topics: solarTopics, canvasW: MAP_W, canvasH: CANVAS_H } = useMemo(
-    () => computeSolarMap(activeBank.pages),
-    [activeBank]
+    () => computeSolarMap(activeBank.pages, subject),
+    [activeBank, subject]
   );
   const totalQuestions = useMemo(
     () => activeBank.pages.reduce((sum, page) => sum + page.questions.length, 0),
@@ -1713,7 +1761,7 @@ function App() {
                   title={activePage.partTitle}
                   className="flex justify-center rounded-xl px-3 py-3 text-primary bg-primary/10 transition-all"
                 >
-                  <TopicIcon type={getTopicType(activePage)} size={28} />
+                  <TopicIcon type={getTopicType(activePage, subject)} size={28} />
                 </button>
               )}
             </nav>
@@ -1738,8 +1786,8 @@ function App() {
       <div className="relative flex-1 overflow-hidden min-w-0">
         {view === "home" ? (
           <HomePage
-            currentPage={activePage || questionBank.pages[0]}
-            onContinue={() => startQuiz(activePage || questionBank.pages[0])}
+            currentPage={activePage || activeBank.pages[0]}
+            onContinue={() => startQuiz(activePage || activeBank.pages[0])}
             onOpenMap={openMap}
             onSearch={submitHomeSearch}
             keyword={keyword}
