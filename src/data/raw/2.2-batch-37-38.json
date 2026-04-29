@@ -1,0 +1,275 @@
+{
+  "schemaVersion": "edu-question-bank/v1",
+  "book": {
+    "subject": "高中数学",
+    "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修 第一册 人教A版"
+  },
+  "chapters": [
+    {
+      "id": "ch2",
+      "title": "第二章 一元二次函数、方程和不等式",
+      "sections": [
+        {
+          "id": "2.2",
+          "title": "2.2 基本不等式",
+          "sets": [
+            {
+              "id": "2.2-l2-advanced",
+              "title": "第2课时 能力提升练",
+              "questions": [
+                {
+                  "id": "2.2-l2-advanced-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 利用基本不等式比较大小",
+                  "title": "判断不成立不等式",
+                  "source": "2025 安徽滁州九校期中联考",
+                  "tags": ["基本不等式", "比较大小", "均值链"],
+                  "stemMarkdown": "已知 $a,b>0$，则下列不等式中不成立的是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$a+b+\\frac{1}{\\sqrt{ab}}\\ge 2\\sqrt{2}$" },
+                    { "label": "B", "text": "$(a+b)\\left(\\frac{1}{a}+\\frac{1}{b}\\right)\\ge 4$" },
+                    { "label": "C", "text": "$\\frac{a^2+b^2}{\\sqrt{ab}}\\ge 2\\sqrt{ab}$" },
+                    { "label": "D", "text": "$\\frac{2ab}{a+b}>\\sqrt{ab}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-l2-advanced-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 利用基本不等式比较大小",
+                  "title": "往返平均速度比较",
+                  "source": "2025 江苏苏州中学月考",
+                  "tags": ["基本不等式", "平均速度", "比较大小"],
+                  "stemMarkdown": "小王从甲地到乙地往返的速度分别为 $a$ 和 $b$（$a<b$），其全程的平均速度为 $v$，则（ ）",
+                  "options": [
+                    { "label": "A", "text": "$a<v<\\sqrt{ab}$" },
+                    { "label": "B", "text": "$\\sqrt{ab}<v<\\frac{a+b}{2}$" },
+                    { "label": "C", "text": "$\\frac{a+b}{2}<v<\\sqrt{\\frac{a^2+b^2}{2}}$" },
+                    { "label": "D", "text": "$\\sqrt{\\frac{a^2+b^2}{2}}<v<b$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-l2-advanced-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 利用基本不等式比较大小",
+                  "title": "两种采购均价比较",
+                  "source": "2025 江苏常州第二中学月考",
+                  "tags": ["基本不等式", "平均值", "实际应用"],
+                  "stemMarkdown": "近来牛肉价格起伏较大，假设某月第一周、第二周的牛肉价格分别为 $a$ 元/斤、$b$ 元/斤（$a\\ne b$），学校甲食堂和乙食堂在这两周中购买牛肉的方式不同，甲食堂每周购买 6 000 元的牛肉，乙食堂每周购买 80 斤牛肉，甲、乙食堂两次购买牛肉的平均单价分别记为 $m_1$ 元、$m_2$ 元，则下列结论正确的是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$m_1=m_2$" },
+                    { "label": "B", "text": "$m_1>m_2$" },
+                    { "label": "C", "text": "$m_2>m_1$" },
+                    { "label": "D", "text": "$m_1,m_2$ 的大小无法确定" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-l2-advanced-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "short-answer",
+                  "group": "题组二 利用基本不等式证明不等式",
+                  "title": "和为一的双重证明",
+                  "source": "2025 四川德阳中学月考",
+                  "tags": ["基本不等式", "证明", "三元变量"],
+                  "stemMarkdown": "已知 $a>0,b>0,c>0$，且 $a+b+c=1$，证明：\\n\\n（1）$\\frac{a^2}{c}+\\frac{b^2}{a}+\\frac{c^2}{b}\\ge 1$；\\n\\n（2）$(1+a)(1+b)(1+c)\\ge 8(1-a)(1-b)(1-c)$。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-l2-advanced-q5",
+                  "no": "5",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "题组二 利用基本不等式证明不等式",
+                  "title": "三问综合证明题",
+                  "source": "2025 广西桂林期中",
+                  "tags": ["基本不等式", "证明", "综合"],
+                  "stemMarkdown": "已知 $a,b,c$ 均为正实数。\\n\\n（1）证明：$a+b+c\\ge \\sqrt{2ab}+\\sqrt{2bc}$；\\n\\n（2）证明：$\\frac{a+b+c}{3}\\ge \\sqrt[3]{abc}$，并求 $2m+\\frac{1}{(m-2)^2}$（$m>2$）的最小值；\\n\\n（3）若 $abc=1$，求证：$\\frac{1}{a\\sqrt{c^2+1}}+\\frac{1}{b\\sqrt{a^2+1}}+\\frac{1}{c\\sqrt{b^2+1}}>2$。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "三问结构清楚，但第（3）问式子较密，后续补答案时应单题复核。"
+                  }
+                },
+                {
+                  "id": "2.2-l2-advanced-q6",
+                  "no": "6",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 基本不等式的综合应用",
+                  "title": "仓库选址费用最小",
+                  "source": "2025 江苏无锡期中",
+                  "tags": ["基本不等式", "实际应用", "最值"],
+                  "stemMarkdown": "一家货物公司计划租地建造仓库储存货物，经过市场调查了解到下列信息：每月土地占地费 $y_1$（单位：元）与仓库到车站的距离 $x$（单位：km）成反比，每月库存货物费 $y_2$（单位：元）与 $x$ 成正比；若在距离车站 6 km 处建仓库，则 $y_2=4y_1$。要使这两项费用之和最小，则仓库到车站的距离应为（ ）",
+                  "options": [
+                    { "label": "A", "text": "2 km" },
+                    { "label": "B", "text": "3 km" },
+                    { "label": "C", "text": "4 km" },
+                    { "label": "D", "text": "5 km" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-l2-advanced-q7",
+                  "no": "7",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 基本不等式的综合应用",
+                  "title": "三斜求积面积最值",
+                  "source": "2025 河南新乡第一中学月考",
+                  "tags": ["基本不等式", "海伦公式", "最值"],
+                  "stemMarkdown": "中国南宋数学家秦九韶提出了“三斜求积术”，即已知三角形的三边长求三角形的面积。设三角形的三条边长分别为 $a,b,c$，则三角形的面积 $S$ 可由公式 $S=\\sqrt{p(p-a)(p-b)(p-c)}$ 求得，其中 $p$ 为三角形周长的一半。现有一个三角形的边长满足 $a=4,\\ b+c=6$，则此三角形面积的最大值为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$3\\sqrt{5}$" },
+                    { "label": "B", "text": "$2\\sqrt{5}$" },
+                    { "label": "C", "text": "$2\\sqrt{6}$" },
+                    { "label": "D", "text": "$3\\sqrt{6}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-l2-advanced-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 基本不等式的综合应用",
+                  "title": "三类均值情境比较",
+                  "source": "2025 吉林长春博硕学校期中",
+                  "tags": ["基本不等式", "比较大小", "应用模型"],
+                  "stemMarkdown": "下列问题中，$a,b$ 是不相等的正数，比较 $x,y,z$ 的大小，下列选项正确的是（ ）\\n\\n问题甲：一个直径为 $a$ 寸的披萨和一个直径为 $b$ 寸的披萨的面积和等于两个直径都为 $x$ 寸的披萨的面积和；\\n\\n问题乙：购买某物品所花钱数一定，第一次购买的单价为 $a$ 元，第二次购买的单价为 $b$ 元，这两次的平均价格为 $y$ 元；\\n\\n问题丙：将一物体放在两臂不等长的天平上测量，放左侧时右侧砝码的质量为 $a$ g（天平平衡），放右侧时左侧砝码的质量为 $b$ g（天平平衡），物体的实际质量为 $z$ g。",
+                  "options": [
+                    { "label": "A", "text": "$x>y>z$" },
+                    { "label": "B", "text": "$x>z>y$" },
+                    { "label": "C", "text": "$z>x>y$" },
+                    { "label": "D", "text": "$z>y>x$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-l2-advanced-q9",
+                  "no": "9",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "题组三 基本不等式的综合应用",
+                  "title": "不等臂天平称金问题",
+                  "source": "2024 河南郑州外国语学校月考",
+                  "tags": ["基本不等式", "实际应用", "建模"],
+                  "stemMarkdown": "一家黄金专卖店使用一架两臂不等长的天平称黄金，其中左臂长和右臂长之比为 $\\lambda$（$\\lambda\\ne 1$）。一位顾客到店里购买 10 g 黄金，售货员先将 5 g 的砝码放在天平左盘中，取出一些黄金放在天平右盘中使天平平衡；再将 5 g 的砝码放在天平右盘中，然后取出一些黄金放在天平左盘中使天平平衡，最后将两次称得的黄金交给顾客。\\n\\n（1）试分析顾客购得的黄金是小于 10 g，等于 10 g，还是大于 10 g，为什么？\\n\\n（2）如果售货员又将 10 g 的砝码放在天平左盘中，然后取出一些黄金放在天平右盘中使天平平衡，那么要使得三次黄金质量总和最小，商家应该将左臂长和右臂长之比 $\\lambda$ 设置为多少？请说明理由。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干主体清楚，但建模步骤较长，后续补答案时需逐次核对三次平衡方程。"
+                  }
+                },
+                {
+                  "id": "2.2-l2-advanced-q10",
+                  "no": "10",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "题组三 基本不等式的综合应用",
+                  "title": "折叠会徽镀金费用最值",
+                  "source": "教材习题改编",
+                  "tags": ["基本不等式", "图形建模", "最值"],
+                  "stemMarkdown": "某校高一（3）班的小北为学校设计的冬季运动会会徽“冬日雪花”获得一等奖。他的设计灵感来自三个全等的矩形的折叠拼装，其中会徽的六个直角三角形（图 2 阴影部分）要利用镀金工艺上色。已知一块矩形材料（如图 1 中矩形 $ABCD$）的周长为 4 cm，其中较长的边 $AD=x$ cm，将矩形 $ABCD$ 沿 $BD$ 向 $\\triangle ABD$ 折叠，使点 $C$ 到点 $C'$ 处，且 $BC'$ 交 $AD$ 于点 $E$。\\n\\n（1）用 $x$ 表示图 1 中 $\\triangle BAE$ 的面积；\\n\\n（2）已知镀金工艺是 2 元/平方厘米，求会徽的镀金部分所需的最大费用。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干与两幅图的对应关系可辨，已补结构化图示；但折叠后点位关系仍建议人工再核一遍。"
+                  },
+                  "visuals": [
+                    {
+                      "id": "2.2-l2-advanced-q10-fig1",
+                      "kind": "geometry",
+                      "placement": "stem",
+                      "status": "complete",
+                      "alt": "矩形ABCD沿对角线BD折叠，点C折到C'，BC'交AD于E。",
+                      "diagramSpec": "画矩形 ABCD，A 在左上，B 在左下，C 在右下，D 在右上；连接 BD；将点 C 绕 BD 折到上方的点 C'；连 BC'，其与 AD 的交点为 E；保留折叠前后轮廓。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Q22L2AdvancedQ10Figure1",
+                        "code": "export default function Q22L2AdvancedQ10Figure1(){return (<svg viewBox=\"0 0 220 160\" width=\"220\" height=\"160\"><line x1=\"40\" y1=\"35\" x2=\"40\" y2=\"125\" stroke=\"currentColor\" strokeWidth=\"2\"/><line x1=\"40\" y1=\"125\" x2=\"160\" y2=\"125\" stroke=\"currentColor\" strokeWidth=\"2\"/><line x1=\"160\" y1=\"125\" x2=\"160\" y2=\"55\" stroke=\"currentColor\" strokeWidth=\"2\"/><line x1=\"40\" y1=\"35\" x2=\"160\" y2=\"55\" stroke=\"currentColor\" strokeWidth=\"2\" strokeDasharray=\"4 3\"/><line x1=\"40\" y1=\"125\" x2=\"160\" y2=\"55\" stroke=\"currentColor\" strokeWidth=\"2\"/><line x1=\"40\" y1=\"125\" x2=\"120\" y2=\"20\" stroke=\"currentColor\" strokeWidth=\"2\"/><line x1=\"120\" y1=\"20\" x2=\"160\" y2=\"55\" stroke=\"currentColor\" strokeWidth=\"2\"/><text x=\"28\" y=\"34\" fontSize=\"12\">A</text><text x=\"28\" y=\"132\" fontSize=\"12\">B</text><text x=\"162\" y=\"132\" fontSize=\"12\">C</text><text x=\"164\" y=\"58\" fontSize=\"12\">D</text><text x=\"122\" y=\"18\" fontSize=\"12\">C'</text><text x=\"86\" y=\"48\" fontSize=\"12\">E</text></svg>);}"
+                      }
+                    },
+                    {
+                      "id": "2.2-l2-advanced-q10-fig2",
+                      "kind": "layout",
+                      "placement": "stem",
+                      "status": "complete",
+                      "alt": "雪花状会徽，中间六边形外侧环绕6个直角三角形阴影。",
+                      "diagramSpec": "画一个中心正六边形，外侧六个方向各连接一个直角三角形阴影块，整体形成雪花状会徽轮廓。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Q22L2AdvancedQ10Figure2",
+                        "code": "export default function Q22L2AdvancedQ10Figure2(){return (<svg viewBox=\"0 0 180 180\" width=\"180\" height=\"180\"><polygon points=\"90,30 125,50 125,90 90,110 55,90 55,50\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\"/><polygon points=\"90,12 110,34 70,34\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\"/><polygon points=\"137,38 148,64 120,56\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\"/><polygon points=\"137,102 120,84 148,76\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\"/><polygon points=\"90,128 70,106 110,106\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\"/><polygon points=\"43,102 60,84 32,76\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\"/><polygon points=\"43,38 32,64 60,56\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\"/></svg>);}"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

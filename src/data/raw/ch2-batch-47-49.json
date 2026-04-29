@@ -1,0 +1,593 @@
+{
+  "schemaVersion": "edu-question-bank/v1",
+  "book": {
+    "subject": "高中数学",
+    "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修 第一册 人教A版"
+  },
+  "chapters": [
+    {
+      "id": "ch2",
+      "title": "第二章 一元二次函数、方程和不等式",
+      "sections": [
+        {
+          "id": "ch2-advanced",
+          "title": "综合拔高练",
+          "sets": [
+            {
+              "id": "ch2-gaokao-5y",
+              "title": "五年高考特练",
+              "questions": [
+                {
+                  "id": "ch2-gaokao-5y-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "考点1 一元二次不等式及其应用",
+                  "title": "集合与二次不等式交集",
+                  "source": "2023 新高标I, 1",
+                  "tags": ["一元二次不等式", "集合运算"],
+                  "stemMarkdown": "已知集合 $M=\\{-2,-1,0,1,2\\}$，$N=\\{x\\mid x^2+x-6\\ge0\\}$，则 $M\\cap N=$（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\{-2,-1,0,1\\}$" },
+                    { "label": "B", "text": "$\\{0,1,2\\}$" },
+                    { "label": "C", "text": "$\\{-2\\}$" },
+                    { "label": "D", "text": "$\\{2\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "考点1 一元二次不等式及其应用",
+                  "title": "二次不等式解集判断",
+                  "source": "课标全国I, 2",
+                  "tags": ["一元二次不等式", "解集"],
+                  "stemMarkdown": "已知集合 $A=\\{x\\mid x^2-x-2>0\\}$，则 $A=$（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\{x\\mid -1<x<2\\}$" },
+                    { "label": "B", "text": "$\\{x\\mid -1\\le x\\le2\\}$" },
+                    { "label": "C", "text": "$\\{x\\mid x<-1\\text{ 或 }x>2\\}$" },
+                    { "label": "D", "text": "$\\{x\\mid x\\le-1\\text{ 或 }x\\ge2\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "考点1 一元二次不等式及其应用",
+                  "title": "由解集反求常数参数",
+                  "source": "天津高考, 10",
+                  "tags": ["一元二次不等式", "参数"],
+                  "stemMarkdown": "设 $a$ 为常数，若不等式 $3x^2+x-2<0$ 成立的 $x$ 的取值范围为 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "答案横线前的末尾说明较短，题干主体清晰。"
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "考点1 一元二次不等式及其应用",
+                  "title": "分式不等式解集填空",
+                  "source": "2021 上海, 4",
+                  "tags": ["分式不等式", "解集"],
+                  "stemMarkdown": "不等式 $\\dfrac{2x+5}{x-2}<1$ 的解集为 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q5",
+                  "no": "5",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "考点2 基本不等式及其应用",
+                  "title": "和与积条件关系判断",
+                  "source": "浙江高考, 5",
+                  "tags": ["基本不等式", "充分必要条件"],
+                  "stemMarkdown": "设 $a>0,b>0$，则“$a+b\\le4$”是“$ab\\le4$”的（ ）",
+                  "options": [
+                    { "label": "A", "text": "充分不必要条件" },
+                    { "label": "B", "text": "必要不充分条件" },
+                    { "label": "C", "text": "充分必要条件" },
+                    { "label": "D", "text": "既不充分也不必要条件" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q6",
+                  "no": "6",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "考点2 基本不等式及其应用",
+                  "title": "二元二次约束多选判断",
+                  "source": "2022 新高考II, 12",
+                  "tags": ["基本不等式", "多选题", "最值"],
+                  "stemMarkdown": "若 $x,y$ 满足 $x^2+y^2-xy=1$，则（ ）",
+                  "options": [
+                    { "label": "A", "text": "$x+y\\le1$" },
+                    { "label": "B", "text": "$x+y\\ge-2$" },
+                    { "label": "C", "text": "$x^2+y^2\\le2$" },
+                    { "label": "D", "text": "$x^2+y^2\\ge1$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q7",
+                  "no": "7",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "考点2 基本不等式及其应用",
+                  "title": "三项和式最小值填空",
+                  "source": "2021 天津, 13",
+                  "tags": ["基本不等式", "最小值"],
+                  "stemMarkdown": "若 $a>0,b>0$，则 $\\dfrac1a+\\dfrac{a}{b^2}+b$ 的最小值为 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "考点2 基本不等式及其应用",
+                  "title": "约束平方和最小值",
+                  "source": "2020 江苏, 12",
+                  "tags": ["基本不等式", "最小值", "代数式"],
+                  "stemMarkdown": "已知 $5x^2y^2+y^4=1\\ (x,y\\in\\mathbb{R})$，则 $x^2+y^2$ 的最小值是 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q9",
+                  "no": "9",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "考点2 基本不等式及其应用",
+                  "title": "倒数与和式最小值",
+                  "source": "2020 天津, 14",
+                  "tags": ["基本不等式", "最小值"],
+                  "stemMarkdown": "已知 $a>0,b>0$，且 $ab=1$，则 $\\dfrac1{2a}+\\dfrac1{2b}+\\dfrac8{a+b}$ 的最小值为 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q10",
+                  "no": "10",
+                  "status": "needs-review",
+                  "type": "single-choice",
+                  "group": "考点3 不等式的实际应用",
+                  "title": "黄金分割比例身高估计",
+                  "source": "课标全国II, 4",
+                  "tags": ["实际应用", "黄金分割", "最值估算"],
+                  "stemMarkdown": "古希腊时期，人们认为最美人体的头顶至肚脐的长度与肚脐至足底的长度之比是 $\\dfrac{\\sqrt5-1}{2}\\approx0.618$，称为黄金分割比例；此外，最美人体的头顶至咽喉的长度与咽喉至肚脐的长度之比也应是 $\\dfrac{\\sqrt5-1}{2}$。若某人满足上述两个黄金分割比例，且腿长为 $105\\text{ cm}$，头顶至膝子下端的长度为 $26\\text{ cm}$，则其身高可能是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$165\\text{ cm}$" },
+                    { "label": "B", "text": "$175\\text{ cm}$" },
+                    { "label": "C", "text": "$185\\text{ cm}$" },
+                    { "label": "D", "text": "$190\\text{ cm}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "长题干应用题，页面配图为雕像照片，非解题必要信息；个别器官名词建议人工复核。"
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q11",
+                  "no": "11",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "考点3 不等式的实际应用",
+                  "title": "水果促销折扣参数问题",
+                  "source": "北京高考, 14",
+                  "tags": ["实际应用", "分段计费", "参数"],
+                  "stemMarkdown": "李明自主创业，在网上经营一家水果店，销售的水果中有草莓、京白梨、西瓜、桃，价格依次为 $60$ 元/盒、$65$ 元/盒、$80$ 元/盒、$90$ 元/盒。为增加销量，李明对这四种水果进行促销：一次购买水果的总价达到 $120$ 元，顾客就少付 $x$ 元；每笔订单顾客网上支付成功后，李明会得到支付对象的 $80\\%$。\n\n（1）当 $x=10$ 时，顾客一次购买草莓和西瓜各 $1$ 盒，需要支付 ________ 元；\n\n（2）在促销活动中，为保证李明每笔订单得到的金额均不低于促销前总价的七折，则 $x$ 的最大值为 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干较长，单价、满减和到账比例已按页面转写，后续补答案时应单题复核。"
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q12",
+                  "no": "12",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "学科竞赛",
+                  "title": "三角形边长式最小值",
+                  "source": "2024 全国高中数学联赛吉林赛区预赛",
+                  "tags": ["学科竞赛", "三角形", "最小值"],
+                  "stemMarkdown": "已知 $A,B,C$ 是平面上三个不同的点，且 $BC=a,CA=b,AB=c$，则 $\\dfrac{c}{a+b}+\\dfrac{b}{c}$ 的最小值为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\sqrt2-\\dfrac12$" },
+                    { "label": "B", "text": "$\\dfrac{\\sqrt2}{2}-\\dfrac12$" },
+                    { "label": "C", "text": "$2-\\dfrac{\\sqrt2}{2}$" },
+                    { "label": "D", "text": "$1-\\dfrac{\\sqrt2}{2}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q13",
+                  "no": "13",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "强基计划",
+                  "title": "根式距离和最大值",
+                  "source": "2024 福建厦门大学强基计划",
+                  "tags": ["强基计划", "最值", "根式"],
+                  "stemMarkdown": "对于 $a,b,c\\in\\{x\\mid 0\\le x\\le2\\}$，$f(a,b,c)=\\sqrt{|a-b|}+\\sqrt{|b-c|}+\\sqrt{|c-a|}$ 的最大值为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$3$" },
+                    { "label": "B", "text": "$2+\\sqrt2$" },
+                    { "label": "C", "text": "$3\\sqrt2$" },
+                    { "label": "D", "text": "以上全错" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q14",
+                  "no": "14",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "强基计划",
+                  "title": "分式根式和最小值",
+                  "source": "2024 清华大学强基计划",
+                  "tags": ["强基计划", "最小值", "基本不等式"],
+                  "stemMarkdown": "已知 $f(a,b,c)=\\sqrt{\\dfrac{a}{b+c}}+\\sqrt{\\dfrac{b}{c+a}}+\\sqrt{\\dfrac{c}{a+b}}\\ (a,b,c\\ge0)$，则 $f(a,b,c)$ 的最小值为 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-gaokao-5y-q15",
+                  "no": "15",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "强基计划",
+                  "title": "倒数乘积最值存在性",
+                  "source": "2024 江苏南京大学强基计划",
+                  "tags": ["强基计划", "最值", "存在性讨论"],
+                  "stemMarkdown": "已知 $a,b,c>0,4abc=\\dfrac1a+\\dfrac1b+\\dfrac1c$，判断 $\\left(\\dfrac1a+\\dfrac1b\\right)\\left(\\dfrac1a+\\dfrac1c\\right)$ 是否存在最大值和最小值；若存在，求出最大值和最小值；若不存在，请说明理由。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "目标式和约束关系清晰，但页面排版较紧，后续补解前建议再核一次原式。"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "ch2-mock-3y",
+              "title": "三年模拟训练",
+              "questions": [
+                {
+                  "id": "ch2-mock-3y-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "应用实践",
+                  "title": "双变量约束最值判断",
+                  "source": "2025 广东广雅中学月考",
+                  "tags": ["应用实践", "最值", "双变量"],
+                  "stemMarkdown": "已知 $x>0,y>0$，满足 $1+x+y=xy$，则下列结论正确的是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$x+y$ 有最小值 $2(1+\\sqrt2)$" },
+                    { "label": "B", "text": "$x+y$ 有最大值 $2(1+\\sqrt2)$" },
+                    { "label": "C", "text": "$xy$ 有最小值 $2(1+\\sqrt2)$" },
+                    { "label": "D", "text": "$xy$ 有最大值 $2(1+\\sqrt2)$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-mock-3y-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "应用实践",
+                  "title": "整数根个数反求参数",
+                  "source": "2025 湖南邵阳邵东第一中学月考",
+                  "tags": ["一元二次不等式", "整数根", "参数"],
+                  "stemMarkdown": "若关于 $x$ 的不等式 $x^2-(a+3)x+2a+2<0$ 的解集中恰有 $3$ 个整数，则实数 $a$ 的取值范围为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\{a\\mid -3\\le a<-2\\}$" },
+                    { "label": "B", "text": "$\\{a\\mid -3\\le a<-2\\text{ 或 }4<a\\le5\\}$" },
+                    { "label": "C", "text": "$\\{a\\mid -3<a<-2\\text{ 或 }4<a<5\\}$" },
+                    { "label": "D", "text": "$\\{a\\mid -3\\le a\\le-2\\text{ 或 }4\\le a\\le5\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "选项中的端点开闭区间已按页面转写，后续可再对照原页复核。"
+                  }
+                },
+                {
+                  "id": "ch2-mock-3y-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "应用实践",
+                  "title": "倒数约束下参数范围",
+                  "source": "2025 江苏南京期中",
+                  "tags": ["基本不等式", "参数范围", "最值"],
+                  "stemMarkdown": "若两个正实数 $x,y$ 满足 $\\dfrac1x+\\dfrac4y=1$，且不等式 $x+\\dfrac y4<m^2-3m$ 有解，则实数 $m$ 的取值范围是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\{m\\mid -1\\le m\\le4\\}$" },
+                    { "label": "B", "text": "$\\{m\\mid m<0\\text{ 或 }m>3\\}$" },
+                    { "label": "C", "text": "$\\{m\\mid -4<m<1\\}$" },
+                    { "label": "D", "text": "$\\{m\\mid m<-1\\text{ 或 }m>4\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-mock-3y-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "三年模拟训练",
+                  "title": "解集反推命题判断",
+                  "source": "2025 安徽宣城中学月考",
+                  "tags": ["一元二次不等式", "命题判断", "解集"],
+                  "stemMarkdown": "已知关于 $x$ 的一元二次不等式 $ax^2+bx+c>0$ 的解集为 $M$，则下列说法错误的是（ ）",
+                  "options": [
+                    { "label": "A", "text": "若 $M=\\varnothing$，则 $a<0$ 且 $b^2-4ac\\le0$" },
+                    { "label": "B", "text": "若 $\\dfrac a{a'}=\\dfrac b{b'}=\\dfrac c{c'}$，则关于 $x$ 的不等式 $a'x^2+b'x+c'>0$ 的解集也为 $M$" },
+                    { "label": "C", "text": "若 $M=\\{x\\mid -1<x<2\\}$，则关于 $x$ 的不等式 $a(x^2+1)+b(x-1)+c<2ax$ 的解集为 $\\{x\\mid x<0\\text{ 或 }x>3\\}$" },
+                    { "label": "D", "text": "若 $M=\\{x\\mid x\\ne x_0,\\ x_0\\text{ 为常数}\\}$，且 $a<b$，则 $\\dfrac{a+3b+4c}{b-a}$ 的最小值为 $5+2\\sqrt5$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-mock-3y-q5",
+                  "no": "5",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "三年模拟训练",
+                  "title": "整数根并集常数差",
+                  "source": "2025 上海敬业中学期中",
+                  "tags": ["整数根", "集合", "参数"],
+                  "stemMarkdown": "已知集合 $M=\\left\\{x\\mid (x^2-4x+c_1)(x^2-4x+c_2)(x^2-4x+c_3)(x^2-4x+c_4)=0\\right\\}=\\{x_1,x_2,\\dots,x_7\\}\\subseteq\\mathbb{Z}$，且 $c_1\\le c_2\\le c_3\\le c_4$，则 $c_4-c_1$ 的值不可能是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$4$" },
+                    { "label": "B", "text": "$9$" },
+                    { "label": "C", "text": "$16$" },
+                    { "label": "D", "text": "$64$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "集合表达式较长，但根式与下标关系整体可辨。"
+                  }
+                },
+                {
+                  "id": "ch2-mock-3y-q6",
+                  "no": "6",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "三年模拟训练",
+                  "title": "线性约束下线性式范围",
+                  "source": "2025 辽宁名校联盟期中",
+                  "tags": ["线性约束", "取值范围"],
+                  "stemMarkdown": "已知实数 $x,y$ 满足 $-1\\le x+y\\le4$ 且 $2\\le x-y\\le3$，则 $x-3y$ 的取值范围是 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch2-mock-3y-q7",
+                  "no": "7",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "三年模拟训练",
+                  "title": "由解集反求最小值",
+                  "source": "2025 天津经济技术开发区第一中学月考",
+                  "tags": ["一元二次不等式", "最小值", "参数"],
+                  "stemMarkdown": "关于 $x$ 的不等式 $mx^2-x+1<0$ 的解集为 $\\{x\\mid a<x<b\\}$，则 $\\dfrac1{a-1}-\\dfrac4{b-1}$ 的最小值为 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "分式目标式已按页面转写，建议后续补答案前复核一次分母符号。"
+                  }
+                },
+                {
+                  "id": "ch2-mock-3y-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "三年模拟训练",
+                  "title": "恒成立不等式解集",
+                  "source": "2024 湖南长沙市一中段考",
+                  "tags": ["恒成立", "一元二次不等式", "解集"],
+                  "stemMarkdown": "当 $a\\in\\{a\\mid 0\\le a\\le2\\}$ 时，不等式 $ax^2+(a+1)x+1-\\dfrac32a<0$ 恒成立，则 $x$ 的取值范围为 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "参数范围与常数项中的 $\\frac32a$ 清晰，其余结构稳定。"
+                  }
+                },
+                {
+                  "id": "ch2-mock-3y-q9",
+                  "no": "9",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "三年模拟训练",
+                  "title": "研发利润率最优化",
+                  "source": "2025 安徽合肥一六八中学月考",
+                  "tags": ["实际应用", "分段函数", "最值"],
+                  "stemMarkdown": "某科技企业生产此设备获得的月利润 $p$（单位：万元）与投入的月研发经费 $x\\ (15\\le x\\le40,\\text{ 单位：万元})$ 有关：当投入的月研发经费不高于 $36$ 万元时，$p=-\\dfrac1{10}x^2+8x-90$；当投入的月研发经费高于 $36$ 万元时，$p=0.4x+54$。对于企业而言，研发利润率 $y=\\dfrac px\\times100\\%$ 是优化企业管理的重要依据之一，$y$ 越大，研发利润率越高，反之越小。\n\n（1）求该企业生产此设备的研发利润率 $y$ 的最大值以及相应月研发经费 $x$ 的值；\n\n（2）若该企业生产此设备的研发利润率不低于 $190\\%$，求月研发经费 $x$ 的取值范围。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "长应用题，分段利润函数与利润率定义已据页面转写，补答案时需单题复核。"
+                  }
+                },
+                {
+                  "id": "ch2-mock-3y-q10",
+                  "no": "10",
+                  "status": "complete",
+                  "type": "short-answer",
+                  "group": "三年模拟训练",
+                  "title": "根区间与不等式求解",
+                  "source": "2024 辽宁沈阳实验中学期中",
+                  "tags": ["一元二次方程", "参数范围", "不等式"],
+                  "stemMarkdown": "已知 $y=x^2-ax+1\\ (a\\in\\mathbb{R})$。\n\n（1）方程 $y=0$ 的两个不等实数根 $x_1,x_2$ 满足 $\\dfrac12<x_1<x_2<2$，求 $a$ 的取值范围；\n\n（2）求解关于 $x$ 的不等式：$y>0$。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                }
+              ]
+            },
+            {
+              "id": "ch2-transfer",
+              "title": "迁移创新",
+              "questions": [
+                {
+                  "id": "ch2-transfer-q1",
+                  "no": "1",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "迁移创新",
+                  "title": "远离量定义综合探究",
+                  "source": "2025 福建泉州安溪第一中学月考",
+                  "tags": ["新定义", "绝对值", "探究题"],
+                  "stemMarkdown": "若实数 $x,y,m$ 满足 $|x-m|>|y-m|$，则称 $x$ 比 $y$ 远离 $m$。\n\n（1）若 $2$ 比 $3x-4$ 远离 $1$，求 $x$ 的取值范围；\n\n（2）设 $y=\\dfrac{x+2}{x+1}$，其中 $x\\in\\{x\\mid x>0\\text{ 且 }x\\ne\\sqrt2\\}$，则 $x$ 与 $y$ 哪一个更远离 $\\sqrt2$？并说明理由；\n\n（3）若 $x+y=2$，则 $y$ 与 $x^2+y^2$ 哪一个更远离 $\\dfrac12$？并说明理由。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "三小问结构稳定，但第（2）（3）问推理链较长，后续补解前建议人工复核。"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

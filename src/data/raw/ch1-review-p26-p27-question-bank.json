@@ -1,0 +1,345 @@
+{
+  "schemaVersion": "edu-question-bank/v1",
+  "book": {
+    "subject": "高中数学",
+    "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修第一册 人教A版"
+  },
+  "chapters": [
+    {
+      "id": "ch1",
+      "title": "第一章 集合与常用逻辑用语",
+      "sections": [
+        {
+          "id": "ch1-review",
+          "title": "本章复习提升",
+          "sets": [
+            {
+              "id": "ch1-review-mistakes",
+              "title": "易混易错练",
+              "questions": [
+                {
+                  "id": "ch1-review-mistakes-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "易错点1 忽略集合中元素的意义",
+                  "title": "偶数集合并集判断",
+                  "source": "2025 江苏淮安七校联考",
+                  "tags": ["并集", "整数集", "元素意义"],
+                  "stemMarkdown": "已知集合 $A=\\{x\\mid x=2k,\\ k\\in\\mathbb{Z}\\}$，$B=\\{x\\mid x=4k+2,\\ k\\in\\mathbb{Z}\\}$，则 $A\\cup B=(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$B$" },
+                    { "label": "B", "text": "$\\mathbb{R}$" },
+                    { "label": "C", "text": "$A$" },
+                    { "label": "D", "text": "以上都不是" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-review-mistakes-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "易错点1 忽略集合中元素的意义",
+                  "title": "数域性质判断",
+                  "source": "2025 江西抚州南城一中月考",
+                  "tags": ["新定义", "数域", "真假判断"],
+                  "stemMarkdown": "设 $P$ 是一个数集，且至少含有两个数，若对任意 $a,b\\in P$，都有 $a+b,a-b,ab,\\frac ab\\in P$（除数 $b\\ne 0$），则称 $P$ 是一个“数域”。例如：有理数集 $\\mathbb{Q}$ 是一个数域；数集 $F=\\{a+\\sqrt2 b\\mid a,b\\in\\mathbb{Q}\\}$ 也是一个数域。下列关于数域的命题中是真命题的为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$0,1$ 是任何数域中的元素" },
+                    { "label": "B", "text": "若数集 $M,N$ 都是数域，则 $M\\cup N$ 是一个数域" },
+                    { "label": "C", "text": "存在无穷多个数域" },
+                    { "label": "D", "text": "若数集 $M,N$ 都是数域，则 $\\mathbb{Z}\\subseteq M\\cap N$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-review-mistakes-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "易错点2 忽略集合中元素的互异性",
+                  "title": "集合互异性填空",
+                  "source": "2025 河南安阳林州第一中学月考",
+                  "tags": ["集合互异性", "填空", "参数"],
+                  "stemMarkdown": "已知集合 $A=\\{1,2,3\\}$，$B=\\{1,m,m+2\\}$，若 $2-m\\in A$，则实数 $m=$ ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-review-mistakes-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "易错点2 忽略集合中元素的互异性",
+                  "title": "集合包含参数填空",
+                  "source": "2025 安徽多校期中联考",
+                  "tags": ["集合包含", "参数", "填空"],
+                  "stemMarkdown": "已知集合 $A=\\{0,a^2,2a\\}$，$B=\\{0,a^2-a+2\\}$。若 $B\\subseteq A$，则实数 $a=$ ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-review-mistakes-q5",
+                  "no": "5",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "易错点3 忽略对空集情况的讨论",
+                  "title": "全食偏食参数讨论",
+                  "source": "2025 北京顺义牛栏山一中月考",
+                  "tags": ["空集讨论", "集合关系", "参数"],
+                  "stemMarkdown": "若一个集合是另一个集合的子集，则称两个集合构成“全食”；若两个集合有公共元素，但互不为对方的子集，则称两个集合构成“偏食”。对于集合 $A=\\left\\{-1,\\frac12,1\\right\\}$，集合 $B$ 的定义式在扫描图中末尾略有切边。若两个集合构成“全食”或“偏食”，则 $a$ 的值为 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "集合 $B$ 的定义式末尾未完全清晰，当前仅保留可确认结构与设问。" }
+                },
+                {
+                  "id": "ch1-review-mistakes-q6",
+                  "no": "6",
+                  "status": "complete",
+                  "type": "short-answer",
+                  "group": "易错点3 忽略对空集情况的讨论",
+                  "title": "区间交并与补集",
+                  "source": "2025 湖南长沙雅礼中学月考",
+                  "tags": ["区间", "补集", "参数范围"],
+                  "stemMarkdown": "已知 $A=\\{x\\mid -2\\le x\\le 3\\}$，$B=\\{x\\mid a-5<x<3a\\}$，全集 $U=\\mathbb{R}$。\\n\\n（1）若 $a=\\frac12$，求 $A\\cup B$，$A\\cap B$；\\n\\n（2）若 $B\\cap(C_UA)=B$，求实数 $a$ 的取值范围。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-review-mistakes-q7",
+                  "no": "7",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "易错点4 忽略对端点值的取舍",
+                  "title": "端点取舍求参",
+                  "source": "2024 江苏淮阴中学",
+                  "tags": ["端点取舍", "全称量词", "参数"],
+                  "stemMarkdown": "命题 $p:\\forall x\\in\\{x\\mid 2<x<3\\},\\ 3x^2-a\\ge 0$，若命题 $p$ 是真命题，则 $a$ 的取值范围为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$a>27$" },
+                    { "label": "B", "text": "$a\\le 12$" },
+                    { "label": "C", "text": "$a<12$" },
+                    { "label": "D", "text": "$a\\ge 27$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-review-mistakes-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "short-answer",
+                  "group": "易错点4 忽略对端点值的取舍",
+                  "title": "区间补集与包含",
+                  "source": "2025 山东济南第一中学月考",
+                  "tags": ["区间", "补集", "集合包含"],
+                  "stemMarkdown": "已知集合 $A=\\{x\\mid 2\\le x<6\\}$，$B=\\{x\\mid 3<x<9\\}$。\\n\\n（1）求 $C_{\\mathbb{R}}(A\\cap B)$，$(C_{\\mathbb{R}}B)\\cup A$；\\n\\n（2）设 $C=\\{x\\mid a<x<a+1\\}$，若 $C\\subseteq B$，求实数 $a$ 的取值范围。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                }
+              ]
+            },
+            {
+              "id": "ch1-review-methods",
+              "title": "思想方法练",
+              "questions": [
+                {
+                  "id": "ch1-review-methods-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "一、数形结合思想在集合与常用逻辑用语问题中的应用",
+                  "title": "维恩图阴影表示",
+                  "source": "2025 湖北鄂东南省级示范高中期中联考",
+                  "tags": ["维恩图", "数形结合", "集合表示"],
+                  "stemMarkdown": "图中阴影部分用集合符号可以表示为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$B\\cap(A\\cup C)$" },
+                    { "label": "B", "text": "$(C_UB)\\cap(A\\cup C)$" },
+                    { "label": "C", "text": "$B\\cap C_U(A\\cup C)$" },
+                    { "label": "D", "text": "$(A\\cap B)\\cup(B\\cap C)$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "题图为必要信息，已按阴影区域完成文字化录入。" }
+                },
+                {
+                  "id": "ch1-review-methods-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "一、数形结合思想在集合与常用逻辑用语问题中的应用",
+                  "title": "有限集反推元素",
+                  "source": "2025 江苏南京第一中学月考",
+                  "tags": ["有限集", "补集", "数形结合"],
+                  "stemMarkdown": "已知全集 $U=\\{x\\mid x<10,\\ x\\in\\mathbb{N}^*\\}$，$A\\subseteq U$，$B\\subseteq U$，$A\\cap(C_UB)=\\{1,9\\}$，$A\\cap B=\\{3\\}$，$(C_UA)\\cap(C_UB)=\\{4,6,7\\}$，则下列结论正确的为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$8\\in B$" },
+                    { "label": "B", "text": "$A$ 的子集的个数为 8" },
+                    { "label": "C", "text": "$\\{9\\}\\subseteq A$" },
+                    { "label": "D", "text": "$6\\in C_U(A\\cup B)$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-review-methods-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "一、数形结合思想在集合与常用逻辑用语问题中的应用",
+                  "title": "充分不必要条件求参",
+                  "source": "数形结合方法练",
+                  "tags": ["充分不必要", "数形结合", "参数"],
+                  "stemMarkdown": "设 $p:x\\le 3a$ 或 $x\\ge a(a<0)$，$q:-4\\le x<-2$，且 $q$ 是 $p$ 的充分不必要条件，则实数 $a$ 的取值范围为 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "题干中关于 $p$ 的不等式组合按页面可辨内容整理，建议后续复核一次原式。" }
+                },
+                {
+                  "id": "ch1-review-methods-q4",
+                  "no": "4",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "二、分类讨论思想在集合与常用逻辑问题中的应用",
+                  "title": "二次方程根集分类",
+                  "source": "2025 湖南长沙南雅中学",
+                  "tags": ["分类讨论", "根集", "参数"],
+                  "stemMarkdown": "已知集合 $A=\\{0,2\\}$，$B=\\{x\\mid (x^2-ax+1)=0,\\ x\\in\\mathbb{R}\\}$，$|A|$ 表示非空集合 $A$ 中元素的个数，若 $A\\cap B=\\varnothing$，则实数 $a$ 的所有可能取值构成的集合为 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "题干主体清楚，但原页说明行较密，建议后续补答案时再复核集合记号。" }
+                },
+                {
+                  "id": "ch1-review-methods-q5",
+                  "no": "5",
+                  "status": "complete",
+                  "type": "short-answer",
+                  "group": "二、分类讨论思想在集合与常用逻辑问题中的应用",
+                  "title": "区间与整数元素讨论",
+                  "source": "山东十校第一次联合考试",
+                  "tags": ["分类讨论", "区间", "整数元素"],
+                  "stemMarkdown": "已知集合 $A=\\{x\\mid -3<x<0\\}$，$B=\\{x\\mid x-1<x<1+m\\}$。\\n\\n（1）若 $(C_{\\mathbb{R}}A)\\cap B=\\varnothing$，求实数 $m$ 的取值范围；\\n\\n（2）若集合 $A\\cap B$ 中仅有一个整数元素，求 $A\\cup B$。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "题干按页面可辨形式整理，区间定义建议后续补解时再核一次不等号方向。" }
+                },
+                {
+                  "id": "ch1-review-methods-q6",
+                  "no": "6",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "三、转化与化归思想在集合与常用逻辑问题中的应用",
+                  "title": "存在命题假值求参",
+                  "source": "2025 黑龙江哈尔滨第九中学校月考",
+                  "tags": ["存在量词", "转化化归", "参数范围"],
+                  "stemMarkdown": "已知命题 $p:\\exists x\\in\\mathbb{R},\\ x^2+4x+a=0$，若命题 $p$ 是假命题，则实数 $a$ 的取值范围是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$0<a<4$" },
+                    { "label": "B", "text": "$a>4$" },
+                    { "label": "C", "text": "$a<0$" },
+                    { "label": "D", "text": "$a\\ge 4$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-review-methods-q7",
+                  "no": "7",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "三、转化与化归思想在集合与常用逻辑问题中的应用",
+                  "title": "充分不必要条件求参",
+                  "source": "2025 天津南开中学月考",
+                  "tags": ["充分不必要", "全称量词", "参数"],
+                  "stemMarkdown": "已知 $A=\\{x\\mid 1\\le x\\le 2\\}$，命题“$\\forall x\\in A,\\ x^2-a<0$”是真命题的一个充分不必要条件是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$a>4$" },
+                    { "label": "B", "text": "$a\\le 4$" },
+                    { "label": "C", "text": "$a>5$" },
+                    { "label": "D", "text": "$a<5$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-review-methods-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "三、转化与化归思想在集合与常用逻辑问题中的应用",
+                  "title": "集合子集个数判断",
+                  "source": "2024 湖北武汉洪山高级中学月考",
+                  "tags": ["转化化归", "集合子集", "整数函数"],
+                  "stemMarkdown": "已知 $[x]$ 表示不超过 $x$ 的最大整数，集合 $A=\\{x\\in\\mathbb{Z}\\mid 0<[x]<3\\}$，$B=\\{x\\mid (x^2+ax)(x^2+2x+b)=0\\}$，且 $A\\cap(C_{\\mathbb{R}}B)=\\varnothing$，则集合 $B$ 的子集的个数为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "4" },
+                    { "label": "B", "text": "8" },
+                    { "label": "C", "text": "16" },
+                    { "label": "D", "text": "18" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-review-methods-q9",
+                  "no": "9",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "三、转化与化归思想在集合与常用逻辑问题中的应用",
+                  "title": "区间包含综合求参",
+                  "source": "安徽蚌埠中学月考",
+                  "tags": ["转化化归", "区间", "参数范围"],
+                  "stemMarkdown": "已知集合 $A=\\{x\\mid -3\\le x\\le 4\\}$，$B=\\{x\\mid x^2-2m-1\\le x\\le m+1\\}$。\\n\\n（1）若 $A\\cap B=A$，求实数 $m$ 的取值范围；\\n\\n（2）若 $A\\cup B\\ne A$，求实数 $m$ 的取值范围。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "参数综合题结构清晰，但后续补答案时需再次核算区间端点与不等式合并。" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

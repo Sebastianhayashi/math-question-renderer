@@ -1,0 +1,316 @@
+[
+  {
+    "schemaVersion": "edu-question-bank/v1",
+    "book": {
+      "subject": "数学",
+      "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修第一册 人教A版"
+    },
+    "chapters": [
+      {
+        "id": "ch1",
+        "title": "第一章 集合与常用逻辑用语",
+        "sections": [
+          {
+            "id": "1.1",
+            "title": "1.1 集合的概念",
+            "sets": [
+              {
+                "id": "1.1-ability",
+                "title": "能力提升练",
+                "questions": [
+                  {
+                    "id": "1.1-ability-q8",
+                    "no": "8",
+                    "status": "incomplete",
+                    "type": "short-answer",
+                    "group": "能力提升练",
+                    "title": "跨页集合应用题待补录",
+                    "source": "5年高考3年模拟同步练习",
+                    "tags": ["集合应用", "跨页题", "待补录"],
+                    "stemMarkdown": "当前仅能确认该题为集合应用类跨页题，正文在当前损坏扫描文件中未能可靠补全。",
+                    "options": [],
+                    "answer": null,
+                    "analysisMarkdown": null,
+                    "solutionMarkdown": null,
+                    "ocr": {
+                      "confidence": "low",
+                      "notes": "题干跨页且当前扫描文件结构损坏，无法可靠恢复完整正文。"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "1.2",
+            "title": "1.2 集合间的基本关系",
+            "sets": [
+              {
+                "id": "1.2-basic",
+                "title": "基础过关",
+                "questions": [
+                  {
+                    "id": "1.2-basic-q7",
+                    "no": "7",
+                    "status": "needs-review",
+                    "type": "unknown",
+                    "group": "基础过关",
+                    "title": "参数集合包含关系判断",
+                    "source": "5年高考3年模拟同步练习",
+                    "tags": ["集合包含", "参数求值", "元素判定"],
+                    "stemMarkdown": "已识别到 $A=\\{0,-a\\}$，$B=\\{1,a-2,2a-2\\}$，且 $A\\subseteq B$，求 $a$。",
+                    "options": [],
+                    "answer": "1",
+                    "analysisMarkdown": "由 $0\\in B$，只能有 $2a-2=0$，得 $a=1$；代入后 $A=\\{0,-1\\}$，$B=\\{1,-1,0\\}$，满足 $A\\subseteq B$。",
+                    "solutionMarkdown": "$a=1$。",
+                    "ocr": {
+                      "confidence": "medium",
+                      "notes": "集合表达式主体较清楚，但原题选项区未稳定识别。"
+                    }
+                  },
+                  {
+                    "id": "1.2-basic-q8",
+                    "no": "8",
+                    "status": "needs-review",
+                    "type": "unknown",
+                    "group": "基础过关",
+                    "title": "整数组成集合关系判断",
+                    "source": "5年高考3年模拟同步练习",
+                    "tags": ["集合关系", "整数集合", "待复核"],
+                    "stemMarkdown": "已识别到 $A=\\{x\\mid x=5(2k+1),k\\in \\mathbb{Z}\\}$。集合 $B$ 也是以 5 为步长的整数集合，但其生成式尾部未可靠识别，题目要求判断 $A$ 与 $B$ 的关系。",
+                    "options": [],
+                    "answer": null,
+                    "analysisMarkdown": null,
+                    "solutionMarkdown": null,
+                    "ocr": {
+                      "confidence": "low",
+                      "notes": "集合 B 的生成式缺损，无法安全给出关系结论。"
+                    }
+                  },
+                  {
+                    "id": "1.2-basic-q9",
+                    "no": "9",
+                    "status": "needs-review",
+                    "type": "unknown",
+                    "group": "基础过关",
+                    "title": "参数不等式集合范围",
+                    "source": "5年高考3年模拟同步练习",
+                    "tags": ["不等式集合", "参数范围", "待复核"],
+                    "stemMarkdown": "已识别到 $A=\\{x\\mid 2x+3>1\\}$，$B=\\{x\\mid x+a\\ge 0\\}$，题目要求判断参数 $a$ 的范围。",
+                    "options": [],
+                    "answer": null,
+                    "analysisMarkdown": null,
+                    "solutionMarkdown": null,
+                    "ocr": {
+                      "confidence": "low",
+                      "notes": "题干后半句和选项区域模糊，暂不输出答案。"
+                    }
+                  },
+                  {
+                    "id": "1.2-basic-q10",
+                    "no": "10",
+                    "status": "needs-review",
+                    "type": "unknown",
+                    "group": "基础过关",
+                    "title": "开区间包含条件求参",
+                    "source": "5年高考3年模拟同步练习",
+                    "tags": ["区间包含", "参数范围", "不等式"],
+                    "stemMarkdown": "已识别到 $A=\\{x\\mid -3<x<2\\}$，$B=\\{x\\mid m<x<2m-1\\}$，且 $B\\subseteq A$，求 $m$ 的取值范围。",
+                    "options": [],
+                    "answer": "$1<m\\le \\frac{3}{2}$",
+                    "analysisMarkdown": "由区间有意义可得 $m<2m-1$，即 $m>1$；又因 $(m,2m-1)\\subseteq(-3,2)$，所以 $m\\ge -3$ 且 $2m-1\\le 2$，从而 $m\\le \\frac{3}{2}$。合并得 $1<m\\le \\frac{3}{2}$。",
+                    "solutionMarkdown": "$1<m\\le \\frac{3}{2}$。",
+                    "ocr": {
+                      "confidence": "medium",
+                      "notes": "区间表达式可辨，但原题选项未稳定识别。"
+                    }
+                  },
+                  {
+                    "id": "1.2-basic-q11",
+                    "no": "11",
+                    "status": "complete",
+                    "type": "short-answer",
+                    "group": "基础过关",
+                    "title": "二次方程根集判定",
+                    "source": "5年高考3年模拟同步练习",
+                    "tags": ["二次方程", "根集", "集合包含"],
+                    "stemMarkdown": "设 $A=\\{x\\mid x^2+4x-a=0\\}$。\n\n（1）若 $a=5$，求集合 $A$；\n\n（2）若 $B=\\{x\\mid x^2+2x=0\\}$，且 $A\\subseteq B$，求 $a$。",
+                    "options": [],
+                    "answer": "（1）$A=\\{1,-5\\}$；（2）$a=-4$",
+                    "analysisMarkdown": "（1）当 $a=5$ 时，方程为 $x^2+4x-5=0$，解得 $x=1,-5$。\n\n（2）$B$ 的元素为 $0,-2$。若 $A\\subseteq B$，则方程 $x^2+4x-a=0$ 的根只能取自 $\\{0,-2\\}$。又两根和恒为 $-4$，只能为 $-2,-2$，故 $(x+2)^2=x^2+4x+4$，所以 $a=-4$。",
+                    "solutionMarkdown": "（1）$A=\\{1,-5\\}$。\n\n（2）$a=-4$。",
+                    "ocr": {
+                      "confidence": "medium",
+                      "notes": "题干主体和公式较清楚，中文说明建议后续人工复核。"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "schemaVersion": "edu-question-bank/v1",
+    "book": {
+      "subject": "数学",
+      "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修第一册 人教A版"
+    },
+    "chapters": [
+      {
+        "id": "ch1",
+        "title": "第一章 集合与常用逻辑用语",
+        "sections": [
+          {
+            "id": "1.2",
+            "title": "1.2 集合间的基本关系",
+            "sets": [
+              {
+                "id": "1.2-group1",
+                "title": "题组一 子集、真子集和空集",
+                "questions": [
+                  {
+                    "id": "1.2-group1-q1",
+                    "no": "1",
+                    "status": "complete",
+                    "type": "single-choice",
+                    "group": "题组一 子集、真子集和空集",
+                    "title": "关系式正误判断",
+                    "source": "2025河北石家庄第三十八中学月考",
+                    "tags": ["集合相等", "子集", "空集"],
+                    "stemMarkdown": "有下列关系式：① $\\{a,b\\}=\\{b,a\\}$；② $\\{a,b\\}\\subseteq\\{b,a\\}$；③ $\\varnothing=\\{\\varnothing\\}$；④ $\\{0\\}=\\varnothing$；⑤ $\\varnothing\\subseteq\\{0\\}$；⑥ $0\\in\\{0\\}$。其中不正确的是（ ）",
+                    "options": [
+                      { "label": "A", "text": "①③④" },
+                      { "label": "B", "text": "②④⑤" },
+                      { "label": "C", "text": "②⑤⑥" },
+                      { "label": "D", "text": "③④" }
+                    ],
+                    "answer": "D",
+                    "analysisMarkdown": "①②⑤⑥正确；③错误，因为空集与只含空集的集合不同；④错误，因为 $\\{0\\}$ 不是空集。",
+                    "solutionMarkdown": "答案为 D。",
+                    "ocr": {
+                      "confidence": "high",
+                      "notes": ""
+                    }
+                  },
+                  {
+                    "id": "1.2-group1-q2",
+                    "no": "2",
+                    "status": "complete",
+                    "type": "single-choice",
+                    "group": "题组一 子集、真子集和空集",
+                    "title": "Venn图表示集合关系",
+                    "source": "2024辽宁沈阳第十五中学月考",
+                    "tags": ["Venn图", "子集", "集合关系"],
+                    "stemMarkdown": "下列 Venn 图中，能正确表示集合 $M=\\{-1,0,1\\}$ 和 $N=\\{x\\mid x^2-x=0\\}$ 的关系的是（ ）",
+                    "options": [
+                      { "label": "A", "text": "图 A" },
+                      { "label": "B", "text": "图 B" },
+                      { "label": "C", "text": "图 C" },
+                      { "label": "D", "text": "图 D" }
+                    ],
+                    "answer": "B",
+                    "analysisMarkdown": "$N=\\{0,1\\}$，所以 $N\\subseteq M$，对应图 B。",
+                    "solutionMarkdown": "答案为 B。",
+                    "ocr": {
+                      "confidence": "high",
+                      "notes": ""
+                    }
+                  },
+                  {
+                    "id": "1.2-group1-q3",
+                    "no": "3",
+                    "status": "complete",
+                    "type": "single-choice",
+                    "group": "题组一 子集、真子集和空集",
+                    "title": "有序对集合关系判断",
+                    "source": "2025广东中山华侨中学月考",
+                    "tags": ["有序对", "子集", "集合关系"],
+                    "stemMarkdown": "若 $x,y\\in\\mathbb{R}$，$A=\\{(x,y)\\mid y=x\\}$，$B=\\{(x,y)\\mid \\frac{y}{x}=1\\}$，则集合 $A,B$ 之间的关系为（ ）",
+                    "options": [
+                      { "label": "A", "text": "$B\\in A$" },
+                      { "label": "B", "text": "$B\\subseteq A$" },
+                      { "label": "C", "text": "$A=B$" },
+                      { "label": "D", "text": "$A\\subseteq B$" }
+                    ],
+                    "answer": "B",
+                    "analysisMarkdown": "$B$ 中要求 $x\\ne 0$ 且 $y=x$，因此 $B$ 是 $A$ 的真子集，四个选项中只有 $B\\subseteq A$ 正确。",
+                    "solutionMarkdown": "答案为 B。",
+                    "ocr": {
+                      "confidence": "high",
+                      "notes": ""
+                    }
+                  },
+                  {
+                    "id": "1.2-group1-q4",
+                    "no": "4",
+                    "status": "complete",
+                    "type": "single-choice",
+                    "group": "题组一 子集、真子集和空集",
+                    "title": "直线点集与交点集关系",
+                    "source": "教材习题改编",
+                    "tags": ["点集", "方程组", "子集"],
+                    "stemMarkdown": "在平面直角坐标系中，集合 $C=\\{(x,y)\\mid y=x\\}$ 表示直线 $y=x$ 上的所有点。从这个角度看，若集合 $D=\\{(x,y)\\mid \\begin{cases} y=x \\\\ x^2+y=2 \\end{cases}\\}$，则集合 $C,D$ 之间的关系是（ ）",
+                    "options": [
+                      { "label": "A", "text": "$C\\subseteq D$" },
+                      { "label": "B", "text": "$D\\subseteq C$" },
+                      { "label": "C", "text": "$C\\in D$" },
+                      { "label": "D", "text": "$D\\in C$" }
+                    ],
+                    "answer": "B",
+                    "analysisMarkdown": "$D$ 表示同时满足两式的点构成的集合，是直线 $y=x$ 与曲线 $x^2+y=2$ 的交点集，因此 $D\\subseteq C$。",
+                    "solutionMarkdown": "答案为 B。",
+                    "ocr": {
+                      "confidence": "high",
+                      "notes": ""
+                    }
+                  },
+                  {
+                    "id": "1.2-group1-q5",
+                    "no": "5",
+                    "status": "needs-review",
+                    "type": "fill-in",
+                    "group": "题组一 子集、真子集和空集",
+                    "title": "真子集个数计算",
+                    "source": "2025四川达州外国语学校月考",
+                    "tags": ["真子集", "计数", "自然数集合"],
+                    "stemMarkdown": "已知集合 $M=\\{x\\in\\mathbb{N}\\mid 2x-3<2\\}$，则 $M$ 的真子集的个数是 ______。",
+                    "options": [],
+                    "answer": "7",
+                    "analysisMarkdown": "由 $2x-3<2$ 得 $x<\\frac{5}{2}$。若按高中教材常见约定 $\\mathbb{N}=\\{0,1,2,\\dots\\}$，则 $M=\\{0,1,2\\}$，真子集个数为 $2^3-1=7$。",
+                    "solutionMarkdown": "按 $\\mathbb{N}$ 含 0 计算，答案为 $7$。",
+                    "ocr": {
+                      "confidence": "medium",
+                      "notes": "答案依赖本书对自然数是否包含 0 的约定；若不含 0，则答案为 3。"
+                    }
+                  },
+                  {
+                    "id": "1.2-group1-q6",
+                    "no": "6",
+                    "status": "needs-review",
+                    "type": "fill-in",
+                    "group": "题组一 子集、真子集和空集",
+                    "title": "子集个数统计",
+                    "source": "2025黑龙江哈尔滨师范大学附属中学月考",
+                    "tags": ["子集计数", "集合包含", "自然数集合"],
+                    "stemMarkdown": "已知集合 $A=\\{x\\mid x^2-5x+6=0\\}$，$B=\\{x\\mid -1<x<5,\\ x\\in\\mathbb{N}\\}$，则满足 $A\\subseteq C\\subseteq B$ 的集合 $C$ 的个数为 ______。",
+                    "options": [],
+                    "answer": "8",
+                    "analysisMarkdown": "$A=\\{2,3\\}$。按 $\\mathbb{N}=\\{0,1,2,\\dots\\}$ 取值，则 $B=\\{0,1,2,3,4\\}$。在 $A$ 基础上还可从 $\\{0,1,4\\}$ 中任取元素加入 $C$，共有 $2^3=8$ 个。",
+                    "solutionMarkdown": "按题干读作 $A\\subseteq C\\subseteq B$ 且 $\\mathbb{N}$ 含 0 时，答案为 $8$。",
+                    "ocr": {
+                      "confidence": "medium",
+                      "notes": "题干关系符号和自然数约定仍建议人工复核；若符号或约定不同，答案会变化。"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

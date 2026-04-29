@@ -1,0 +1,397 @@
+{
+  "schemaVersion": "edu-question-bank/v1",
+  "book": {
+    "subject": "高中数学",
+    "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修第一册 人教A版"
+  },
+  "chapters": [
+    {
+      "id": "ch1",
+      "title": "第一章 集合与常用逻辑用语",
+      "sections": [
+        {
+          "id": "ch1-advanced",
+          "title": "综合拔高练",
+          "sets": [
+            {
+              "id": "ch1-gaokao-5y",
+              "title": "五年高考考练",
+              "questions": [
+                {
+                  "id": "ch1-gaokao-5y-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "考点1 集合的基本运算",
+                  "title": "平方不等式与交集",
+                  "source": "2024 新课标I卷",
+                  "tags": ["集合运算", "交集", "平方不等式"],
+                  "stemMarkdown": "已知集合 $A=\\{x\\mid -5<x^2<5\\}$，$B=\\{-3,-1,0,2,3\\}$，则 $A\\cap B=(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$\\{-1,0\\}$" },
+                    { "label": "B", "text": "$\\{2,3\\}$" },
+                    { "label": "C", "text": "$\\{-3,-1,0\\}$" },
+                    { "label": "D", "text": "$\\{-1,0,2\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-gaokao-5y-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "考点1 集合的基本运算",
+                  "title": "由集合定义反求交集",
+                  "source": "2024 全国甲卷文科",
+                  "tags": ["集合定义", "交集", "元素"],
+                  "stemMarkdown": "集合 $A=\\{1,2,3,4,5,9\\}$，$B=\\{x\\mid x+1\\in A\\}$，则 $A\\cap B=(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$\\{1,2,3,4\\}$" },
+                    { "label": "B", "text": "$\\{1,2,3\\}$" },
+                    { "label": "C", "text": "$\\{3,4\\}$" },
+                    { "label": "D", "text": "$\\{1,2,9\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-gaokao-5y-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "考点1 集合的基本运算",
+                  "title": "补集交集判断",
+                  "source": "2024 全国甲理",
+                  "tags": ["补集", "交集", "有限集"],
+                  "stemMarkdown": "已知集合 $A=\\{1,2,3,4,5,9\\}$，$B=\\{x\\mid x\\in A\\}$，则 $(C_UA)\\cap B=(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$\\{1,4,9\\}$" },
+                    { "label": "B", "text": "$\\{3,4,9\\}$" },
+                    { "label": "C", "text": "$\\{1,2,3\\}$" },
+                    { "label": "D", "text": "$\\{2,3,5\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "原题中全集符号较密，当前按页面可辨形式保留。" }
+                },
+                {
+                  "id": "ch1-gaokao-5y-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "考点1 集合的基本运算",
+                  "title": "区间并集判断",
+                  "source": "2024 北京卷",
+                  "tags": ["并集", "区间", "端点"],
+                  "stemMarkdown": "已知集合 $M=\\{x\\mid -3<x<1\\}$，$N=\\{x\\mid -1\\le x<4\\}$，则 $M\\cup N=(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$\\{x\\mid -1\\le x<1\\}$" },
+                    { "label": "B", "text": "$\\{x\\mid x>-3\\}$" },
+                    { "label": "C", "text": "$\\{x\\mid -3<x<4\\}$" },
+                    { "label": "D", "text": "$\\{x\\mid x<4\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-gaokao-5y-q5",
+                  "no": "5",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "考点1 集合的基本运算",
+                  "title": "解不等式得交集",
+                  "source": "2023 北京卷",
+                  "tags": ["交集", "不等式", "区间"],
+                  "stemMarkdown": "已知集合 $M=\\{x\\mid x+2\\ge 0\\}$，$N=\\{x\\mid x-1<0\\}$，则 $M\\cap N=(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$\\{x\\mid -2\\le x<1\\}$" },
+                    { "label": "B", "text": "$\\{x\\mid -2<x\\le 1\\}$" },
+                    { "label": "C", "text": "$\\{x\\mid x\\ge -2\\}$" },
+                    { "label": "D", "text": "$\\{x\\mid x<1\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-gaokao-5y-q6",
+                  "no": "6",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "考点1 集合的基本运算",
+                  "title": "整数全集补集判断",
+                  "source": "2023 全国甲理",
+                  "tags": ["补集", "整数集", "同余类"],
+                  "stemMarkdown": "设全集 $U=\\mathbb{Z}$，集合 $M=\\{x\\mid x=3k+1,\\ k\\in\\mathbb{Z}\\}$，$N=\\{x\\mid x=3k+2,\\ k\\in\\mathbb{Z}\\}$，则 $C_U(M\\cup N)=(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$\\{x\\mid x=3k,\\ k\\in\\mathbb{Z}\\}$" },
+                    { "label": "B", "text": "$\\{x\\mid x=3k-1,\\ k\\in\\mathbb{Z}\\}$" },
+                    { "label": "C", "text": "$\\{x\\mid x=3k-2,\\ k\\in\\mathbb{Z}\\}$" },
+                    { "label": "D", "text": "$\\varnothing$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-gaokao-5y-q7",
+                  "no": "7",
+                  "status": "incomplete",
+                  "type": "unknown",
+                  "group": "考点2 集合的运算关系的应用",
+                  "title": "集合关系反求表达式",
+                  "source": "2023 全国乙理",
+                  "tags": ["集合关系", "待复核", "补集"],
+                  "stemMarkdown": "设全集 $U=\\mathbb{R}$，集合 $M=\\{x\\mid x<1\\}$，$N=\\{x\\mid -1<x<2\\}$，题面要求根据给定条件反求集合表达式，但当前页图中后半段选项未可靠辨清。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "low", "notes": "选项后半段不清，暂不强行补全。" }
+                },
+                {
+                  "id": "ch1-gaokao-5y-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "小中专扩‘数’ 心算·摩根定律；对点突破收广",
+                  "title": "由补集反推元素",
+                  "source": "2022 全国乙理",
+                  "tags": ["补集", "有限集", "元素判断"],
+                  "stemMarkdown": "设全集 $U=\\{1,2,3,4,5\\}$，集合 $M$ 满足 $C_UM=\\{1,3\\}$，则 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$2\\in M$" },
+                    { "label": "B", "text": "$3\\in M$" },
+                    { "label": "C", "text": "$4\\notin M$" },
+                    { "label": "D", "text": "$5\\notin M$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-gaokao-5y-q9",
+                  "no": "9",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "考点3 常用逻辑用语",
+                  "title": "命题真假综合判断",
+                  "source": "2024 新课标II卷",
+                  "tags": ["命题真假", "全称量词", "存在量词"],
+                  "stemMarkdown": "已知命题 $p:\\forall x\\in\\mathbb{R},\\ |x+1|>1$；命题 $q:\\exists x>0,\\ x^3=x^0$，则 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$p$ 和 $q$ 都是真命题" },
+                    { "label": "B", "text": "$\\neg p$ 和 $q$ 都是真命题" },
+                    { "label": "C", "text": "$p$ 和 $\\neg q$ 都是真命题" },
+                    { "label": "D", "text": "$\\neg p$ 和 $\\neg q$ 都是真命题" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-gaokao-5y-q10",
+                  "no": "10",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "考点3 常用逻辑用语",
+                  "title": "等价关系判断",
+                  "source": "2024 天津卷",
+                  "tags": ["充要条件", "函数单调", "逻辑关系"],
+                  "stemMarkdown": "设 $a,b\\in\\mathbb{R}$，则“$a^3=b^3$”是“$3^a=3^b$”的 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "充分不必要条件" },
+                    { "label": "B", "text": "必要不充分条件" },
+                    { "label": "C", "text": "充要条件" },
+                    { "label": "D", "text": "既不充分也不必要条件" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-gaokao-5y-q11",
+                  "no": "11",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "学科竞赛",
+                  "title": "非空子集元素和",
+                  "source": "2024 数学奥林匹克竞赛内蒙古赛区初赛",
+                  "tags": ["子集", "元素和", "竞赛题"],
+                  "stemMarkdown": "集合 $M=\\{1,2,3,5,6\\}$ 的全部非空子集的元素和等于 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-gaokao-5y-q12",
+                  "no": "12",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "学科竞赛",
+                  "title": "由积集反推原集合",
+                  "source": "2024 全国高中数学联赛北京赛区预赛",
+                  "tags": ["反推集合", "三元子集", "竞赛题"],
+                  "stemMarkdown": "设整数集合 $A=\\{a_1,a_2,a_3,a_4,a_5\\}$，若 $A$ 的所有三元子集中三个元素之积组成的集合为 $$B=\\{-30,-15,-10,-6,-5,-3,2,6,10,15\\},$$ 则集合 $A=$ ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-gaokao-5y-q13",
+                  "no": "13",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "学科竞赛",
+                  "title": "极大子集计数",
+                  "source": "2024 数学奥林匹克竞赛广西赛区选拔赛",
+                  "tags": ["组合计数", "互素", "整除关系"],
+                  "stemMarkdown": "设 $A$ 为数集 $\\{1,2,3,\\ldots,2024\\}$ 的 $n$（$n\\in\\mathbb{N}^*$）元子集，且 $A$ 中的任意两个数既不互素又不存在整除关系，则 $n$ 的最大值为 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                }
+              ]
+            },
+            {
+              "id": "ch1-sim-3y",
+              "title": "三年模拟训练",
+              "questions": [
+                {
+                  "id": "ch1-sim-3y-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "应用实践",
+                  "title": "三集合人数统计",
+                  "source": "2025 重庆巴南中学校月考",
+                  "tags": ["容斥原理", "应用题", "选修课"],
+                  "stemMarkdown": "为丰富学生的课外活动，学校开设了丰富的选修课，参与“数学建模选修课”的有 169 人，参与“语文素养选修课”的有 158 人，参与“国际视野选修课”的有 146 人，三门选修课都参与的有 30 人，三门选修课都没有参与的有 20 人。已知全校共有 400 人，则只参与两门选修课的学生人数为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "30" },
+                    { "label": "B", "text": "31" },
+                    { "label": "C", "text": "32" },
+                    { "label": "D", "text": "33" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-sim-3y-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "应用实践",
+                  "title": "集合特征值计数",
+                  "source": "2025 北京第十九中学期中",
+                  "tags": ["集合特征", "计数", "极值"],
+                  "stemMarkdown": "设集合 $A$ 中的最大元素为 $M$，最小元素为 $m$，记 $A$ 的特征值为 $X_A=M-m$。若集合中只有一个元素，规定其特征值为 0。已知 $A_1,A_2,A_3,\\ldots,A_n$ 是集合 $\\mathbb{N}^*$ 的元素个数均不同的非空真子集，且 $$X_{A_1}+X_{A_2}+X_{A_3}+\\cdots+X_{A_n}=60,$$ 则正整数 $n$ 的最大值为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "10" },
+                    { "label": "B", "text": "11" },
+                    { "label": "C", "text": "12" },
+                    { "label": "D", "text": "13" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-sim-3y-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "三年模拟训练",
+                  "title": "新定义性质判断",
+                  "source": "2025 浙江温州期末",
+                  "tags": ["新定义", "整数集", "多选"],
+                  "stemMarkdown": "已知整数集 $$A=\\{a_1,a_2,\\ldots,a_n\\}\\ (n\\in\\mathbb{N}^*),$$ 且 $$B=\\{x\\mid x=a+b\\ \\text{或}\\ x=a-b,\\ a\\ne b,\\ a\\in A,b\\in A\\},$$ 若存在 $m\\in B$，使得 $m=ck$，$c\\in\\mathbb{Z},k\\in\\mathbb{N}^*$，则称集合 $A$ 具有性质 $M(k)$，则 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "若 $A=\\{1,2\\}$，则 $A$ 具有性质 $M(2)$" },
+                    { "label": "B", "text": "若 $A=\\{1,2,3\\}$，则 $A$ 具有性质 $M(3)$" },
+                    { "label": "C", "text": "若 $n=4$，则 $A$ 一定具有性质 $M(5)$" },
+                    { "label": "D", "text": "若 $n=7$，则 $A$ 一定具有性质 $M(10)$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "ch1-sim-3y-q4",
+                  "no": "4",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "三年模拟训练",
+                  "title": "双命题真假求参",
+                  "source": "2025 湖南邵东第一中学月考",
+                  "tags": ["命题真假", "参数范围", "填空"],
+                  "stemMarkdown": "已知命题 $$p:\\forall x\\in\\{x\\mid 1\\le x\\le 2\\},\\ x^2+1\\ge a,$$ $$q:\\exists x\\in\\{x\\mid -1\\le x\\le 1\\},\\ 使得\\ 2x+a-1>0\\ 成立,$$ 若 $p$ 是真命题，$q$ 是假命题，则实数 $a$ 的取值范围为 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "题干主结构清楚，但参数综合题建议后续单独补解。" }
+                },
+                {
+                  "id": "ch1-sim-3y-q5",
+                  "no": "5",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "三年模拟训练",
+                  "title": "二次方程根集关系",
+                  "source": "2025 四川攀枝花六中中学月考",
+                  "tags": ["根集", "必要条件", "参数范围"],
+                  "stemMarkdown": "已知集合 $$A=\\{x\\mid x^2-3x+2=0\\},$$ $$B=\\{x\\mid x^2-(m+1)x+m-2=0\\},$$ $$C=\\{x\\mid x^2-2x+n-1=0\\}.$$\\n\\n（1）若命题“$\\forall x\\in A,\\ x\\in B$”为真命题，求实数 $m$ 的值；\\n\\n（2）已知 $p:x\\in A,q:x\\in C$，若 $p$ 是 $q$ 的必要不充分条件，求实数 $n$ 的取值范围。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "综合题结构稳定，但建议后续单独补答案与解析。" }
+                },
+                {
+                  "id": "ch1-sim-3y-q6",
+                  "no": "6",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "迁移创新",
+                  "title": "孪生集新定义探究",
+                  "source": "2025 河南郑州第四高级中学月考",
+                  "tags": ["新定义", "集合构造", "探究题"],
+                  "stemMarkdown": "设 $A$ 是正实数集的非空子集，称集合 $$B=\\{z\\mid z=xy,\\ x\\in A,\\ y\\in A\\ 且\\ x\\ne y\\}$$ 为集合 $A$ 的“孪生集”。\\n\\n（1）当 $A=\\{2,5,7\\}$ 时，直接写出集合 $A$ 的孪生集 $B$；\\n\\n（2）若 $A$ 是由 5 个正实数构成的集合，求其孪生集 $B$ 的子集数的最小值；\\n\\n（3）判断是否存在由 4 个正实数构成的集合 $A$，使其孪生集 $B=\\{6,8,14,16,21,24\\}$，并说明理由。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "新定义探究题题干清晰，但后续补解需要较长推导。" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

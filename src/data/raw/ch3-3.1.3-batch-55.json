@@ -1,0 +1,196 @@
+{
+  "schemaVersion": "edu-question-bank/v1",
+  "book": {
+    "subject": "高中数学",
+    "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修 第一册 人教A版"
+  },
+  "chapters": [
+    {
+      "id": "ch3",
+      "title": "第三章 函数的概念与性质",
+      "sections": [
+        {
+          "id": "3.1",
+          "title": "3.1 函数的概念及其表示",
+          "sets": [
+            {
+              "id": "3.1.3",
+              "title": "3.1.3 分段函数问题",
+              "questions": [
+                {
+                  "id": "3.1.3-q9",
+                  "no": "9",
+                  "status": "needs-review",
+                  "type": "multiple-choice",
+                  "group": "题组三 分段函数问题",
+                  "title": "分段函数性质判断",
+                  "source": "2025 山东泰安期中",
+                  "tags": ["分段函数", "性质", "多选"],
+                  "stemMarkdown": "已知函数 $f(x)=\\begin{cases}x+2,&x\\le -1,\\\\x^2+1,&-1<x<2,\\end{cases}$ 则下列关于函数 $f(x)$ 的结论正确的是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$f(x)$ 的定义域是 $R$" },
+                    { "label": "B", "text": "$f(x)$ 的值域是 $(-\\infty,5)$" },
+                    { "label": "C", "text": "若 $f(x)=3$，则 $x=\\sqrt{2}$" },
+                    { "label": "D", "text": "$f(x)$ 的图象与直线 $y=2$ 有一个交点" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "low",
+                    "notes": "当前页仅稳定识别出分段式前两段；若原题还有后续分段，本题判断可能受影响，需人工复核原页。"
+                  }
+                },
+                {
+                  "id": "3.1.3-q10",
+                  "no": "10",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 分段函数问题",
+                  "title": "绝对值不等式解集",
+                  "source": "题组题",
+                  "tags": ["绝对值", "不等式", "解集"],
+                  "stemMarkdown": "已知 $f(x)=|x-5|+|x+3|$，则 $f(x)\\ge 10$ 的解集是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$[-5,7]$" },
+                    { "label": "B", "text": "$[-4,6]$" },
+                    { "label": "C", "text": "$(-\\infty,-5]\\cup[7,+\\infty)$" },
+                    { "label": "D", "text": "$(-\\infty,-4]\\cup[6,+\\infty)$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "3.1.3-q11",
+                  "no": "11",
+                  "status": "needs-review",
+                  "type": "single-choice",
+                  "group": "题组三 分段函数问题",
+                  "title": "面积随路径变化图像",
+                  "source": "2025 安徽合肥期中",
+                  "tags": ["分段函数", "图像", "面积"],
+                  "stemMarkdown": "如图，点 $P$ 在边长为 $1$ 的正方形 $ABCD$ 的边上运动，$M$ 是 $CD$ 的中点，当点 $P$ 沿 $A-B-C-M$ 运动时，$\\triangle APM$ 的面积 $y$ 关于点 $P$ 经过的路程 $x$ 的函数图象大致是（ ）",
+                  "options": [
+                    { "label": "A", "text": "见图像 A" },
+                    { "label": "B", "text": "见图像 B" },
+                    { "label": "C", "text": "见图像 C" },
+                    { "label": "D", "text": "见图像 D" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干和选项图可辨，已补图示说明，但最终判断依赖三段运动时面积变化，建议人工复核。"
+                  },
+                  "visuals": [
+                    {
+                      "id": "3.1.3-q11-fig1",
+                      "kind": "geometry",
+                      "placement": "stem",
+                      "status": "complete",
+                      "alt": "正方形ABCD中，A在左下，B在右下，C在右上，M为CD中点，P沿A-B-C-M运动。",
+                      "diagramSpec": "画边长为1的正方形，A 左下、B 右下、C 右上、D 左上，M 为上边中点。连 A 到 M，再连 A 到右边上的点 P 和 M 到 P，形成阴影三角形。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch313Q11Figure",
+                        "code": "export default function Ch313Q11Figure(){return <svg viewBox='0 0 180 170' width='180' height='170'><rect x='35' y='25' width='100' height='100' fill='none' stroke='currentColor' strokeWidth='2'/><text x='28' y='132' fontSize='12'>A</text><text x='132' y='132' fontSize='12'>B</text><text x='132' y='22' fontSize='12'>C</text><text x='28' y='22' fontSize='12'>D</text><text x='83' y='20' fontSize='12'>M</text><circle cx='85' cy='25' r='2.5' fill='currentColor'/><circle cx='135' cy='80' r='2.5' fill='currentColor'/><text x='140' y='84' fontSize='12'>P</text><polygon points='35,125 85,25 135,80' fill='currentColor' fillOpacity='0.2' stroke='currentColor' strokeWidth='2'/></svg>;}"
+                      }
+                    },
+                    {
+                      "id": "3.1.3-q11-fig2",
+                      "kind": "coordinate-plane",
+                      "placement": "stem",
+                      "status": "complete",
+                      "alt": "四个候选面积变化图像，横轴标有1、2、2.5。",
+                      "diagramSpec": "四个小坐标系候选图：A 为先线性上升再折线下降；B 为先缓升后陡降；C 为从原点线性上升到接近 2 处峰值再线性下降；D 为光滑拱形曲线。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch313Q11Options",
+                        "code": "export default function Ch313Q11Options(){return <svg viewBox='0 0 320 110' width='320' height='110'><text x='36' y='104' fontSize='12'>A</text><text x='116' y='104' fontSize='12'>B</text><text x='196' y='104' fontSize='12'>C</text><text x='276' y='104' fontSize='12'>D</text><g transform='translate(0,0)'><line x1='15' y1='70' x2='65' y2='70' stroke='currentColor'/><line x1='15' y1='70' x2='15' y2='18' stroke='currentColor'/><path d='M15 70 L35 35 L52 48 L65 70' fill='none' stroke='currentColor'/></g><g transform='translate(80,0)'><line x1='15' y1='70' x2='65' y2='70' stroke='currentColor'/><line x1='15' y1='70' x2='15' y2='18' stroke='currentColor'/><path d='M15 70 L35 45 L52 35 L65 70' fill='none' stroke='currentColor'/></g><g transform='translate(160,0)'><line x1='15' y1='70' x2='65' y2='70' stroke='currentColor'/><line x1='15' y1='70' x2='15' y2='18' stroke='currentColor'/><path d='M15 70 L52 35 L65 70' fill='none' stroke='currentColor'/></g><g transform='translate(240,0)'><line x1='15' y1='70' x2='65' y2='70' stroke='currentColor'/><line x1='15' y1='70' x2='15' y2='18' stroke='currentColor'/><path d='M15 70 C22 24 45 18 65 70' fill='none' stroke='currentColor'/></g></svg>;}"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "3.1.3-q12",
+                  "no": "12",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 分段函数问题",
+                  "title": "复合后仍在区间",
+                  "source": "题组题",
+                  "tags": ["分段函数", "复合函数", "区间"],
+                  "stemMarkdown": "设 $A=\\left[0,\\dfrac{1}{2}\\right)$，$B=\\left[\\dfrac{1}{2},1\\right]$，函数 $f(x)=\\begin{cases}x+\\dfrac{1}{2},&x\\in A,\\\\3(1-x),&x\\in B,\\end{cases}$ 若 $x_0\\in A$，且 $f(f(x_0))\\in A$，则 $x_0$ 的取值范围是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\left(\\dfrac{1}{3},\\dfrac{1}{2}\\right)$" },
+                    { "label": "B", "text": "$\\left[0,\\dfrac{1}{4}\\right)$" },
+                    { "label": "C", "text": "$\\left[0,\\dfrac{3}{8}\\right]$" },
+                    { "label": "D", "text": "$\\left(\\dfrac{1}{4},\\dfrac{1}{2}\\right)$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "3.1.3-q13",
+                  "no": "13",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组三 分段函数问题",
+                  "title": "值域反推参数范围",
+                  "source": "2025 山西太原期中",
+                  "tags": ["分段函数", "值域", "参数范围"],
+                  "stemMarkdown": "已知函数 $f(x)=\\begin{cases}x^2-2x,&x\\ge 2,\\\\-x^2+2x,&x<2,\\end{cases}$ 在 $[0,a]$ 上的值域为 $[0,1]$，则实数 $a$ 的取值范围是 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "3.1.3-q14",
+                  "no": "14",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组三 分段函数问题",
+                  "title": "最小值函数求最大值",
+                  "source": "2025 湖北部分高中联考协作体期中",
+                  "tags": ["分段函数", "最值", "填空"],
+                  "stemMarkdown": "用 $m(x)$ 表示 $f(x),g(x),h(x)$ 中的最小者，记为 $m(x)=\\min\\{f(x),g(x),h(x)\\}$，已知 $m(x)=\\min\\{2x+7,\\ x^2-3x+1,\\ 10-3x\\}$，则 $m(x)$ 的最大值为 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "3.1.3-q15",
+                  "no": "15",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "题组三 分段函数问题",
+                  "title": "回旋点综合讨论",
+                  "source": "2025 广东汕头期中",
+                  "tags": ["分段函数", "新定义", "综合"],
+                  "stemMarkdown": "定义：若 $x_0$ 满足 $f(f(x_0))=x_0$，但 $f(x_0)\\ne x_0$，则称 $x_0$ 为 $f(x)$ 的回旋点。已知函数 $f(x)=\\begin{cases}\\dfrac{1}{a}x,&0\\le x\\le a,\\\\\\dfrac{1-x}{1-a},&a<x\\le 1,\\end{cases}$ 其中 $a$ 为常数且 $a\\in(0,1)$。\\n\\n（1）当 $a=\\dfrac{1}{2}$ 时，求 $f\\!\\left(f\\!\\left(\\dfrac{4}{5}\\right)\\right)$ 的值，并判断 $\\dfrac{4}{5}$ 是不是 $f(x)$ 的回旋点；\\n\\n（2）当 $x\\in(a,1]$ 时，求函数 $y=f(f(x))$ 的解析式，并求出 $f(x)$ 的回旋点。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干已通过高分辨率裁图复核清楚，但属于新定义综合题，后续补答案时宜单题复核。"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

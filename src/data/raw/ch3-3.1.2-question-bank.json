@@ -1,0 +1,1166 @@
+{
+  "schemaVersion": "edu-question-bank/v1",
+  "book": {
+    "subject": "高中数学",
+    "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修 第一册 人教A版"
+  },
+  "chapters": [
+    {
+      "id": "ch3",
+      "title": "第三章 函数的概念与性质",
+      "sections": [
+        {
+          "id": "3.1.2",
+          "title": "3.1.2 函数的表示法",
+          "sets": [
+            {
+              "id": "3.1.2-basic",
+              "title": "基础过关",
+              "questions": [
+                {
+                  "id": "ch3-3.1.2-basic-q1",
+                  "no": "1",
+                  "status": "needs-review",
+                  "type": "single-choice",
+                  "group": "题组一 函数表示的图象法和列表法",
+                  "title": "分式函数图象辨识",
+                  "source": "教材习题改编",
+                  "tags": [
+                    "图象法",
+                    "分式函数",
+                    "函数表示"
+                  ],
+                  "stemMarkdown": "函数 $y=\\dfrac{x}{x+1}$ 的图象大致是（ ）",
+                  "options": [
+                    {
+                      "label": "A",
+                      "text": "图象 A"
+                    },
+                    {
+                      "label": "B",
+                      "text": "图象 B"
+                    },
+                    {
+                      "label": "C",
+                      "text": "图象 C"
+                    },
+                    {
+                      "label": "D",
+                      "text": "图象 D"
+                    }
+                  ],
+                  "visuals": [
+                    {
+                      "id": "ch3-3.1.2-basic-q1-optA",
+                      "kind": "coordinate-plane",
+                      "placement": "option:A",
+                      "status": "complete",
+                      "alt": "选项 A：竖直渐近线为 x=1，水平渐近线为 y=1；左支经过原点附近，右支在渐近线右侧并趋近 y=1。",
+                      "diagramSpec": {
+                        "0": "坐",
+                        "1": "标",
+                        "2": "系",
+                        "3": "中",
+                        "4": "，",
+                        "5": "一",
+                        "6": "条",
+                        "7": "类",
+                        "8": "似",
+                        "9": "反",
+                        "10": "比",
+                        "11": "例",
+                        "12": "函",
+                        "13": "数",
+                        "14": "的",
+                        "15": "双",
+                        "16": "曲",
+                        "17": "线",
+                        "18": "，",
+                        "19": "右",
+                        "20": "支",
+                        "21": "在",
+                        "22": "第",
+                        "23": "一",
+                        "24": "象",
+                        "25": "限",
+                        "26": "附",
+                        "27": "近",
+                        "28": "，",
+                        "29": "左",
+                        "30": "支",
+                        "31": "穿",
+                        "32": "过",
+                        "33": "原",
+                        "34": "点",
+                        "35": "左",
+                        "36": "侧",
+                        "37": "并",
+                        "38": "向",
+                        "39": " ",
+                        "40": "x",
+                        "41": "=",
+                        "42": "1",
+                        "43": " ",
+                        "44": "的",
+                        "45": "竖",
+                        "46": "直",
+                        "47": "渐",
+                        "48": "近",
+                        "49": "线",
+                        "50": "靠",
+                        "51": "近",
+                        "52": "，",
+                        "53": "另",
+                        "54": "有",
+                        "55": " ",
+                        "56": "y",
+                        "57": "=",
+                        "58": "1",
+                        "59": " ",
+                        "60": "的",
+                        "61": "水",
+                        "62": "平",
+                        "63": "渐",
+                        "64": "近",
+                        "65": "线",
+                        "66": "。",
+                        "coordinateLabels": [
+                          "x",
+                          "y",
+                          "O",
+                          "-1",
+                          "1"
+                        ],
+                        "horizontalAsymptote": "y=1",
+                        "verticalAsymptote": "x=1"
+                      },
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch312BasicQ1OptionA",
+                        "code": "export default function Ch312BasicQ1OptionA(){return (<svg viewBox=\"0 0 220 150\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs><marker id=\"arrow\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" fill=\"currentColor\"/></marker></defs>\n  <g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n    <line x1=\"24\" y1=\"96\" x2=\"198\" y2=\"96\" stroke-width=\"1.8\" marker-end=\"url(#arrow)\"/>\n    <line x1=\"82\" y1=\"130\" x2=\"82\" y2=\"18\" stroke-width=\"1.8\" marker-end=\"url(#arrow)\"/>\n    <line x1=\"126\" y1=\"130\" x2=\"126\" y2=\"18\" stroke-width=\"1.4\" stroke-dasharray=\"5 5\"/>\n    <line x1=\"24\" y1=\"64\" x2=\"198\" y2=\"64\" stroke-width=\"1.4\" stroke-dasharray=\"5 5\"/>\n    <path d=\"M24 78 C48 77, 66 68, 82 96 C98 116, 116 132, 124 140\" stroke-width=\"2.2\"/>\n    <path d=\"M132 24 C138 46, 154 57, 198 61\" stroke-width=\"2.2\"/>\n  </g>\n  <g fill=\"currentColor\" font-family=\"serif\" font-size=\"15\">\n    <text x=\"201\" y=\"101\">x</text><text x=\"88\" y=\"24\">y</text><text x=\"68\" y=\"113\">O</text>\n    <text x=\"119\" y=\"112\">1</text><text x=\"64\" y=\"72\">1</text><text x=\"59\" y=\"112\">-1</text>\n  </g>\n</svg>);}"
+                      }
+                    },
+                    {
+                      "id": "ch3-3.1.2-basic-q1-optB",
+                      "kind": "coordinate-plane",
+                      "placement": "option:B",
+                      "status": "complete",
+                      "alt": "选项 B：竖直渐近线为 x=1，水平渐近线为 y=1；左支在上方趋向正无穷，右支从负无穷上升并趋近 y=1。",
+                      "diagramSpec": {
+                        "0": "坐",
+                        "1": "标",
+                        "2": "系",
+                        "3": "中",
+                        "4": "，",
+                        "5": "竖",
+                        "6": "直",
+                        "7": "渐",
+                        "8": "近",
+                        "9": "线",
+                        "10": "在",
+                        "11": " ",
+                        "12": "x",
+                        "13": "=",
+                        "14": "1",
+                        "15": "，",
+                        "16": "水",
+                        "17": "平",
+                        "18": "渐",
+                        "19": "近",
+                        "20": "线",
+                        "21": "在",
+                        "22": " ",
+                        "23": "y",
+                        "24": "=",
+                        "25": "1",
+                        "26": "，",
+                        "27": "左",
+                        "28": "支",
+                        "29": "位",
+                        "30": "于",
+                        "31": "第",
+                        "32": "二",
+                        "33": "象",
+                        "34": "限",
+                        "35": "，",
+                        "36": "右",
+                        "37": "支",
+                        "38": "位",
+                        "39": "于",
+                        "40": "第",
+                        "41": "四",
+                        "42": "象",
+                        "43": "限",
+                        "44": "并",
+                        "45": "向",
+                        "46": "右",
+                        "47": "上",
+                        "48": "靠",
+                        "49": "近",
+                        "50": "水",
+                        "51": "平",
+                        "52": "渐",
+                        "53": "近",
+                        "54": "线",
+                        "55": "。",
+                        "coordinateLabels": [
+                          "x",
+                          "y",
+                          "O",
+                          "-1",
+                          "1"
+                        ],
+                        "horizontalAsymptote": "y=1",
+                        "verticalAsymptote": "x=1"
+                      },
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch312BasicQ1OptionB",
+                        "code": "export default function Ch312BasicQ1OptionB(){return (<svg viewBox=\"0 0 220 150\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs><marker id=\"arrow\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" fill=\"currentColor\"/></marker></defs>\n  <g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n    <line x1=\"24\" y1=\"96\" x2=\"198\" y2=\"96\" stroke-width=\"1.8\" marker-end=\"url(#arrow)\"/>\n    <line x1=\"82\" y1=\"130\" x2=\"82\" y2=\"18\" stroke-width=\"1.8\" marker-end=\"url(#arrow)\"/>\n    <line x1=\"126\" y1=\"130\" x2=\"126\" y2=\"18\" stroke-width=\"1.4\" stroke-dasharray=\"5 5\"/>\n    <line x1=\"24\" y1=\"64\" x2=\"198\" y2=\"64\" stroke-width=\"1.4\" stroke-dasharray=\"5 5\"/>\n    <path d=\"M24 75 C52 73, 74 66, 92 48 C106 34, 116 18, 122 8\" stroke-width=\"2.2\"/>\n    <path d=\"M130 140 C142 104, 158 83, 179 73 C187 69, 194 66, 198 64\" stroke-width=\"2.2\"/>\n  </g>\n  <g fill=\"currentColor\" font-family=\"serif\" font-size=\"15\">\n    <text x=\"201\" y=\"101\">x</text><text x=\"88\" y=\"24\">y</text><text x=\"68\" y=\"113\">O</text>\n    <text x=\"119\" y=\"112\">1</text><text x=\"64\" y=\"72\">1</text><text x=\"59\" y=\"112\">-1</text>\n  </g>\n</svg>);}"
+                      }
+                    },
+                    {
+                      "id": "ch3-3.1.2-basic-q1-optC",
+                      "kind": "coordinate-plane",
+                      "placement": "option:C",
+                      "status": "complete",
+                      "alt": "选项 C：竖直渐近线为 x=-1，水平渐近线为 y=1；左支在 y=1 上方，右支过原点并从下方趋近 y=1。",
+                      "diagramSpec": {
+                        "0": "坐",
+                        "1": "标",
+                        "2": "系",
+                        "3": "中",
+                        "4": "，",
+                        "5": "一",
+                        "6": "条",
+                        "7": "双",
+                        "8": "曲",
+                        "9": "线",
+                        "10": "，",
+                        "11": "竖",
+                        "12": "直",
+                        "13": "渐",
+                        "14": "近",
+                        "15": "线",
+                        "16": "在",
+                        "17": " ",
+                        "18": "y",
+                        "19": " ",
+                        "20": "轴",
+                        "21": "左",
+                        "22": "侧",
+                        "23": " ",
+                        "24": "x",
+                        "25": "=",
+                        "26": "-",
+                        "27": "1",
+                        "28": "，",
+                        "29": "水",
+                        "30": "平",
+                        "31": "渐",
+                        "32": "近",
+                        "33": "线",
+                        "34": "在",
+                        "35": " ",
+                        "36": "y",
+                        "37": "=",
+                        "38": "1",
+                        "39": "，",
+                        "40": "右",
+                        "41": "支",
+                        "42": "穿",
+                        "43": "过",
+                        "44": "原",
+                        "45": "点",
+                        "46": "并",
+                        "47": "向",
+                        "48": "渐",
+                        "49": "近",
+                        "50": "线",
+                        "51": "靠",
+                        "52": "近",
+                        "53": "。",
+                        "coordinateLabels": [
+                          "x",
+                          "y",
+                          "O",
+                          "-1",
+                          "1"
+                        ],
+                        "horizontalAsymptote": "y=1",
+                        "verticalAsymptote": "x=-1"
+                      },
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch312BasicQ1OptionC",
+                        "code": "export default function Ch312BasicQ1OptionC(){return (<svg viewBox=\"0 0 220 150\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs><marker id=\"arrow\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" fill=\"currentColor\"/></marker></defs>\n  <g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n    <line x1=\"24\" y1=\"96\" x2=\"198\" y2=\"96\" stroke-width=\"1.8\" marker-end=\"url(#arrow)\"/>\n    <line x1=\"104\" y1=\"130\" x2=\"104\" y2=\"18\" stroke-width=\"1.8\" marker-end=\"url(#arrow)\"/>\n    <line x1=\"74\" y1=\"130\" x2=\"74\" y2=\"18\" stroke-width=\"1.4\" stroke-dasharray=\"5 5\"/>\n    <line x1=\"24\" y1=\"64\" x2=\"198\" y2=\"64\" stroke-width=\"1.4\" stroke-dasharray=\"5 5\"/>\n    <path d=\"M24 57 C48 56, 63 42, 70 13\" stroke-width=\"2.2\"/>\n    <path d=\"M80 140 C88 114, 96 101, 104 96 C126 80, 158 68, 198 66\" stroke-width=\"2.2\"/>\n  </g>\n  <g fill=\"currentColor\" font-family=\"serif\" font-size=\"15\">\n    <text x=\"201\" y=\"101\">x</text><text x=\"110\" y=\"24\">y</text><text x=\"109\" y=\"112\">O</text>\n    <text x=\"130\" y=\"112\">1</text><text x=\"86\" y=\"72\">1</text><text x=\"62\" y=\"112\">-1</text>\n  </g>\n</svg>);}"
+                      }
+                    },
+                    {
+                      "id": "ch3-3.1.2-basic-q1-optD",
+                      "kind": "coordinate-plane",
+                      "placement": "option:D",
+                      "status": "complete",
+                      "alt": "选项 D：竖直渐近线为 x=-1，水平渐近线为 y=1；右支在上方下降趋近 y=1，左支在下方趋向负无穷。",
+                      "diagramSpec": {
+                        "0": "坐",
+                        "1": "标",
+                        "2": "系",
+                        "3": "中",
+                        "4": "，",
+                        "5": "一",
+                        "6": "条",
+                        "7": "双",
+                        "8": "曲",
+                        "9": "线",
+                        "10": "，",
+                        "11": "竖",
+                        "12": "直",
+                        "13": "渐",
+                        "14": "近",
+                        "15": "线",
+                        "16": "在",
+                        "17": " ",
+                        "18": "x",
+                        "19": "=",
+                        "20": "-",
+                        "21": "1",
+                        "22": "，",
+                        "23": "水",
+                        "24": "平",
+                        "25": "渐",
+                        "26": "近",
+                        "27": "线",
+                        "28": "在",
+                        "29": " ",
+                        "30": "y",
+                        "31": "=",
+                        "32": "1",
+                        "33": "，",
+                        "34": "右",
+                        "35": "支",
+                        "36": "位",
+                        "37": "于",
+                        "38": "第",
+                        "39": "一",
+                        "40": "象",
+                        "41": "限",
+                        "42": "并",
+                        "43": "从",
+                        "44": "高",
+                        "45": "处",
+                        "46": "下",
+                        "47": "降",
+                        "48": "到",
+                        "49": " ",
+                        "50": "y",
+                        "51": "=",
+                        "52": "1",
+                        "53": " ",
+                        "54": "附",
+                        "55": "近",
+                        "56": "，",
+                        "57": "左",
+                        "58": "支",
+                        "59": "位",
+                        "60": "于",
+                        "61": "第",
+                        "62": "三",
+                        "63": "象",
+                        "64": "限",
+                        "65": "附",
+                        "66": "近",
+                        "67": "。",
+                        "coordinateLabels": [
+                          "x",
+                          "y",
+                          "O",
+                          "-1",
+                          "1"
+                        ],
+                        "horizontalAsymptote": "y=1",
+                        "verticalAsymptote": "x=-1"
+                      },
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch312BasicQ1OptionD",
+                        "code": "export default function Ch312BasicQ1OptionD(){return (<svg viewBox=\"0 0 220 150\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs><marker id=\"arrow\" markerWidth=\"8\" markerHeight=\"8\" refX=\"6\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" fill=\"currentColor\"/></marker></defs>\n  <g fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n    <line x1=\"24\" y1=\"96\" x2=\"198\" y2=\"96\" stroke-width=\"1.8\" marker-end=\"url(#arrow)\"/>\n    <line x1=\"104\" y1=\"130\" x2=\"104\" y2=\"18\" stroke-width=\"1.8\" marker-end=\"url(#arrow)\"/>\n    <line x1=\"74\" y1=\"130\" x2=\"74\" y2=\"18\" stroke-width=\"1.4\" stroke-dasharray=\"5 5\"/>\n    <line x1=\"24\" y1=\"64\" x2=\"198\" y2=\"64\" stroke-width=\"1.4\" stroke-dasharray=\"5 5\"/>\n    <path d=\"M24 74 C44 75, 61 86, 70 130\" stroke-width=\"2.2\"/>\n    <path d=\"M80 13 C88 42, 104 56, 126 61 C148 66, 172 66, 198 65\" stroke-width=\"2.2\"/>\n  </g>\n  <g fill=\"currentColor\" font-family=\"serif\" font-size=\"15\">\n    <text x=\"201\" y=\"101\">x</text><text x=\"110\" y=\"24\">y</text><text x=\"109\" y=\"112\">O</text>\n    <text x=\"130\" y=\"112\">1</text><text x=\"86\" y=\"72\">1</text><text x=\"62\" y=\"112\">-1</text>\n  </g>\n</svg>);}"
+                      }
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "四个选项图已按页面近似网页化重述，建议人工再对照原图确认。"
+                  }
+                },
+                {
+                  "id": "ch3-3.1.2-basic-q2",
+                  "no": "2",
+                  "status": "needs-review",
+                  "type": "single-choice",
+                  "group": "题组一 函数表示的图象法和列表法",
+                  "title": "容器注水图象判断",
+                  "source": "2025 江苏苏州期中",
+                  "tags": [
+                    "图象法",
+                    "分段变化",
+                    "函数表示"
+                  ],
+                  "stemMarkdown": "如图所示，正方体容器内放了一个圆柱形烧杯，向放在容器底部的烧杯内注水（流量一定），注满烧杯后，继续注水，直至注满正方体容器，则正方体容器中水面上升高度 $h$ 与注水时间 $t$ 之间的函数图象可能是（ ）",
+                  "options": [
+                    {
+                      "label": "A",
+                      "text": "图象 A"
+                    },
+                    {
+                      "label": "B",
+                      "text": "图象 B"
+                    },
+                    {
+                      "label": "C",
+                      "text": "图象 C"
+                    },
+                    {
+                      "label": "D",
+                      "text": "图象 D"
+                    }
+                  ],
+                  "visuals": [
+                    {
+                      "id": "ch3-3.1.2-basic-q2-container",
+                      "kind": "geometry",
+                      "placement": "stem",
+                      "status": "complete",
+                      "alt": "正方体容器内部放置一只圆柱形烧杯。",
+                      "diagramSpec": "一个透明正方体容器，内部底部放有一只圆柱形烧杯，圆柱上下口用虚线椭圆表示。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch312BasicQ2Container",
+                        "code": "export default function Ch312BasicQ2Container(){return (<svg viewBox=\"0 0 140 120\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M25 95V35H90V95Z\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\"/><path d=\"M25 35L45 18H110V78L90 95\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\"/><path d=\"M90 35L110 18\" stroke=\"currentColor\" strokeWidth=\"2\"/><ellipse cx=\"57\" cy=\"58\" rx=\"22\" ry=\"7\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.6\" strokeDasharray=\"5 4\"/><ellipse cx=\"57\" cy=\"84\" rx=\"22\" ry=\"7\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.6\" strokeDasharray=\"5 4\"/><path d=\"M35 58V84M79 58V84\" stroke=\"currentColor\" strokeWidth=\"1.6\" strokeDasharray=\"5 4\"/></svg>);}"
+                      }
+                    },
+                    {
+                      "id": "ch3-3.1.2-basic-q2-optA",
+                      "kind": "coordinate-plane",
+                      "placement": "option:A",
+                      "status": "complete",
+                      "alt": "前段缓慢上升，后段更陡上升的折线。",
+                      "diagramSpec": "h-t 坐标系中，一条先缓后陡的连续折线，起点在原点。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch312BasicQ2OptionA",
+                        "code": "export default function Ch312BasicQ2OptionA(){return (<svg viewBox=\"0 0 100 80\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 68H92M18 74V8\" stroke=\"currentColor\" strokeWidth=\"2\" fill=\"none\"/><path d=\"M18 68 L48 62 L84 20\" stroke=\"currentColor\" strokeWidth=\"2.5\" fill=\"none\"/></svg>);}"
+                      }
+                    },
+                    {
+                      "id": "ch3-3.1.2-basic-q2-optB",
+                      "kind": "coordinate-plane",
+                      "placement": "option:B",
+                      "status": "complete",
+                      "alt": "起初几乎贴近横轴，后段转折后陡升。",
+                      "diagramSpec": "h-t 坐标系中，一条先近乎水平、后明显变陡的连续折线。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch312BasicQ2OptionB",
+                        "code": "export default function Ch312BasicQ2OptionB(){return (<svg viewBox=\"0 0 100 80\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 68H92M18 74V8\" stroke=\"currentColor\" strokeWidth=\"2\" fill=\"none\"/><path d=\"M18 68 L54 64 L84 20\" stroke=\"currentColor\" strokeWidth=\"2.5\" fill=\"none\"/></svg>);}"
+                      }
+                    },
+                    {
+                      "id": "ch3-3.1.2-basic-q2-optC",
+                      "kind": "coordinate-plane",
+                      "placement": "option:C",
+                      "status": "complete",
+                      "alt": "前段陡升，后段变缓的折线。",
+                      "diagramSpec": "h-t 坐标系中，一条先陡后缓的连续折线，起点在原点。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch312BasicQ2OptionC",
+                        "code": "export default function Ch312BasicQ2OptionC(){return (<svg viewBox=\"0 0 100 80\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 68H92M18 74V8\" stroke=\"currentColor\" strokeWidth=\"2\" fill=\"none\"/><path d=\"M18 68 L34 36 L84 20\" stroke=\"currentColor\" strokeWidth=\"2.5\" fill=\"none\"/></svg>);}"
+                      }
+                    },
+                    {
+                      "id": "ch3-3.1.2-basic-q2-optD",
+                      "kind": "coordinate-plane",
+                      "placement": "option:D",
+                      "status": "complete",
+                      "alt": "先停滞一段后突然上升，再变缓。",
+                      "diagramSpec": "h-t 坐标系中，图线先沿横轴一段，再折向上升，后段斜率减小。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch312BasicQ2OptionD",
+                        "code": "export default function Ch312BasicQ2OptionD(){return (<svg viewBox=\"0 0 100 80\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 68H92M18 74V8\" stroke=\"currentColor\" strokeWidth=\"2\" fill=\"none\"/><path d=\"M18 68 L36 68 L48 34 L84 20\" stroke=\"currentColor\" strokeWidth=\"2.5\" fill=\"none\"/></svg>);}"
+                      }
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "容器图和 4 个选项图均已结构化重述，后续补答案前建议人工对照原图。"
+                  }
+                },
+                {
+                  "id": "ch3-3.1.2-basic-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组一 函数表示的图象法和列表法",
+                  "title": "列表法反求解析式",
+                  "source": "教材习题改编",
+                  "tags": [
+                    "列表法",
+                    "解析式"
+                  ],
+                  "stemMarkdown": "用列表法表示 $f(x)$ 如下表，则 $f(x)$ 的解析式为 ________ 。\n\n| $x$ | 1 | 2 | 3 | 4 | 5 |\n| --- | --- | --- | --- | --- | --- |\n| $f(x)$ | 6 | 12 | 18 | 24 | 30 |",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.2-basic-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 函数的解析式",
+                  "title": "换元求函数解析式",
+                  "source": "2025 黑龙江鹤岗期中",
+                  "tags": [
+                    "解析式",
+                    "换元"
+                  ],
+                  "stemMarkdown": "已知 $f\\left(\\dfrac{x+1}{x}\\right)=\\dfrac{2x+1}{x}$，则 $f(x)=$（ ）",
+                  "options": [
+                    {
+                      "label": "A",
+                      "text": "$x+1\\ (x\\ne0)$"
+                    },
+                    {
+                      "label": "B",
+                      "text": "$x+1\\ (x\\ne1)$"
+                    },
+                    {
+                      "label": "C",
+                      "text": "$2x+1\\ (x\\ne0)$"
+                    },
+                    {
+                      "label": "D",
+                      "text": "$2x+1\\ (x\\ne1)$"
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.2-basic-q5",
+                  "no": "5",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 函数的解析式",
+                  "title": "复合自变量求参数",
+                  "source": "2025 河南南阳期中",
+                  "tags": [
+                    "解析式",
+                    "参数"
+                  ],
+                  "stemMarkdown": "已知函数 $f(x^2+x)=x^4+2x^3+x^2-2a$，且 $f(6)=10$，则 $a=$（ ）",
+                  "options": [
+                    {
+                      "label": "A",
+                      "text": "13"
+                    },
+                    {
+                      "label": "B",
+                      "text": "-13"
+                    },
+                    {
+                      "label": "C",
+                      "text": "23"
+                    },
+                    {
+                      "label": "D",
+                      "text": "-23"
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.2-basic-q6",
+                  "no": "6",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 函数的解析式",
+                  "title": "一次函数复合求函数值",
+                  "source": "2025 湖北荆门期中",
+                  "tags": [
+                    "解析式",
+                    "一次函数",
+                    "复合函数"
+                  ],
+                  "stemMarkdown": "已知函数 $f(x)$ 是一次函数，且 $f(f(x)-2x)=3$，则 $f(5)=$（ ）",
+                  "options": [
+                    {
+                      "label": "A",
+                      "text": "11"
+                    },
+                    {
+                      "label": "B",
+                      "text": "9"
+                    },
+                    {
+                      "label": "C",
+                      "text": "7"
+                    },
+                    {
+                      "label": "D",
+                      "text": "5"
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.2-basic-q7",
+                  "no": "7",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组二 函数的解析式",
+                  "title": "由对应式反求函数值",
+                  "source": "2024 安徽淮南月考",
+                  "tags": [
+                    "解析式",
+                    "换元"
+                  ],
+                  "stemMarkdown": "已知函数 $f(2x-1)=3x-5$，若 $f(x_0)=4$，则 $x_0=$ ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.2-basic-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "short-answer",
+                  "group": "题组二 函数的解析式",
+                  "title": "两类条件求解析式",
+                  "source": "2024 重庆育才中学检测",
+                  "tags": [
+                    "解析式",
+                    "二次函数",
+                    "根式代换"
+                  ],
+                  "stemMarkdown": "（1）已知 $f(x)$ 为二次函数，且 $f(x+1)+f(x-1)=2x^2-4x$，求函数 $f(x)$ 的解析式；\n\n（2）已知 $f(\\sqrt{x}+1)=x+2\\sqrt{x}$，求函数 $f(x)$ 的解析式。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.2-basic-q9",
+                  "no": "9",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 分段函数问题",
+                  "title": "分段函数复合求参数",
+                  "source": "2024 重庆名校联盟期中",
+                  "tags": [
+                    "分段函数",
+                    "参数"
+                  ],
+                  "stemMarkdown": "已知函数 $f(x)=\\begin{cases}x^3+1,&x<1,\\\\x^2-ax,&x\\ge1,\\end{cases}$ 若 $f(f(0))=-2$，则实数 $a=$（ ）",
+                  "options": [
+                    {
+                      "label": "A",
+                      "text": "1"
+                    },
+                    {
+                      "label": "B",
+                      "text": "2"
+                    },
+                    {
+                      "label": "C",
+                      "text": "3"
+                    },
+                    {
+                      "label": "D",
+                      "text": "4"
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.2-basic-q10",
+                  "no": "10",
+                  "status": "needs-review",
+                  "type": "multiple-choice",
+                  "group": "题组三 分段函数问题",
+                  "title": "狄利克雷函数性质判断",
+                  "source": "2025 广东广州期中",
+                  "tags": [
+                    "分段函数",
+                    "新定义",
+                    "多选题"
+                  ],
+                  "stemMarkdown": "德国著名数学家狄利克雷在数学领域成就显著，是解析数论的创始人之一，以他的名字命名的函数 $$f(x)=\\begin{cases}1,&x\\text{ 为有理数},\\\\0,&x\\text{ 为无理数},\\end{cases}$$ 称为狄利克雷函数。若以 $f$ 为狄利克雷函数，则下列关于 $f(x)$ 的说法正确的是（ ）",
+                  "options": [
+                    {
+                      "label": "A",
+                      "text": "$f(x)$ 的值域为 $[0,1]$"
+                    },
+                    {
+                      "label": "B",
+                      "text": "$f(x)$ 的定义域为 $\\mathbb{R}$"
+                    },
+                    {
+                      "label": "C",
+                      "text": "$\\forall x\\in\\mathbb{R},\\ f(f(x))=1$"
+                    },
+                    {
+                      "label": "D",
+                      "text": "存在 $x,y$ 是无理数，使 $f(x+y)=1$"
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干主体稳定，属多判断题，后续补答案时应逐项复核。"
+                  }
+                },
+                {
+                  "id": "ch3-3.1.2-basic-q11",
+                  "no": "11",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组三 分段函数问题",
+                  "title": "递推定义分段函数求值",
+                  "source": "2025 天津咸水沽第一中学期中",
+                  "tags": [
+                    "分段函数",
+                    "递推求值"
+                  ],
+                  "stemMarkdown": "设 $$f(x)=\\begin{cases}x-1,&x\\ge9,\\\\f(x+7),&x<9,\\end{cases}$$ 则 $f(5)=$ ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.2-basic-q12",
+                  "no": "12",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "题组三 分段函数问题",
+                  "title": "分段函数双重求值",
+                  "source": "2024 浙江温州十校联合体期中",
+                  "tags": [
+                    "分段函数",
+                    "求值"
+                  ],
+                  "stemMarkdown": "已知 $$f(x)=\\begin{cases}x+2,&x>0,\\\\x^2,&x\\le0,\\end{cases}$$\n（1）若 $f(a)=\\dfrac{25}{4}$，求 $a$ 的值；\n\n（2）若 $f(f(k))=\\dfrac{9}{4}$，求 $k$ 的值。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干清楚，但两问都要分情况讨论，后续补答案时需单题复核。"
+                  }
+                },
+                {
+                  "id": "ch3-3.1.2-basic-q13",
+                  "no": "13",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "题组三 分段函数问题",
+                  "title": "出租车费用分段建模",
+                  "source": "教材习题改编",
+                  "tags": [
+                    "分段函数",
+                    "实际应用",
+                    "建模"
+                  ],
+                  "stemMarkdown": "某小组 4 位同学准备乘坐出租车去参加社会实践活动。已知全程 $30$ 千米，且该城市出租车的收费标准是：起步价 $11$ 元（乘车不超过 $3$ 千米）；行驶 $3$ 千米后，每千米车费 $2.2$ 元；行驶 $10$ 千米后，每千米车费 $2.8$ 元。\n\n（1）写出同学们打车的费用 $f(x)$（单位：元）与路程 $x$（单位：千米）的函数关系式；\n\n（2）为了节省支出，他们设计了三种乘车方案：\n① 不换车：乘一辆出租车行驶 $30$ 千米；\n② 分两段乘车：先乘一辆车，行驶 $15$ 千米后，换乘另一辆车，再行驶 $15$ 千米；\n③ 分三段乘车：每行驶 $10$ 千米后，换乘一次车。\n\n哪一种方案最省钱？",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "长应用题主体稳定，但计费分段与三种方案比较建议后续单题复核。"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "3.1.2-advanced",
+              "title": "能力提升练",
+              "questions": [
+                {
+                  "id": "3.1.2-advanced-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 函数的表示法",
+                  "title": "图像反推解析式",
+                  "source": "2025 广东潮州期中",
+                  "tags": [
+                    "图像",
+                    "解析式",
+                    "单选"
+                  ],
+                  "stemMarkdown": "函数 $f(x)$ 的图象如图所示，则 $f(x)=$（ ）",
+                  "options": [
+                    {
+                      "label": "A",
+                      "text": "$2(x-1)^2-|x-1|$"
+                    },
+                    {
+                      "label": "B",
+                      "text": "$(x-1)^2-2|x-1|$"
+                    },
+                    {
+                      "label": "C",
+                      "text": "$-2(x-1)^2+|x-1|$"
+                    },
+                    {
+                      "label": "D",
+                      "text": "$-(x-1)^2+2|x-1|$"
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "3.1.2-advanced-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组一 函数的表示法",
+                  "title": "双表复合求值",
+                  "source": "2025 河南漯河期中",
+                  "tags": [
+                    "列表法",
+                    "复合函数",
+                    "多选"
+                  ],
+                  "stemMarkdown": "已知函数 $f(x),g(x)$ 分别由下表给出，若 $f(g(a))=2$，则 $a$ 的值可以是（ ）。其中当 $x=1,2,3,4$ 时，$f(x)=2,3,1,2$，$g(x)=3,4,1,4$。",
+                  "options": [
+                    {
+                      "label": "A",
+                      "text": "$1$"
+                    },
+                    {
+                      "label": "B",
+                      "text": "$2$"
+                    },
+                    {
+                      "label": "C",
+                      "text": "$3$"
+                    },
+                    {
+                      "label": "D",
+                      "text": "$4$"
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "3.1.2-advanced-q3",
+                  "no": "3",
+                  "status": "needs-review",
+                  "type": "single-choice",
+                  "group": "题组一 函数的表示法",
+                  "title": "含参数图像判断",
+                  "source": "2024 吉林省实验中学期中",
+                  "tags": [
+                    "图像",
+                    "参数",
+                    "单选"
+                  ],
+                  "stemMarkdown": "函数 $f(x)=2|x|-\\dfrac{a}{x}\\ (a\\in R)$ 的大致图象不可能为（ ）",
+                  "options": [
+                    {
+                      "label": "A",
+                      "text": "见图像 A"
+                    },
+                    {
+                      "label": "B",
+                      "text": "见图像 B"
+                    },
+                    {
+                      "label": "C",
+                      "text": "见图像 C"
+                    },
+                    {
+                      "label": "D",
+                      "text": "见图像 D"
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干清楚，但选项完全依赖草图形态，已补图示说明，建议人工复核。"
+                  },
+                  "visuals": [
+                    {
+                      "id": "3.1.2-advanced-q3-opts",
+                      "kind": "coordinate-plane",
+                      "placement": "stem",
+                      "status": "complete",
+                      "alt": "四幅候选函数草图，分别对应不同的分支形态。",
+                      "diagramSpec": "A 为关于 y 轴对称的 V 形且原点空心；B 为左右两支不对称分支；C 为靠近 y 轴两侧竖直发散且右支向下；D 为左上分支与右侧单调上升分支。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch312AdvancedQ3Figure",
+                        "code": "export default function Ch312AdvancedQ3Figure(){return <svg viewBox='0 0 320 120' width='320' height='120'><text x='35' y='112' fontSize='12'>A</text><text x='115' y='112' fontSize='12'>B</text><text x='195' y='112' fontSize='12'>C</text><text x='275' y='112' fontSize='12'>D</text><g transform='translate(0,0)'><line x1='20' y1='60' x2='60' y2='60' stroke='currentColor'/><line x1='40' y1='20' x2='40' y2='100' stroke='currentColor'/><path d='M22 35 L40 60 L58 35' fill='none' stroke='currentColor'/><circle cx='40' cy='60' r='3' fill='white' stroke='currentColor'/></g><g transform='translate(80,0)'><line x1='20' y1='60' x2='60' y2='60' stroke='currentColor'/><line x1='40' y1='20' x2='40' y2='100' stroke='currentColor'/><path d='M22 30 C30 42 36 50 38 95' fill='none' stroke='currentColor'/><path d='M42 22 C46 36 50 44 58 38 C60 48 58 60 52 72' fill='none' stroke='currentColor'/></g><g transform='translate(160,0)'><line x1='20' y1='60' x2='60' y2='60' stroke='currentColor'/><line x1='40' y1='20' x2='40' y2='100' stroke='currentColor'/><path d='M22 30 C30 42 36 30 38 22' fill='none' stroke='currentColor'/><path d='M42 20 C44 30 46 40 50 52 C54 68 58 80 60 96' fill='none' stroke='currentColor'/></g><g transform='translate(240,0)'><line x1='20' y1='60' x2='60' y2='60' stroke='currentColor'/><line x1='40' y1='20' x2='40' y2='100' stroke='currentColor'/><path d='M22 30 C30 42 36 28 38 20' fill='none' stroke='currentColor'/><path d='M42 96 C46 80 50 64 60 34' fill='none' stroke='currentColor'/></g></svg>;}"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "3.1.2-advanced-q4",
+                  "no": "4",
+                  "status": "needs-review",
+                  "type": "single-choice",
+                  "group": "题组二 函数的解析式及其应用",
+                  "title": "矩形花圃面积函数",
+                  "source": "2024 天津河东期中",
+                  "tags": [
+                    "解析式",
+                    "应用题",
+                    "单选"
+                  ],
+                  "stemMarkdown": "如图，在一直角墙角内的点 $P$ 处有一棵树，它到两墙的距离分别是 $3$ 米和 $2$ 米。现欲用 $10$ 米长的篱笆，借助墙角围成一个矩形花圃 $ABCD$，要求这棵树在花圃内或边界上。设 $BC=x$ 米，矩形花圃的面积为 $f(x)$ 平方米，则（ ）",
+                  "options": [
+                    {
+                      "label": "A",
+                      "text": "$f(x)=-x^2+5x\\ (0\\le x\\le 10)$"
+                    },
+                    {
+                      "label": "B",
+                      "text": "$f(x)=-x^2+10x\\ (0\\le x\\le 10)$"
+                    },
+                    {
+                      "label": "C",
+                      "text": "$f(x)=-x^2+5x\\ (3\\le x\\le 8)$"
+                    },
+                    {
+                      "label": "D",
+                      "text": "$f(x)=-x^2+10x\\ (3\\le x\\le 8)$"
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干与图示稳定，选项区通过相邻版面交叉复核后补全，建议人工再核一遍。"
+                  },
+                  "visuals": [
+                    {
+                      "id": "3.1.2-advanced-q4-fig1",
+                      "kind": "geometry",
+                      "placement": "stem",
+                      "status": "complete",
+                      "alt": "墙角形成矩形花圃的两条边，树点P距左墙3米、距下墙2米，下边BC记为x。",
+                      "diagramSpec": "左墙和下墙垂直相交形成墙角，矩形花圃以墙为左边与下边；矩形右上角为 D，左上角为 A。点 P 在矩形内偏右下，距左墙 3 米、距下墙 2 米，下边 BC 长记为 x。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch312AdvancedQ4Figure",
+                        "code": "export default function Ch312AdvancedQ4Figure(){return <svg viewBox='0 0 200 150' width='200' height='150'><line x1='30' y1='20' x2='30' y2='130' stroke='currentColor' strokeWidth='4'/><line x1='30' y1='130' x2='180' y2='130' stroke='currentColor' strokeWidth='4'/><rect x='30' y='40' width='120' height='90' fill='none' stroke='currentColor' strokeWidth='2'/><circle cx='120' cy='100' r='3' fill='currentColor'/><text x='125' y='98' fontSize='12'>P</text><line x1='30' y1='100' x2='120' y2='100' stroke='currentColor' strokeDasharray='4 3'/><line x1='120' y1='100' x2='120' y2='130' stroke='currentColor' strokeDasharray='4 3'/><text x='72' y='92' fontSize='12'>3米</text><text x='126' y='118' fontSize='12'>2米</text><text x='86' y='145' fontSize='12'>x</text></svg>;}"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "3.1.2-advanced-q5",
+                  "no": "5",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组二 函数的解析式及其应用",
+                  "title": "分式函数性质判断",
+                  "source": "2025 广东广州奥林匹克学校期中",
+                  "tags": [
+                    "解析式",
+                    "函数性质",
+                    "多选"
+                  ],
+                  "stemMarkdown": "设 $f(x)=\\dfrac{1+x^2}{1-x^2}$，则下列结论成立的是（ ）",
+                  "options": [
+                    {
+                      "label": "A",
+                      "text": "$f(-x)=f(x)$"
+                    },
+                    {
+                      "label": "B",
+                      "text": "$f\\!\\left(\\dfrac{1}{x}\\right)=-f(x)$"
+                    },
+                    {
+                      "label": "C",
+                      "text": "$f(2x)=2f(x)$"
+                    },
+                    {
+                      "label": "D",
+                      "text": "$f\\!\\left(\\dfrac{1}{x}\\right)=f(x)$"
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "3.1.2-advanced-q6",
+                  "no": "6",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组二 函数的解析式及其应用",
+                  "title": "函数条件可行性判断",
+                  "source": "2025 陕西榆林期中",
+                  "tags": [
+                    "解析式",
+                    "构造",
+                    "多选"
+                  ],
+                  "stemMarkdown": "已知 $f(x)$ 是定义在 $R$ 上的函数，$f(1)=1$，且存在 $f(x)$ 满足条件 $\\Omega$，则 $\\Omega$ 可能为（ ）",
+                  "options": [
+                    {
+                      "label": "A",
+                      "text": "$\\forall x,y\\in R,\\ f(xy)=2f(x)f(y)-x^2y^2$"
+                    },
+                    {
+                      "label": "B",
+                      "text": "$\\forall x,y\\in R,\\ f(xy)=xf(y)+yf(x)-2$"
+                    },
+                    {
+                      "label": "C",
+                      "text": "$\\forall x,y\\in R,\\ f(x+y)=f(x)+f(y)+1$"
+                    },
+                    {
+                      "label": "D",
+                      "text": "$\\forall x,y\\in R,\\ f(x+y)=xf(y)+yf(x)$"
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "3.1.2-advanced-q7",
+                  "no": "7",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "题组二 函数的解析式及其应用",
+                  "title": "构造满足条件函数",
+                  "source": "2025 北京第十二中学期中",
+                  "tags": [
+                    "函数构造",
+                    "凸性",
+                    "填空"
+                  ],
+                  "stemMarkdown": "写出同时满足以下两个条件的一个函数：$f(x)=$ ______。\n\n① $\\forall x,y\\in R,\\ f(xy)=f(x)f(y)$；\n\n② $\\forall x,y\\in[0,+\\infty)$ 且 $x\\ne y$，$f\\!\\left(\\dfrac{x+y}{2}\\right)<\\dfrac{f(x)+f(y)}{2}$。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干清楚，但属于开放构造题，后续补答案时需确认给出的函数同时满足严格不等式条件。"
+                  }
+                },
+                {
+                  "id": "3.1.2-advanced-q8",
+                  "no": "8",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "题组二 函数的解析式及其应用",
+                  "title": "多条件求解析式",
+                  "source": "综合题",
+                  "tags": [
+                    "解析式",
+                    "换元",
+                    "综合"
+                  ],
+                  "stemMarkdown": "（1）已知 $f(x)+2f\\!\\left(\\dfrac{1}{x}\\right)=3x-2$，求 $f(x)$ 的解析式；\n\n（2）已知 $f\\!\\left(\\dfrac{1-x}{1+x}\\right)=\\dfrac{1-x^2}{1+x^2}$，求 $f(x)$ 的解析式；\n\n（3）已知对任意的 $x,y\\in R$，都有 $f(x+y)-2f(y)=x^2+2xy-y^2+3x-3y$，求 $f(x)$。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "三小问主干清楚，但都属于换元或函数方程题，后续补答案时建议逐问单独复核。"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

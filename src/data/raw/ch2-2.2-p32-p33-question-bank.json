@@ -1,0 +1,507 @@
+{
+  "schemaVersion": "edu-question-bank/v1",
+  "book": {
+    "subject": "高中数学",
+    "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修第一册 人教A版"
+  },
+  "chapters": [
+    {
+      "id": "ch2",
+      "title": "第二章 一元二次函数、方程和不等式",
+      "sections": [
+        {
+          "id": "2.2",
+          "title": "2.2 基本不等式",
+          "sets": [
+            {
+              "id": "2.2-basic",
+              "title": "基础过关",
+              "questions": [
+                {
+                  "id": "2.2-basic-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 对基本不等式的理解",
+                  "title": "基本不等式正误判断",
+                  "source": "2025 河北石家庄二十二中期中",
+                  "tags": ["基本不等式", "正误判断", "概念辨析"],
+                  "stemMarkdown": "下列不等式正确的是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$a+\\dfrac{4}{a}\\ge 4$" },
+                    { "label": "B", "text": "$a^2+b^2\\ge 4ab$" },
+                    { "label": "C", "text": "$\\dfrac{a+b}{2}\\ge \\sqrt{ab}$" },
+                    { "label": "D", "text": "$x^2+\\dfrac{3}{x^2}\\ge 2\\sqrt{3}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-basic-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 对基本不等式的理解",
+                  "title": "等号成立条件判断",
+                  "source": "来源未标明",
+                  "tags": ["基本不等式", "等号条件", "选择题"],
+                  "stemMarkdown": "不等式 $a^2+\\dfrac{4}{a^2}\\ge 4$ 中，等号成立的条件是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$a=2$" },
+                    { "label": "B", "text": "$a=\\pm 2$" },
+                    { "label": "C", "text": "$a=\\sqrt{2}$" },
+                    { "label": "D", "text": "$a=\\pm \\sqrt{2}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": "来源行未见单独标注，按页面可确认题干与选项稳定入库。"
+                  }
+                },
+                {
+                  "id": "2.2-basic-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 对基本不等式的理解",
+                  "title": "条件关系判断",
+                  "source": "2025 江苏南京师范大学附属中学期中",
+                  "tags": ["基本不等式", "充分必要条件", "条件判断"],
+                  "stemMarkdown": "“$a>0,b>0$”是“$\\dfrac{b}{a}+\\dfrac{a}{b}\\ge 2$”的 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "充分不必要条件" },
+                    { "label": "B", "text": "必要不充分条件" },
+                    { "label": "C", "text": "充要条件" },
+                    { "label": "D", "text": "既不充分也不必要条件" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-basic-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组二 利用基本不等式求最大（小）值",
+                  "title": "最值结论多选判断",
+                  "source": "2025 云南文山第一中学月考",
+                  "tags": ["最值", "多选", "基本不等式"],
+                  "stemMarkdown": "下列选项正确的是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "当 $x>1$ 时，$x+\\dfrac{1}{x-1}$ 的最小值是 3" },
+                    { "label": "B", "text": "已知 $x<0$，则 $x+\\dfrac{1}{x}$ 的最大值是 $-2$" },
+                    { "label": "C", "text": "当 $0<x<10$ 时，$\\sqrt{x(10-x)}$ 的最大值是 5" },
+                    { "label": "D", "text": "设 $x\\in \\mathbb{R}$，则 $(x^2+2)+\\dfrac{1}{x^2+2}$ 的最小值为 2" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-basic-q5",
+                  "no": "5",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 利用基本不等式求最大（小）值",
+                  "title": "分式变形求最大值",
+                  "source": "2025 福建福州期中",
+                  "tags": ["最值", "分式", "选择题"],
+                  "stemMarkdown": "已知 $m<10$，则 $m+\\dfrac{9}{m-10}$ 的最大值为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "4" },
+                    { "label": "B", "text": "6" },
+                    { "label": "C", "text": "8" },
+                    { "label": "D", "text": "10" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-basic-q6",
+                  "no": "6",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 利用基本不等式求最大（小）值",
+                  "title": "约束分式最小值",
+                  "source": "2024 河南郑州外国语学校月考",
+                  "tags": ["最小值", "分式", "基本不等式"],
+                  "stemMarkdown": "已知 $0<a<2$，则 $\\dfrac{4}{a}+\\dfrac{a}{2-a}$ 的最小值是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$\\dfrac{7}{2}$" },
+                    { "label": "B", "text": "4" },
+                    { "label": "C", "text": "$\\dfrac{9}{2}$" },
+                    { "label": "D", "text": "5" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-basic-q7",
+                  "no": "7",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 利用基本不等式求最大（小）值",
+                  "title": "线性组合最小值",
+                  "source": "2025 四川师范大学附属中学期中",
+                  "tags": ["最小值", "约束方程", "基本不等式"],
+                  "stemMarkdown": "已知 $a,b>0$，且 $a+2b-2ab=0$，则 $8a+b$ 的最小值是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$8\\sqrt{2}$" },
+                    { "label": "B", "text": "$\\dfrac{25}{2}$" },
+                    { "label": "C", "text": "$\\dfrac{27}{2}$" },
+                    { "label": "D", "text": "17" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-basic-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组二 利用基本不等式求最大（小）值",
+                  "title": "二次式取最大值时参数",
+                  "source": "教材习题改编",
+                  "tags": ["填空", "最值", "二次式"],
+                  "stemMarkdown": "已知 $0<x<1$，则 $x(4-3x)$ 取得最大值时 $x$ 的值为 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-basic-q9",
+                  "no": "9",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组二 利用基本不等式求最大（小）值",
+                  "title": "分式二次式最小值",
+                  "source": "2025 山东十校期中联考",
+                  "tags": ["填空", "分式", "最小值"],
+                  "stemMarkdown": "若 $x>-1$，则 $\\dfrac{2x^2+4x+4}{x+1}$ 的最小值为 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-basic-q10",
+                  "no": "10",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 利用基本不等式求最大（小）值的应用",
+                  "title": "恒成立不等式参数范围",
+                  "source": "2025 山东青岛第六中学期中",
+                  "tags": ["恒成立", "参数", "最值"],
+                  "stemMarkdown": "若 $\\forall x>2$，不等式 $x+\\dfrac{4}{x-2}\\ge a$ 恒成立，则实数 $a$ 的 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "最大值是 4" },
+                    { "label": "B", "text": "最大值是 6" },
+                    { "label": "C", "text": "最小值是 4" },
+                    { "label": "D", "text": "最小值是 6" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-basic-q11",
+                  "no": "11",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 利用基本不等式求最大（小）值的应用",
+                  "title": "线性约束求参数最大值",
+                  "source": "2025 云南大理下关第一中学期中",
+                  "tags": ["参数", "最值", "应用题"],
+                  "stemMarkdown": "已知实数 $x,y$ 满足 $x+y=xy$，且 $x>0,y>0$，若不等式 $4x+9y-5t\\ge 0$ 恒成立，则实数 $t$ 的最大值为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "9" },
+                    { "label": "B", "text": "12" },
+                    { "label": "C", "text": "16" },
+                    { "label": "D", "text": "5" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-basic-q12",
+                  "no": "12",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 利用基本不等式求最大（小）值的应用",
+                  "title": "分式恒成立求参数上界",
+                  "source": "2025 四川达州铁路中学期中",
+                  "tags": ["恒成立", "参数", "分式"],
+                  "stemMarkdown": "已知 $a>0,b>0$，若不等式 $\\dfrac{m}{a+b}\\le \\dfrac{4a+9b}{ab}$ 恒成立，则实数 $m$ 的最大值为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "64" },
+                    { "label": "B", "text": "25" },
+                    { "label": "C", "text": "13" },
+                    { "label": "D", "text": "12" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                }
+              ]
+            },
+            {
+              "id": "2.2-advanced",
+              "title": "能力提升练",
+              "questions": [
+                {
+                  "id": "2.2-advanced-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 对基本不等式的理解",
+                  "title": "条件推出关系判断",
+                  "source": "2025 吉林长春实验中学期中",
+                  "tags": ["充分必要条件", "基本不等式", "逻辑关系"],
+                  "stemMarkdown": "已知 $a>b>0$，$p:x<\\dfrac{a+b}{2}$，$q:x<\\sqrt{ab}$，则 $p$ 是 $q$ 的 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "充分不必要条件" },
+                    { "label": "B", "text": "必要不充分条件" },
+                    { "label": "C", "text": "既不充分也不必要条件" },
+                    { "label": "D", "text": "充要条件" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-advanced-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组一 对基本不等式的理解",
+                  "title": "恒成立不等式多选",
+                  "source": "2025 山东淄博第四中学月考",
+                  "tags": ["多选", "恒成立", "基本不等式"],
+                  "stemMarkdown": "若 $a>0,b>0,a+b=2$，则下列不等式恒成立的是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$ab\\ge 1$" },
+                    { "label": "B", "text": "$a^2+b^2\\ge 2$" },
+                    { "label": "C", "text": "$\\sqrt{a}+\\sqrt{b}\\le \\sqrt{2}$" },
+                    { "label": "D", "text": "$\\dfrac{1}{a}+\\dfrac{1}{b}\\ge 2$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-advanced-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 利用基本不等式求最大（小）值",
+                  "title": "双倒数约束求积最值",
+                  "source": "2025 浙江嘉兴六校期中联考",
+                  "tags": ["最小值", "约束转化", "选择题"],
+                  "stemMarkdown": "已知 $x>-1,y>2$，且 $\\dfrac{1}{x+1}+\\dfrac{1}{y-2}=1$，则 $xy$ 的最小值为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "5" },
+                    { "label": "B", "text": "6" },
+                    { "label": "C", "text": "7" },
+                    { "label": "D", "text": "9" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-advanced-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 利用基本不等式求最大（小）值",
+                  "title": "分式和最小值判断",
+                  "source": "2024 山东日照实验高级中学校段考",
+                  "tags": ["分式", "最小值", "选择题"],
+                  "stemMarkdown": "已知 $0<x<\\dfrac{3}{2}$，则 $\\dfrac{1}{x}+\\dfrac{2}{3-2x}$ 的最小值为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$\\dfrac{4}{3}$" },
+                    { "label": "B", "text": "2" },
+                    { "label": "C", "text": "$\\dfrac{8}{3}$" },
+                    { "label": "D", "text": "4" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "2.2-advanced-q5",
+                  "no": "5",
+                  "status": "needs-review",
+                  "type": "single-choice",
+                  "group": "题组二 利用基本不等式求最大（小）值",
+                  "title": "含参数乘积最小值",
+                  "source": "来源未清晰识别",
+                  "tags": ["最小值", "分式", "基本不等式"],
+                  "stemMarkdown": "已知 $a>b>0$，则 $a^2+\\dfrac{16}{b(a-b)}$ 的最小值为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "8" },
+                    { "label": "B", "text": "$8\\sqrt{2}$" },
+                    { "label": "C", "text": "16" },
+                    { "label": "D", "text": "$16\\sqrt{2}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干与选项清楚，但来源行被版面裁切与二维码干扰，未能稳定识别。"
+                  }
+                },
+                {
+                  "id": "2.2-advanced-q6",
+                  "no": "6",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "题组二 利用基本不等式求最大（小）值",
+                  "title": "乘积约束线性式最小值",
+                  "source": "2025 上海中学期中",
+                  "tags": ["填空", "最小值", "综合题"],
+                  "stemMarkdown": "若 $x,y,z$ 均为正数，且 $(x+2y)(x+3z)=10$，则 $2x+2y+3z$ 的最小值为 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干可辨，但属于乘积约束综合最值题，后续补答案时需复核等号成立条件。"
+                  }
+                },
+                {
+                  "id": "2.2-advanced-q7",
+                  "no": "7",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "题组二 利用基本不等式求最大（小）值",
+                  "title": "二元二次型最值填空",
+                  "source": "2025 重庆巴蜀中学期中",
+                  "tags": ["填空", "二次型", "最值"],
+                  "stemMarkdown": "若 $x,y\\in \\mathbb{R}$，且 $x^2+4y^2-2xy=1$，则 $x^2+4y^2$ 的最大值是 ______，$xy$ 的最小值是 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "结构稳定，但双空联动，后续补答案时需统一核算最值与取等条件。"
+                  }
+                },
+                {
+                  "id": "2.2-advanced-q8",
+                  "no": "8",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "题组二 利用基本不等式求最大（小）值",
+                  "title": "分步求值综合题一",
+                  "source": "2025 江苏宿迁中学期中",
+                  "tags": ["解答题", "最值", "分步求解"],
+                  "stemMarkdown": "已知 $a>0,b>0$，且 $a+2b=2$。\\n\\n（1）求 $\\dfrac{1}{a}+\\dfrac{1}{b}$ 的最小值；\\n\\n（2）求 $\\dfrac{4}{b+1}$ 的最大值；\\n\\n（3）求 $\\dfrac{ab}{a^2-2b+4}$ 的最大值。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "三问结构清楚，但属于综合求值题，当前仅做稳定入库。"
+                  }
+                },
+                {
+                  "id": "2.2-advanced-q9",
+                  "no": "9",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "题组二 利用基本不等式求最大（小）值",
+                  "title": "分步求值综合题二",
+                  "source": "2024 江苏镇江扬中段考",
+                  "tags": ["解答题", "最值", "综合题"],
+                  "stemMarkdown": "已知 $a>0,b>0$。\\n\\n（1）若 $a+b=4$，求 $\\dfrac{1}{2a}+\\dfrac{2}{b}$ 的最小值及此时 $a,b$ 的值；\\n\\n（2）若 $2a^2+b^2=4a+4b$，求 $\\dfrac{1}{a}+\\dfrac{1}{b}$ 的最小值及此时 $a,b$ 的值；\\n\\n（3）若 $a^2+3b^2+4ab-6=0$，求 $5a+9b$ 的最小值及此时 $a,b$ 的值。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "右侧二维码贴近版面，但三问正文可辨；后续补答案时需逐问复核。"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

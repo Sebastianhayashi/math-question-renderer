@@ -1,0 +1,65 @@
+{
+  "task": "missing-diagram-rework",
+  "version": "2026-04-28",
+  "principles": [
+    "不要返回整页截图",
+    "不要只返回图 A / 图 B 文字",
+    "必须按题目输出 visuals 数组",
+    "每个图形同时给出 diagramSpec 和 renderCode",
+    "优先输出 SVG / React 组件代码",
+    "图形无法可靠识别时必须标记 status 为 needs-recrop"
+  ],
+  "diagramTasks": [
+    {
+      "priority": "P0",
+      "questionId": "1.2-basic-q2",
+      "path": "1.2 集合间的基本关系 / 基础过关 / 第 2 题",
+      "problem": "选项只有图 A/B/C/D，缺 4 个 Venn 选项图",
+      "required": "四个 Venn 图选项，每个选项输出 diagramSpec 与 renderCode"
+    },
+    {
+      "priority": "P0",
+      "questionId": "1.3-basic-q5",
+      "path": "1.3 集合的基本运算 / 基础过关 / 第 5 题",
+      "problem": "题干说 Venn 图阴影部分，但图未入库",
+      "required": "一个 Venn 阴影图，明确全集 U、集合 M/N 与阴影区域"
+    },
+    {
+      "priority": "P0",
+      "questionId": "1.3-advanced-q2",
+      "path": "1.3 集合的基本运算 / 能力提升练 / 第 2 题",
+      "problem": "题干如图所示，缺 U/A/B 的阴影 Venn 图",
+      "required": "一个二集合 Venn 阴影图，明确阴影区域与选项表达式对应关系"
+    },
+    {
+      "priority": "P0",
+      "questionId": "1.4-basic-q11",
+      "path": "1.4 充分条件与必要条件 / 基础过关 / 第 11 题",
+      "problem": "题干要求四个电路图，图中开关连接方式缺失",
+      "required": "四个电路图，序号 ①②③④，输出 components/wires/logic 与 renderCode"
+    },
+    {
+      "priority": "P0",
+      "questionId": "ch1-review-methods-q1",
+      "path": "本章复习提升 / 思想方法练 / 第 1 题",
+      "problem": "题干图中阴影部分缺失",
+      "required": "一个三集合 Venn 阴影图，明确全集 U、A/B/C 和阴影区域"
+    }
+  ],
+  "ocrTasks": [
+    {
+      "priority": "P1",
+      "questionId": "ch1-review-mistakes-q5",
+      "path": "本章复习提升 / 易混易错练 / 第 5 题",
+      "problem": "集合 B 定义式末尾切边",
+      "required": "重新 OCR 完整题干，尤其是集合 B 的完整定义式"
+    },
+    {
+      "priority": "P1",
+      "questionId": "ch1-gaokao-5y-q7",
+      "path": "综合拔高练 / 五年高考考练 / 第 7 题",
+      "problem": "题干后半段选项未可靠辨清",
+      "required": "重新 OCR 完整题干和选项；若原题有图，同步补 visuals"
+    }
+  ]
+}

@@ -1,0 +1,600 @@
+{
+  "schemaVersion": "edu-question-bank/v1",
+  "book": {
+    "subject": "高中数学",
+    "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修 第一册 人教A版"
+  },
+  "chapters": [
+    {
+      "id": "ch3",
+      "title": "第三章 函数的概念与性质",
+      "sections": [
+        {
+          "id": "3.1.1",
+          "title": "3.1.1 函数的概念",
+          "sets": [
+            {
+              "id": "3.1.1-basic",
+              "title": "基础过关",
+              "questions": [
+                {
+                  "id": "ch3-3.1.1-basic-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 函数的概念",
+                  "title": "集合间函数关系判断",
+                  "source": "2025 湖北武汉第一中学月考",
+                  "tags": ["函数概念", "对应关系"],
+                  "stemMarkdown": "集合 $A=\\{x\\mid 0\\le x\\le 4\\}$，$B=\\{y\\mid 0\\le y\\le 2\\}$，下列不能表示从 $A$ 到 $B$ 的函数的是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$f:x\\mapsto y=\\dfrac12x$" },
+                    { "label": "B", "text": "$f:x\\mapsto y=\\dfrac13x$" },
+                    { "label": "C", "text": "$f:x\\mapsto y=\\dfrac23x$" },
+                    { "label": "D", "text": "$f:x\\mapsto y=\\sqrt{x}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-basic-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 函数的概念",
+                  "title": "同一函数表示判断",
+                  "source": "教材习题改编",
+                  "tags": ["函数概念", "定义域", "同一函数"],
+                  "stemMarkdown": "下列各组函数表示同一个函数的是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$f(x)=\\sqrt{-2x^3}$ 与 $g(x)=x\\sqrt{-2x}$" },
+                    { "label": "B", "text": "$f(x)=x$ 与 $g(x)=\\dfrac{x^2}{x}$" },
+                    { "label": "C", "text": "$f(x)=x^2-2x-1$ 与 $g(t)=t^2-2t-1$" },
+                    { "label": "D", "text": "$f(x)=\\sqrt{x-1}\\cdot\\sqrt{x+1}$ 与 $g(x)=\\sqrt{(x+1)(x-1)}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-basic-q3",
+                  "no": "3",
+                  "status": "needs-review",
+                  "type": "single-choice",
+                  "group": "题组一 函数的概念",
+                  "title": "定义域值域图象匹配",
+                  "source": "2025 山东泰安期中",
+                  "tags": ["函数概念", "图象判断", "值域"],
+                  "stemMarkdown": "若函数 $f(x)$ 的定义域为 $M=\\{x\\mid -2\\le x\\le 2\\}$，值域为 $N=\\{y\\mid 0\\le y\\le 2\\}$，则函数 $y=f(x)$ 的图象可能是（ ）",
+                  "options": [
+                    { "label": "A", "text": "图象 A" },
+                    { "label": "B", "text": "图象 B" },
+                    { "label": "C", "text": "图象 C" },
+                    { "label": "D", "text": "图象 D" }
+                  ],
+                  "visuals": [
+                    {
+                      "id": "ch3-3.1.1-basic-q3-optA",
+                      "kind": "coordinate-plane",
+                      "placement": "option:A",
+                      "status": "complete",
+                      "alt": "定义域为[-2,2]、关于y轴对称的下开口弧线，两端落在x轴，顶点在(0,2)附近。",
+                      "diagramSpec": "直角坐标系中，一段在 x=-2 到 x=2 之间的下凹弧线，经过(-2,0)、(0,2)、(2,0)。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch311BasicQ3OptionA",
+                        "code": "export default function Ch311BasicQ3OptionA(){return (<svg viewBox=\"0 0 120 90\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M15 75H108M60 82V8\" stroke=\"currentColor\" strokeWidth=\"2\" fill=\"none\"/><path d=\"M20 75 Q60 20 100 75\" stroke=\"currentColor\" strokeWidth=\"2.5\" fill=\"none\"/></svg>);}"
+                      }
+                    },
+                    {
+                      "id": "ch3-3.1.1-basic-q3-optB",
+                      "kind": "coordinate-plane",
+                      "placement": "option:B",
+                      "status": "complete",
+                      "alt": "从左上方空心点开始向右下方递减，到(2,0)附近结束的曲线。",
+                      "diagramSpec": "直角坐标系中，一条从 x=-2 处空心点出发、向右下缓慢下降到 x=2 且 y=0 附近的曲线。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch311BasicQ3OptionB",
+                        "code": "export default function Ch311BasicQ3OptionB(){return (<svg viewBox=\"0 0 120 90\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M15 75H108M60 82V8\" stroke=\"currentColor\" strokeWidth=\"2\" fill=\"none\"/><circle cx=\"22\" cy=\"30\" r=\"4\" fill=\"white\" stroke=\"currentColor\" strokeWidth=\"2\"/><path d=\"M26 33 C50 34, 78 45, 100 75\" stroke=\"currentColor\" strokeWidth=\"2.5\" fill=\"none\"/></svg>);}"
+                      }
+                    },
+                    {
+                      "id": "ch3-3.1.1-basic-q3-optC",
+                      "kind": "coordinate-plane",
+                      "placement": "option:C",
+                      "status": "complete",
+                      "alt": "定义在x不大于0附近的一条递增曲线，从(-2,0)附近升到(0,2)。",
+                      "diagramSpec": "直角坐标系中，一条位于第二象限和原点附近的递增曲线，从(-2,0)附近升至(0,2)。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch311BasicQ3OptionC",
+                        "code": "export default function Ch311BasicQ3OptionC(){return (<svg viewBox=\"0 0 120 90\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M15 75H108M60 82V8\" stroke=\"currentColor\" strokeWidth=\"2\" fill=\"none\"/><path d=\"M20 75 C40 74, 50 68, 58 25\" stroke=\"currentColor\" strokeWidth=\"2.5\" fill=\"none\"/></svg>);}"
+                      }
+                    },
+                    {
+                      "id": "ch3-3.1.1-basic-q3-optD",
+                      "kind": "coordinate-plane",
+                      "placement": "option:D",
+                      "status": "complete",
+                      "alt": "一条横向张开的曲线，左边靠近x=-2，右端在x=2附近，顶端高度约为2。",
+                      "diagramSpec": "直角坐标系中，一条向左开口的横向弧线，上下范围约在 y=0 到 y=2 之间，配有虚线辅助边界。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch311BasicQ3OptionD",
+                        "code": "export default function Ch311BasicQ3OptionD(){return (<svg viewBox=\"0 0 120 90\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M15 75H108M60 82V8\" stroke=\"currentColor\" strokeWidth=\"2\" fill=\"none\"/><path d=\"M20 24 H98 M20 24 V75 M98 24 V75\" stroke=\"currentColor\" strokeWidth=\"1.5\" strokeDasharray=\"5 4\" fill=\"none\"/><path d=\"M98 48 C90 28, 54 18, 20 48 C54 78, 90 68, 98 48\" stroke=\"currentColor\" strokeWidth=\"2.5\" fill=\"none\"/></svg>);}"
+                      }
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "四个选项图已按页面结构重述，局部曲线形状为近似网页化表达，建议人工再对照原图确认。"
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-basic-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组二 函数的定义域",
+                  "title": "根式分式定义域",
+                  "source": "教材习题改编",
+                  "tags": ["定义域", "根式", "分式"],
+                  "stemMarkdown": "函数 $f(x)=\\dfrac{\\sqrt{3x+11}}{x}$ 的定义域为 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-basic-q5",
+                  "no": "5",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组二 函数的定义域",
+                  "title": "零次幂根式定义域",
+                  "source": "2025 河北沧州四县联考",
+                  "tags": ["定义域", "零次幂", "根式"],
+                  "stemMarkdown": "函数 $f(x)=\\dfrac{(x^2-1)^0}{\\sqrt{3x-x^2}}$ 的定义域为 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-basic-q6",
+                  "no": "6",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "题组三 函数值及函数的值域",
+                  "title": "三角形内矩形面积函数",
+                  "source": "2025 湖南衡阳第四中学月考",
+                  "tags": ["函数关系", "面积", "图形建模"],
+                  "stemMarkdown": "如图，某小区有一块底边和高均为 $40\\text{ m}$ 的锐角三角形空地，现规划在空地内种植一边长为 $x\\ (\\text{单位：m})$ 的矩形草坪（阴影部分），则草坪面积 $S$ 关于 $x$ 的函数关系为 ________ ，若要求草坪面积不小于 $336\\text{ m}^2$，则 $x$ 的取值范围为 ________ 。",
+                  "visuals": [
+                    {
+                      "id": "ch3-3.1.1-basic-q6-fig",
+                      "kind": "geometry",
+                      "placement": "stem",
+                      "status": "complete",
+                      "alt": "底边和高均为40米的三角形内，底部放置一个宽40米、上边长为x的阴影矩形。",
+                      "diagramSpec": "一个底边长 40m、高 40m 的等腰三角形，底部内接一块矩形草坪，矩形上边标注 x，右侧标注三角形总高 40m，底边标注 40m，矩形区域填充阴影。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch311BasicQ6Figure",
+                        "code": "export default function Ch311BasicQ6Figure(){return (<svg viewBox=\"0 0 160 140\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"20,120 80,20 140,120\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2.5\"/><rect x=\"50\" y=\"70\" width=\"60\" height=\"50\" fill=\"rgba(120,120,120,0.35)\" stroke=\"currentColor\" strokeWidth=\"2\"/><path d=\"M20 128 H140\" stroke=\"currentColor\" strokeWidth=\"1.5\"/><path d=\"M145 20 V120\" stroke=\"currentColor\" strokeWidth=\"1.5\"/><path d=\"M141 20 h8 M141 120 h8\" stroke=\"currentColor\" strokeWidth=\"1.5\"/><text x=\"72\" y=\"66\" fontSize=\"12\">x</text><text x=\"68\" y=\"136\" fontSize=\"12\">40 m</text><text x=\"150\" y=\"74\" fontSize=\"12\">40 m</text></svg>);}"
+                      }
+                    }
+                  ],
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干与图形关系清楚，矩形具体边界按页面近似重绘，后续补答案前建议再核图。"
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-basic-q7",
+                  "no": "7",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 函数值及函数的值域",
+                  "title": "根式函数值域判断",
+                  "source": "2025 吉林四平期中",
+                  "tags": ["值域", "根式函数"],
+                  "stemMarkdown": "函数 $y=2-\\sqrt{-x^2+4x}$，$x\\in[0,4]$ 的值域为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$[-2,2]$" },
+                    { "label": "B", "text": "$[1,2]$" },
+                    { "label": "C", "text": "$[0,2]$" },
+                    { "label": "D", "text": "$[-\\sqrt2,\\sqrt2]$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-basic-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组三 函数值及函数的值域",
+                  "title": "对数型性质求函数值",
+                  "source": "2025 北京首都师范大学附属中学月考",
+                  "tags": ["函数值", "函数性质"],
+                  "stemMarkdown": "已知对任意的正实数 $x,y$，函数 $f(x)$ 都满足 $f(xy)=f(x)+f(y)$，$f(2)=1$，则 $f(8)=$ ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-basic-q9",
+                  "no": "9",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组三 函数值及函数的值域",
+                  "title": "分式函数值与反求自变量",
+                  "source": "2025 安徽涡阳第二中学质量检测",
+                  "tags": ["函数值", "分式函数"],
+                  "stemMarkdown": "已知函数 $f(x)=\\dfrac{4x-3}{x^2+1}$，则 $f(-3)=$ ________ ，当 $f(x)=1$ 时，$x=$ ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-basic-q10",
+                  "no": "10",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组三 函数值及函数的值域",
+                  "title": "双根式函数定义域最值",
+                  "source": "2025 广东广州清华附中湾区学校月考",
+                  "tags": ["定义域", "最值", "根式函数"],
+                  "stemMarkdown": "函数 $y=\\sqrt{x}\\cdot\\sqrt{1-4x}$ 的定义域为 ________ ，最大值为 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-basic-q11",
+                  "no": "11",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组三 函数值及函数的值域",
+                  "title": "分式函数求和计算",
+                  "source": "2025 四川雅安中学月考",
+                  "tags": ["函数值", "求和", "分式函数"],
+                  "stemMarkdown": "已知函数 $f(x)=\\dfrac{x}{1+x}$，计算：$$f\\left(\\frac1{2024}\\right)+f\\left(\\frac1{2023}\\right)+\\cdots+f\\left(\\frac12\\right)+f(1)+f(1)+f(2)+\\cdots+f(2024)=\\underline{\\qquad}$$",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                }
+              ]
+            },
+            {
+              "id": "3.1.1-advanced",
+              "title": "能力提升练",
+              "questions": [
+                {
+                  "id": "ch3-3.1.1-advanced-q1",
+                  "no": "1",
+                  "status": "needs-review",
+                  "type": "single-choice",
+                  "group": "题组一 函数的概念",
+                  "title": "容器排水过程函数判断",
+                  "source": "2025 江西南昌第二中学月考",
+                  "tags": ["函数概念", "图形情境", "对应关系"],
+                  "stemMarkdown": "下图是由两个高为 $H$ 的圆锥（去掉底面）构成的玻璃容器，装满水，其底部装有一个排水小孔，当小孔打开时，水从孔中匀速流出，在 $t$ 时刻，水面的高度为 $h$，水面对应圆的直径为 $d$，则下列说法错误的是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$h$ 是 $d$ 的函数" },
+                    { "label": "B", "text": "$d$ 是 $t$ 的函数" },
+                    { "label": "C", "text": "$h$ 是 $t$ 的函数" },
+                    { "label": "D", "text": "$d$ 是 $h$ 的函数" }
+                  ],
+                  "visuals": [
+                    {
+                      "id": "ch3-3.1.1-advanced-q1-fig",
+                      "kind": "geometry",
+                      "placement": "stem",
+                      "status": "complete",
+                      "alt": "上下两个圆锥尖对尖连接成玻璃容器，内部有水平水面，右侧标注高度 h。",
+                      "diagramSpec": "由两个等高圆锥尖端相接组成的对称玻璃容器，下部尖端处有小孔，容器内有一条水平水面，上方截面圆直径记为 d，右侧从底部到水面的高度记为 h。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Ch311AdvancedQ1Figure",
+                        "code": "export default function Ch311AdvancedQ1Figure(){return (<svg viewBox=\"0 0 150 180\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"75,20 35,85 115,85\" fill=\"rgba(160,160,160,0.2)\" stroke=\"currentColor\" strokeWidth=\"2.2\"/><polygon points=\"35,85 115,85 75,160\" fill=\"rgba(160,160,160,0.2)\" stroke=\"currentColor\" strokeWidth=\"2.2\"/><ellipse cx=\"75\" cy=\"52\" rx=\"22\" ry=\"7\" fill=\"rgba(120,120,120,0.35)\" stroke=\"currentColor\" strokeWidth=\"1.5\"/><path d=\"M122 52 V160\" stroke=\"currentColor\" strokeWidth=\"1.5\"/><path d=\"M118 52 h8 M118 160 h8\" stroke=\"currentColor\" strokeWidth=\"1.5\"/><text x=\"127\" y=\"108\" fontSize=\"12\">h</text></svg>);}"
+                      }
+                    }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "图形结构已按原图重述，主要关系清楚，但后续补答案时仍建议结合原图再核。"
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-advanced-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 函数的概念",
+                  "title": "由定义域判断等式成立",
+                  "source": "2025 河南郑州中学月考",
+                  "tags": ["函数概念", "定义域"],
+                  "stemMarkdown": "已知函数 $f(x)$ 的定义域为 $\\mathbb{R}$，则下列等式成立的是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$f(x^2)=x^3$" },
+                    { "label": "B", "text": "$f(x^2+1)=|x+1|$" },
+                    { "label": "C", "text": "$f(x^2+x)=|x|$" },
+                    { "label": "D", "text": "$f(|x|)=x^2+1$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-advanced-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 函数的定义域",
+                  "title": "复合函数定义域求区间",
+                  "source": "2025 辽宁鞍山一中月考",
+                  "tags": ["定义域", "复合函数"],
+                  "stemMarkdown": "已知 $f(x)$ 的定义域为 $(1,3)$，则 $f\\left(\\dfrac1x\\right)+f\\left(x+\\dfrac52\\right)$ 的定义域为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\left(\\dfrac13,1\\right)$" },
+                    { "label": "B", "text": "$\\left(\\dfrac13,\\dfrac12\\right]$" },
+                    { "label": "C", "text": "$\\left(\\dfrac13,\\dfrac12\\right)$" },
+                    { "label": "D", "text": "$\\left(\\dfrac12,1\\right)$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-advanced-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 函数的定义域",
+                  "title": "平移后分式根式定义域",
+                  "source": "2025 重庆一中月考",
+                  "tags": ["定义域", "复合函数", "根式分式"],
+                  "stemMarkdown": "已知函数 $f(x+2)$ 的定义域为 $(-3,4)$，则函数 $g(x)=\\dfrac{f(x+1)}{\\sqrt{3x-1}}$ 的定义域为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$(-4,3)$" },
+                    { "label": "B", "text": "$(-2,5)$" },
+                    { "label": "C", "text": "$\\left(\\dfrac13,3\\right)$" },
+                    { "label": "D", "text": "$\\left(\\dfrac13,5\\right)$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-advanced-q5",
+                  "no": "5",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 函数的定义域",
+                  "title": "根式函数全体实数定义域",
+                  "source": "2025 黑龙江鹤岗第一中学期中",
+                  "tags": ["定义域", "二次式", "参数"],
+                  "stemMarkdown": "已知函数 $f(x)=\\sqrt{ax^2-2ax+1}$ 的定义域为 $\\mathbb{R}$，则实数 $a$ 的取值范围是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$(0,1]$" },
+                    { "label": "B", "text": "$(0,+\\infty)$" },
+                    { "label": "C", "text": "$[1,+\\infty)$" },
+                    { "label": "D", "text": "$[0,1]$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-advanced-q6",
+                  "no": "6",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组三 函数值及函数的值域",
+                  "title": "由值域反推定义域",
+                  "source": "2025 河南洛阳四校期中联考",
+                  "tags": ["值域", "定义域反推", "多选题"],
+                  "stemMarkdown": "已知函数 $f(x)=x^2$ 的值域为 $[0,36]$，则 $f(x)$ 的定义域可能为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$[2,6]$" },
+                    { "label": "B", "text": "$[-2,6]$" },
+                    { "label": "C", "text": "$[-6,6]$" },
+                    { "label": "D", "text": "$[0,6]$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-advanced-q7",
+                  "no": "7",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 函数值及函数的值域",
+                  "title": "含根函数值域判断",
+                  "source": "2025 重庆八中月考",
+                  "tags": ["值域", "根式函数"],
+                  "stemMarkdown": "函数 $y=x+\\sqrt{2-x}$ 的值域为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$(-\\infty,2]$" },
+                    { "label": "B", "text": "$[2,+\\infty)$" },
+                    { "label": "C", "text": "$\\left(-\\infty,\\dfrac94\\right]$" },
+                    { "label": "D", "text": "$\\left[\\dfrac94,+\\infty\\right)$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-advanced-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 函数值及函数的值域",
+                  "title": "复合分式函数值域",
+                  "source": "2025 辽宁沈阳第二十中学质量监测",
+                  "tags": ["值域", "复合函数", "分式函数"],
+                  "stemMarkdown": "已知函数 $f(x)=\\dfrac1x\\ (1\\le x\\le 2)$，则函数 $g(x)=2f(x)+f(x^2)$ 的值域为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$[3,2+2\\sqrt2]$" },
+                    { "label": "B", "text": "$\\left[\\dfrac54,3\\right]$" },
+                    { "label": "C", "text": "$\\left[\\dfrac9{16},3\\right]$" },
+                    { "label": "D", "text": "$\\left[\\dfrac12+\\sqrt2,3\\right]$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-advanced-q9",
+                  "no": "9",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 函数值及函数的值域",
+                  "title": "取整函数值域判断",
+                  "source": "2025 山东省实验中学月考",
+                  "tags": ["值域", "取整函数"],
+                  "stemMarkdown": "设 $x\\in\\mathbb{R}$，用 $[x]$ 表示不超过 $x$ 的最大整数，例如：$[-2.1]=-3$，$[3.1]=3$。已知函数 $f(x)=\\dfrac{(x+1)^2}{x^2+1}-\\dfrac12$，则函数 $y=[f(x)]$ 的值域是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\{0,1\\}$" },
+                    { "label": "B", "text": "$\\{0,1,2\\}$" },
+                    { "label": "C", "text": "$\\{-1,0,1\\}$" },
+                    { "label": "D", "text": "$\\{-1,0,1,2\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "high",
+                    "notes": ""
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-advanced-q10",
+                  "no": "10",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "题组三 函数值及函数的值域",
+                  "title": "二次函数值域反求参数",
+                  "source": "2025 江苏南京六校期中联考",
+                  "tags": ["值域", "二次函数", "参数"],
+                  "stemMarkdown": "已知函数 $f(x)=x^2-2ax+a^2-9,\\ x\\in[a-3,a^2]\\ (a>0)$，若函数 $f(x)$ 的值域为 $[-9,0]$，则实数 $a$ 的取值范围是 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干结构清楚，但区间上端写作 $a^2$ 需补答案前再复核一次。"
+                  }
+                },
+                {
+                  "id": "ch3-3.1.1-advanced-q11",
+                  "no": "11",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "题组三 函数值及函数的值域",
+                  "title": "三角形边长条件求参数",
+                  "source": "2025 江苏无锡期中",
+                  "tags": ["值域", "参数", "三角形"],
+                  "stemMarkdown": "已知函数 $f(x)=\\dfrac{x^4+kx^2+1}{x^4+x^2+1}\\ (x\\in\\mathbb{R})$，若 $a,b,c\\in\\mathbb{R}$，$f(a),f(b),f(c)$ 为某个三角形的三边边长，则实数 $k$ 的取值范围为 ________ 。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "有二维码贴近页面右侧，但核心函数式和设问可辨，后续补答案时建议单题复核。"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

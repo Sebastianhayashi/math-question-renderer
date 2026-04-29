@@ -1,0 +1,227 @@
+{
+  "schemaVersion": "edu-question-bank/v1",
+  "book": {
+    "subject": "高中数学",
+    "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修 第一册 人教A版"
+  },
+  "chapters": [
+    {
+      "id": "ch2",
+      "title": "第二章 一元二次函数、方程和不等式",
+      "sections": [
+        {
+          "id": "2.3",
+          "title": "2.3 二次函数与一元二次方程、不等式",
+          "sets": [
+            {
+              "id": "2.3-topic2",
+              "title": "专题强化练2 三个“二次”的应用",
+              "questions": [
+                {
+                  "id": "2.3-topic2-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "专题强化练2 三个“二次”的应用",
+                  "title": "系数表达式最小值",
+                  "source": "2025 天津第一中学滨海学校期中",
+                  "tags": ["一元二次不等式", "最值", "根与系数"],
+                  "stemMarkdown": "若一元二次不等式 $ax^2+bx+c<0$（$a,b,c\\in R$）的解集为 $\\{x\\mid -1<x<2\\}$，则 $b-c+\\frac{4}{a}$ 的最小值为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$-4$" },
+                    { "label": "B", "text": "$-2$" },
+                    { "label": "C", "text": "$2$" },
+                    { "label": "D", "text": "$4$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-topic2-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "专题强化练2 三个“二次”的应用",
+                  "title": "分式恒成立求a",
+                  "source": "2025 安徽合肥期中",
+                  "tags": ["恒成立", "参数范围", "分式"],
+                  "stemMarkdown": "若 $\\forall x\\in R,\\ \\frac{x}{x^2+x+1}\\le a$ 恒成立，则实数 $a$ 的取值范围是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\left\\{a\\mid a\\le \\frac{1}{3}\\right\\}$" },
+                    { "label": "B", "text": "$\\left\\{a\\mid a\\ge \\frac{1}{3}\\right\\}$" },
+                    { "label": "C", "text": "$\\{a\\mid a\\le 0\\}$" },
+                    { "label": "D", "text": "$\\{a\\mid a\\ge 0\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-topic2-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "专题强化练2 三个“二次”的应用",
+                  "title": "根与参数大小规律",
+                  "source": "2024 福建厦门一中适应性考试",
+                  "tags": ["根与系数", "参数关系", "一元二次不等式"],
+                  "stemMarkdown": "已知 $a,b\\in R$，且 $a<b$，关于 $x$ 的不等式 $x^2-(a+b)x+ab+1<0$ 的解集为 $\\{x\\mid x_1<x<x_2\\}$，$x_1<x_2$，则实数 $a,b,x_1,x_2$ 的大小关系是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$a<x_1<x_2<b$" },
+                    { "label": "B", "text": "$x_1<a<b<x_2$" },
+                    { "label": "C", "text": "$a<x_1<b<x_2$" },
+                    { "label": "D", "text": "$x_1<a<x_2<b$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-topic2-q4",
+                  "no": "4",
+                  "status": "needs-review",
+                  "type": "multiple-choice",
+                  "group": "专题强化练2 三个“二次”的应用",
+                  "title": "图像反推系数关系",
+                  "source": "2025 湖南长沙期中",
+                  "tags": ["二次函数", "多选", "图像"],
+                  "stemMarkdown": "已知二次函数 $y=ax^2+bx+c$（$a,b,c$ 为常数，且 $a\\ne 0$）的部分图象如图所示，则（ ）",
+                  "options": [
+                    { "label": "A", "text": "$abc>0$" },
+                    { "label": "B", "text": "$a+b>0$" },
+                    { "label": "C", "text": "$a+b+c<0$" },
+                    { "label": "D", "text": "不等式 $cx^2-bx+a>0$ 的解集为 $\\left\\{x\\mid -\\frac{1}{2}<x<1\\right\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干和选项稳定，但属于图像反推题，建议后续结合图示再核一次各符号关系。"
+                  },
+                  "visuals": [
+                    {
+                      "id": "2.3-topic2-q4-fig1",
+                      "kind": "coordinate-plane",
+                      "placement": "stem",
+                      "status": "complete",
+                      "alt": "开口向上的抛物线与x轴交于-1和2，顶点在x轴下方。",
+                      "diagramSpec": "画直角坐标系，一条开口向上的抛物线经过 x=-1 与 x=2 两个零点，顶点位于 y 轴右侧且在 x 轴下方。",
+                      "renderCode": {
+                        "type": "react-svg",
+                        "componentName": "Q23Topic2Q4Figure",
+                        "code": "export default function Q23Topic2Q4Figure(){return (<svg viewBox=\"0 0 200 160\" width=\"200\" height=\"160\"><line x1=\"20\" y1=\"80\" x2=\"180\" y2=\"80\" stroke=\"currentColor\" strokeWidth=\"2\"/><line x1=\"90\" y1=\"10\" x2=\"90\" y2=\"145\" stroke=\"currentColor\" strokeWidth=\"2\"/><path d=\"M35 50 Q105 130 155 45\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"2\"/><text x=\"62\" y=\"94\" fontSize=\"12\">-1</text><text x=\"142\" y=\"94\" fontSize=\"12\">2</text><text x=\"94\" y=\"18\" fontSize=\"12\">y</text><text x=\"184\" y=\"84\" fontSize=\"12\">x</text></svg>);}"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "2.3-topic2-q5",
+                  "no": "5",
+                  "status": "incomplete",
+                  "type": "multiple-choice",
+                  "group": "专题强化练2 三个“二次”的应用",
+                  "title": "解集反推多选关系",
+                  "source": "2025 湖北黄冈十五校期中联考",
+                  "tags": ["多选", "解集", "系数关系"],
+                  "stemMarkdown": "已知关于 $x$ 的不等式 $ax^2+bx+c\\ge 0$ 的解集为 $\\{x\\mid -3\\le x\\le 4\\}$，则下列说法正确的是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$a<0$" },
+                    { "label": "B", "text": "不等式 $cx^2-bx+a<0$ 的解集为 $\\left\\{x\\mid -\\frac{1}{4}<x<\\frac{1}{3}\\right\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "low",
+                    "notes": "当前页底切边，C、D 两个选项未完整显出，不能可靠补全。"
+                  }
+                },
+                {
+                  "id": "2.3-topic2-q6",
+                  "no": "6",
+                  "status": "needs-review",
+                  "type": "unknown",
+                  "group": "专题强化练2 三个“二次”的应用",
+                  "title": "负根条件关系判断",
+                  "source": "2025 上海七宝中学期中",
+                  "tags": ["充分必要", "方程根", "参数符号"],
+                  "stemMarkdown": "“$a<0$”是“关于 $x$ 的方程 $ax^2+2x+2=0$ 至少有一个负数根”的 ______ 条件（用“充分不必要”“必要不充分”“充要”“既不充分也不必要”填写）。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干稳定，但属于条件关系判断题，后续补答案时需分类讨论判别式与根号符号。"
+                  }
+                },
+                {
+                  "id": "2.3-topic2-q7",
+                  "no": "7",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "专题强化练2 三个“二次”的应用",
+                  "title": "根区间求参范围",
+                  "source": "2024 浙江宁波余姚中学质检",
+                  "tags": ["根与系数", "参数范围", "填空"],
+                  "stemMarkdown": "已知方程 $x^2+2(a+2)x+a^2-1=0$ 有两个根 $x_1,x_2$。若 $x_1<0<x_2$，则实数 $a$ 的取值范围是 ______；若 $-4<x_1<x_2<0$，则实数 $a$ 的取值范围是 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干可辨，但两段范围都需综合根与区间条件，后续补答案时需单题复核。"
+                  }
+                },
+                {
+                  "id": "2.3-topic2-q8",
+                  "no": "8",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "专题强化练2 三个“二次”的应用",
+                  "title": "整数解个数求a",
+                  "source": "2025 江苏连云港期中",
+                  "tags": ["整数解", "参数范围", "填空"],
+                  "stemMarkdown": "若关于 $x$ 的不等式 $(ax-1)^2<x^2$ 恰有 3 个整数解，则实数 $a$ 的取值范围是 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干稳定，但整数解计数对区间端点较敏感，后续补答案时需复核。"
+                  }
+                },
+                {
+                  "id": "2.3-topic2-q9",
+                  "no": "9",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "专题强化练2 三个“二次”的应用",
+                  "title": "不等式组整数解个数",
+                  "source": "2025 上海实验学校月考",
+                  "tags": ["不等式组", "整数解", "参数范围"],
+                  "stemMarkdown": "关于 $x$ 的不等式组 $$\\begin{cases}x^2-x-2>0,\\\\2x^2+(2k+5)x+5k<0\\end{cases}$$ 的整数解组成的集合为 $A$。\\n\\n（1）当 $k=3$ 时，求集合 $A$；\\n\\n（2）若集合 $A=\\{-2\\}$，求实数 $k$ 的取值范围；\\n\\n（3）若集合 $A$ 中有 2019 个元素，求实数 $k$ 的取值范围。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": {
+                    "confidence": "medium",
+                    "notes": "题干清楚，但涉及不等式组与整数计数三问联动，后续补答案时需逐问核算。"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

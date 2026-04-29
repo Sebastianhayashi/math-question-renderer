@@ -1,0 +1,419 @@
+{
+  "schemaVersion": "edu-question-bank/v1",
+  "book": {
+    "subject": "数学",
+    "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修第一册 人教A版"
+  },
+  "chapters": [
+    {
+      "id": "ch1",
+      "title": "第一章 集合与常用逻辑用语",
+      "sections": [
+        {
+          "id": "1.2",
+          "title": "1.2 集合间的基本关系",
+          "sets": [
+            {
+              "id": "1.2-basic",
+              "title": "基础过关",
+              "questions": [
+                {
+                  "id": "1.2-basic-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 子集、真子集和空集",
+                  "title": "关系式正误判断",
+                  "source": "2025河北石家庄第三十八中学月考",
+                  "tags": ["集合相等", "子集", "空集"],
+                  "stemMarkdown": "有下列关系式：① $\\{a,b\\}=\\{b,a\\}$；② $\\{a,b\\}\\subseteq\\{b,a\\}$；③ $\\varnothing=\\{\\varnothing\\}$；④ $\\{0\\}=\\varnothing$；⑤ $\\varnothing\\subseteq\\{0\\}$；⑥ $0\\in\\{0\\}$。其中不正确的是（ ）",
+                  "options": [
+                    { "label": "A", "text": "①③④" },
+                    { "label": "B", "text": "②④⑤" },
+                    { "label": "C", "text": "②⑤⑥" },
+                    { "label": "D", "text": "③④" }
+                  ],
+                  "answer": "D",
+                  "analysisMarkdown": "③错误，因为 $\\varnothing$ 与 $\\{\\varnothing\\}$ 不同；④错误，因为 $\\{0\\}$ 不是空集。",
+                  "solutionMarkdown": "答案为 D。",
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.2-basic-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 子集、真子集和空集",
+                  "title": "Venn图表示集合关系",
+                  "source": "2024辽宁沈阳第十五中学月考",
+                  "tags": ["Venn图", "子集", "集合关系"],
+                  "stemMarkdown": "下列 Venn 图中，能正确表示集合 $M=\\{-1,0,1\\}$ 和 $N=\\{x\\mid x^2-x=0\\}$ 的关系的是（ ）",
+                  "options": [
+                    { "label": "A", "text": "图 A" },
+                    { "label": "B", "text": "图 B" },
+                    { "label": "C", "text": "图 C" },
+                    { "label": "D", "text": "图 D" }
+                  ],
+                  "answer": "B",
+                  "analysisMarkdown": "$N=\\{0,1\\}$，故 $N\\subseteq M$。",
+                  "solutionMarkdown": "答案为 B。",
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.2-basic-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 子集、真子集和空集",
+                  "title": "有序对集合关系判断",
+                  "source": "2025广东中山华侨中学月考",
+                  "tags": ["有序对", "子集", "集合关系"],
+                  "stemMarkdown": "若 $x,y\\in\\mathbb{R}$，$A=\\{(x,y)\\mid y=x\\}$，$B=\\{(x,y)\\mid \\frac{y}{x}=1\\}$，则集合 $A,B$ 之间的关系为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$B\\in A$" },
+                    { "label": "B", "text": "$B\\subseteq A$" },
+                    { "label": "C", "text": "$A=B$" },
+                    { "label": "D", "text": "$A\\subseteq B$" }
+                  ],
+                  "answer": "B",
+                  "analysisMarkdown": "$B$ 中还要求 $x\\ne 0$，故 $B$ 是 $A$ 的真子集。",
+                  "solutionMarkdown": "答案为 B。",
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.2-basic-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 子集、真子集和空集",
+                  "title": "直线点集与交点集关系",
+                  "source": "教材习题改编",
+                  "tags": ["点集", "方程组", "子集"],
+                  "stemMarkdown": "在平面直角坐标系中，集合 $C=\\{(x,y)\\mid y=x\\}$ 表示直线 $y=x$ 上的所有点。从这个角度看，若集合 $D=\\{(x,y)\\mid \\begin{cases} y=x \\\\ x^2+y=2 \\end{cases}\\}$，则集合 $C,D$ 之间的关系是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$C\\subseteq D$" },
+                    { "label": "B", "text": "$D\\subseteq C$" },
+                    { "label": "C", "text": "$C\\in D$" },
+                    { "label": "D", "text": "$D\\in C$" }
+                  ],
+                  "answer": "B",
+                  "analysisMarkdown": "$D$ 是直线 $y=x$ 与曲线 $x^2+y=2$ 的交点集，因此 $D\\subseteq C$。",
+                  "solutionMarkdown": "答案为 B。",
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.2-basic-q5",
+                  "no": "5",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "题组一 子集、真子集和空集",
+                  "title": "真子集个数计算",
+                  "source": "2025四川达州外国语学校月考",
+                  "tags": ["真子集", "计数", "自然数集合"],
+                  "stemMarkdown": "已知集合 $M=\\{x\\in\\mathbb{N}\\mid 2x-3<2\\}$，则 $M$ 的真子集的个数是 ______。",
+                  "options": [],
+                  "answer": "7（若 $\\mathbb{N}$ 含 0）；3（若 $\\mathbb{N}$ 不含 0）",
+                  "analysisMarkdown": "由 $2x-3<2$ 得 $x<\\frac{5}{2}$。若 $\\mathbb{N}=\\{0,1,2,\\dots\\}$，则 $M=\\{0,1,2\\}$，真子集个数为 $2^3-1=7$；若 $\\mathbb{N}=\\{1,2,3,\\dots\\}$，则 $M=\\{1,2\\}$，真子集个数为 $2^2-1=3$。",
+                  "solutionMarkdown": "答案受 $\\mathbb{N}$ 约定影响。",
+                  "ocr": { "confidence": "medium", "notes": "自然数是否包含 0 未在题面显式说明。" }
+                },
+                {
+                  "id": "1.2-basic-q6",
+                  "no": "6",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "题组一 子集、真子集和空集",
+                  "title": "子集个数统计",
+                  "source": "2025黑龙江哈尔滨师范大学附属中学月考",
+                  "tags": ["子集计数", "集合包含", "自然数集合"],
+                  "stemMarkdown": "已知集合 $A=\\{x\\mid x^2-5x+6=0\\}$，$B=\\{x\\mid -1<x<5,\\ x\\in\\mathbb{N}\\}$，则满足 $A\\subseteq C\\subseteq B$ 的集合 $C$ 的个数为 ______。",
+                  "options": [],
+                  "answer": "8（若 $\\mathbb{N}$ 含 0）；4（若 $\\mathbb{N}$ 不含 0）",
+                  "analysisMarkdown": "$A=\\{2,3\\}$。若 $\\mathbb{N}$ 含 0，则 $B=\\{0,1,2,3,4\\}$，还可自由选择 $\\{0,1,4\\}$ 中元素，故有 $2^3=8$ 个；若不含 0，则 $B=\\{1,2,3,4\\}$，故有 $2^2=4$ 个。",
+                  "solutionMarkdown": "答案受 $\\mathbb{N}$ 约定影响。",
+                  "ocr": { "confidence": "medium", "notes": "自然数是否包含 0 未在题面显式说明。" }
+                },
+                {
+                  "id": "1.2-basic-q7",
+                  "no": "7",
+                  "status": "needs-review",
+                  "type": "unknown",
+                  "group": "题组二 集合间的关系及其应用",
+                  "title": "参数集合包含关系判断",
+                  "source": "2025江苏苏大附中月考",
+                  "tags": ["参数求值", "集合包含", "元素判定"],
+                  "stemMarkdown": "设集合 $A=\\{0,-a\\}$，$B=\\{1,a-2,2a-2\\}$，若 $A\\subseteq B$，则 $a=$ ______。",
+                  "options": [],
+                  "answer": "1",
+                  "analysisMarkdown": "由 $0\\in A\\subseteq B$，得 $0$ 必为 $B$ 中元素。由 $1\\ne 0$ 且 $a-2=0$ 与 $2a-2=0$ 中只有后者与结论相容，得 $a=1$。",
+                  "solutionMarkdown": "$a=1$。",
+                  "ocr": { "confidence": "medium", "notes": "原题选项区未完整截出，但题干与结论可确认。" }
+                },
+                {
+                  "id": "1.2-basic-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 集合间的关系及其应用",
+                  "title": "数列型集合关系判断",
+                  "source": "2025天津静海第一中学月考",
+                  "tags": ["集合关系", "数列生成式", "相等"],
+                  "stemMarkdown": "若集合 $A=\\left\\{x\\mid x=\\frac{1}{9}(2k+1),\\ k\\in\\mathbb{Z}\\right\\}$，$B=\\left\\{x\\mid x=\\frac{4}{9}k\\pm\\frac{1}{9},\\ k\\in\\mathbb{Z}\\right\\}$，则集合 $A,B$ 之间的关系表示最准确的是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$A\\subseteq B$" },
+                    { "label": "B", "text": "$B\\subseteq A$" },
+                    { "label": "C", "text": "$A=B$" },
+                    { "label": "D", "text": "$A$ 与 $B$ 互不包含" }
+                  ],
+                  "answer": "C",
+                  "analysisMarkdown": "$B$ 中元素可写成 $\\frac{4k\\pm 1}{9}$，而任一奇整数都可表示为 $4k\\pm1$，故 $A=B$。",
+                  "solutionMarkdown": "答案为 C。",
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.2-basic-q9",
+                  "no": "9",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组二 集合间的关系及其应用",
+                  "title": "不等式集合包含求参",
+                  "source": "2025黑龙江齐齐哈尔衡齐高级中学月考",
+                  "tags": ["不等式集合", "参数范围", "子集"],
+                  "stemMarkdown": "设集合 $A=\\{x\\mid 2x+3>1\\}$，$B=\\{x\\mid x+a\\ge 0\\}$，若 $A\\subseteq B$，则实数 $a$ 的最小值是 ______。",
+                  "options": [],
+                  "answer": "1",
+                  "analysisMarkdown": "$A=(-1,+\\infty)$，$B=[-a,+\\infty)$。由 $A\\subseteq B$，得 $-a\\le -1$，故 $a\\ge 1$，最小值为 1。",
+                  "solutionMarkdown": "答案为 1。",
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.2-basic-q10",
+                  "no": "10",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "题组二 集合间的关系及其应用",
+                  "title": "区间包含求参",
+                  "source": "2024广东广大附中强基班入学考试",
+                  "tags": ["区间包含", "参数范围", "空集"],
+                  "stemMarkdown": "设 $m$ 为实数，集合 $A=\\{x\\mid -3\\le x\\le 2\\}$，$B=\\{x\\mid m\\le x\\le 2m-1\\}$，且 $B\\subseteq A$，则 $m$ 的取值范围是 ______。",
+                  "options": [],
+                  "answer": "$m\\le \\frac{3}{2}$",
+                  "analysisMarkdown": "若 $m<1$，则 $B=\\varnothing$，显然满足 $B\\subseteq A$。若 $m\\ge 1$，则要有 $m\\ge -3$ 且 $2m-1\\le 2$，得 $1\\le m\\le \\frac{3}{2}$。综上 $m\\le \\frac{3}{2}$。",
+                  "solutionMarkdown": "$m\\le \\frac{3}{2}$。",
+                  "ocr": { "confidence": "medium", "notes": "按空集也可作为子集处理；若题目隐含要求 $B$ 非空，则范围会缩小。" }
+                },
+                {
+                  "id": "1.2-basic-q11",
+                  "no": "11",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "题组二 集合间的关系及其应用",
+                  "title": "二次方程根集判定",
+                  "source": "2025陕西榆林第十四中学期中",
+                  "tags": ["二次方程", "根集", "集合包含"],
+                  "stemMarkdown": "已知集合 $A=\\{x\\mid x^2+4x-a=0\\}$。\n\n（1）若 $a=5$，请写出集合 $A$ 的所有子集；\n\n（2）若集合 $B=\\{x\\mid x^2+2x=0\\}$，且 $A\\subseteq B$，求 $a$ 的取值范围。",
+                  "options": [],
+                  "answer": "（1）$\\varnothing,\\{1\\},\\{-5\\},\\{1,-5\\}$；（2）$a\\le -4$",
+                  "analysisMarkdown": "（1）当 $a=5$ 时，方程为 $x^2+4x-5=0$，根为 $1,-5$，所以 $A=\\{1,-5\\}$，其所有子集共有四个。\n\n（2）$B=\\{0,-2\\}$。若 $a<-4$，则方程无实根，$A=\\varnothing\\subseteq B$；若 $a=-4$，则 $A=\\{-2\\}\\subseteq B$；若 $a>-4$，方程有实根且两根和为 $-4$，不可能都落在 $\\{0,-2\\}$ 中。",
+                  "solutionMarkdown": "（1）$\\varnothing,\\{1\\},\\{-5\\},\\{1,-5\\}$。\n\n（2）$a\\le -4$。",
+                  "ocr": { "confidence": "medium", "notes": "按空集也可作为子集处理；若题目另有限制，需要再复核。" }
+                }
+              ]
+            },
+            {
+              "id": "1.2-advanced",
+              "title": "能力提升练",
+              "questions": [
+                {
+                  "id": "1.2-advanced-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 集合间的基本关系",
+                  "title": "伙伴关系集合计数",
+                  "source": "2025吉林长春东北师大附中月考",
+                  "tags": ["新定义", "子集计数", "集合综合"],
+                  "stemMarkdown": "若对任意 $x\\in A$，都有 $\\frac{1}{x}\\in A$，就称 $A$ 是具有伙伴关系的集合。集合 $M=\\left\\{-1,0,\\frac{1}{4},\\frac{1}{3},1,2\\right\\}$ 的所有非空子集中，具有伙伴关系的集合的个数为（ ）",
+                  "options": [
+                    { "label": "A", "text": "1" },
+                    { "label": "B", "text": "3" },
+                    { "label": "C", "text": "5" },
+                    { "label": "D", "text": "7" }
+                  ],
+                  "answer": "B",
+                  "analysisMarkdown": "集合中只有 $-1$ 与 $1$ 的倒数仍在原集合中，且 $0$ 不可取。满足条件的非空子集只有 $\\{-1\\}$、$\\{1\\}$、$\\{-1,1\\}$ 共 3 个。",
+                  "solutionMarkdown": "答案为 B。",
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.2-advanced-q2",
+                  "no": "2",
+                  "status": "needs-review",
+                  "type": "single-choice",
+                  "group": "题组一 集合间的基本关系",
+                  "title": "三个数列集合关系判断",
+                  "source": "2025福建福宁古五校期中",
+                  "tags": ["集合关系", "数列生成式", "自然数集合"],
+                  "stemMarkdown": "设集合 $M=\\{x\\mid x=7k-2,\\ k\\in\\mathbb{N}\\}$，$P=\\{x\\mid x=7n+5,\\ n\\in\\mathbb{N}\\}$，$S=\\{x\\mid x=14m+5,\\ m\\in\\mathbb{N}\\}$。则它们的关系是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$S\\subseteq P\\subseteq M$" },
+                    { "label": "B", "text": "$S=P\\subseteq M$" },
+                    { "label": "C", "text": "$S\\subseteq P=M$" },
+                    { "label": "D", "text": "$P=M\\subseteq S$" }
+                  ],
+                  "answer": "A（若 $\\mathbb{N}$ 含 0）；C（若 $\\mathbb{N}$ 从 1 开始）",
+                  "analysisMarkdown": "恒有 $S\\subseteq P$。若 $\\mathbb{N}$ 含 0，则 $M$ 比 $P$ 多一个元素 $-2$，故为 $S\\subseteq P\\subseteq M$；若 $\\mathbb{N}$ 从 1 开始，则 $M=P$。",
+                  "solutionMarkdown": "答案受 $\\mathbb{N}$ 约定影响。",
+                  "ocr": { "confidence": "medium", "notes": "题面使用 $\\mathbb{N}$，但未显式说明是否含 0。" }
+                },
+                {
+                  "id": "1.2-advanced-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组一 集合间的基本关系",
+                  "title": "真子集个数统计",
+                  "source": "2025四川安宁河联盟期中",
+                  "tags": ["真子集", "整除", "计数"],
+                  "stemMarkdown": "集合 $A=\\left\\{a\\in\\mathbb{Z}\\mid a+\\frac{4}{a}\\in\\mathbb{Z}\\right\\}$ 的真子集有 ______ 个。",
+                  "options": [],
+                  "answer": "63",
+                  "analysisMarkdown": "要使 $a+\\frac{4}{a}$ 为整数，需 $a\\mid 4$ 且 $a\\ne 0$，故 $A=\\{\\pm1,\\pm2,\\pm4\\}$，有 6 个元素。真子集个数为 $2^6-1=63$。",
+                  "solutionMarkdown": "答案为 63。",
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.2-advanced-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组一 集合间的基本关系",
+                  "title": "含至少两个奇数的真子集计数",
+                  "source": "2025上海交大附中月考",
+                  "tags": ["计数", "真子集", "分类讨论"],
+                  "stemMarkdown": "若集合 $M\\subsetneqq\\{1,2,3,4,5,6,7,8\\}$，且 $M$ 中至少含有两个奇数，则满足条件的集合 $M$ 的个数是 ______。",
+                  "options": [],
+                  "answer": "175",
+                  "analysisMarkdown": "4 个奇数中至少选 2 个，共 $\\binom42+\\binom43+\\binom44=11$ 种；4 个偶数任意选，共 $2^4=16$ 种，合计 176。再去掉全集 1 个，得 175。",
+                  "solutionMarkdown": "答案为 175。",
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.2-advanced-q5",
+                  "no": "5",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组一 集合间的基本关系",
+                  "title": "子集元素和反推原集合",
+                  "source": "2025上海洋泾中学月考",
+                  "tags": ["子集计数", "元素和", "反推"],
+                  "stemMarkdown": "设集合 $S=\\{a_1,a_2,a_3,a_4,a_5\\}$。若集合 $S$ 的所有非空真子集的元素之和是 300，则 $a_1+a_2+a_3+a_4+a_5=$ ______。",
+                  "options": [],
+                  "answer": "20",
+                  "analysisMarkdown": "每个元素出现在 $2^{4}-1=15$ 个非空真子集中，故 $15(a_1+a_2+a_3+a_4+a_5)=300$。",
+                  "solutionMarkdown": "答案为 20。",
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.2-advanced-q6",
+                  "no": "6",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组二 由集合间的关系解决参数问题",
+                  "title": "解集子集个数反求参数",
+                  "source": "2025安徽马鞍山第二中学月考",
+                  "tags": ["多选", "二次方程", "解集"],
+                  "stemMarkdown": "集合 $A=\\{x\\mid ax^2+2x+a=0,\\ a\\in\\mathbb{R}\\}$。若集合 $A$ 只有 2 个子集，则 $a$ 的取值可以为（ ）",
+                  "options": [
+                    { "label": "A", "text": "-2" },
+                    { "label": "B", "text": "-1" },
+                    { "label": "C", "text": "0" },
+                    { "label": "D", "text": "1" }
+                  ],
+                  "answer": ["B", "C", "D"],
+                  "analysisMarkdown": "集合只有 2 个子集，说明其只有 1 个元素。$a=0$ 时方程化为 $2x=0$；$a\\ne0$ 时需判别式 $4-4a^2=0$，即 $a=\\pm1$。",
+                  "solutionMarkdown": "答案为 B、C、D。",
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.2-advanced-q7",
+                  "no": "7",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 由集合间的关系解决参数问题",
+                  "title": "已知元素属于解集求参数",
+                  "source": "2025江西景德镇一中期中",
+                  "tags": ["参数范围", "不等式解集", "子集"],
+                  "stemMarkdown": "已知集合 $A=\\{x\\mid ax\\le 4\\}$，$B=\\{4,\\sqrt{2}\\}$，若 $B\\subseteq A$，则实数 $a$ 的取值范围为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\{a\\mid a\\le 1\\}$" },
+                    { "label": "B", "text": "$\\{a\\mid a\\le -1\\}$" },
+                    { "label": "C", "text": "$\\{a\\mid a\\le -2\\}$" },
+                    { "label": "D", "text": "$\\{a\\mid a\\le 2\\}$" }
+                  ],
+                  "answer": "A",
+                  "analysisMarkdown": "需同时有 $4a\\le 4$ 与 $\\sqrt{2}a\\le 4$。前者给出 $a\\le 1$，后者给出 $a\\le 2\\sqrt{2}$，故综合得 $a\\le1$。",
+                  "solutionMarkdown": "答案为 A。",
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.2-advanced-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "能力提升练",
+                  "title": "解集包含于给定集合求参",
+                  "source": "2025重庆巴南中学月考",
+                  "tags": ["多选", "二次方程", "集合包含"],
+                  "stemMarkdown": "已知集合 $A=\\{0,1\\}$，$B=\\{x\\mid ax^2+x-1=0\\}$，若 $A\\supseteq B$，则实数 $a$ 的取值可以是（ ）",
+                  "options": [
+                    { "label": "A", "text": "0" },
+                    { "label": "B", "text": "1" },
+                    { "label": "C", "text": "-1" },
+                    { "label": "D", "text": "$\\frac{1}{2}$" }
+                  ],
+                  "answer": ["A", "C"],
+                  "analysisMarkdown": "$a=0$ 时 $B=\\{1\\}\\subseteq A$；$a=-1$ 时方程无实根，$B=\\varnothing\\subseteq A$。其余两个选项所得根不都属于 $\\{0,1\\}$。",
+                  "solutionMarkdown": "答案为 A、C。",
+                  "ocr": { "confidence": "high", "notes": "按空集也可作为子集处理。" }
+                },
+                {
+                  "id": "1.2-advanced-q9",
+                  "no": "9",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "能力提升练",
+                  "title": "集合与参数范围综合",
+                  "source": "2025河北沧州月考",
+                  "tags": ["子集", "参数范围", "自然数集合"],
+                  "stemMarkdown": "设集合 $A=\\{x\\mid -1\\le x+1\\le 4\\}$，$B=\\{x\\mid m-1<x<2m+1\\}$。\n\n（1）当 $x\\in\\mathbb{N}$ 时，求 $A$ 的非空真子集的个数；\n\n（2）若 $A\\supseteq B$，求实数 $m$ 的取值范围。",
+                  "options": [],
+                  "answer": "（1）14（若 $\\mathbb{N}$ 含 0）；6（若 $\\mathbb{N}$ 不含 0）。（2）$m\\le -2$ 或 $-1\\le m\\le 1$",
+                  "analysisMarkdown": "由 $-1\\le x+1\\le 4$ 得 $A=[-2,3]$。若按自然数含 0，则 $A\\cap\\mathbb{N}=\\{0,1,2,3\\}$，非空真子集个数为 $2^4-2=14$；若不含 0，则为 $\\{1,2,3\\}$，个数为 6。\n\n对（2），若 $m\\le -2$，则区间 $(m-1,2m+1)$ 为空，故 $B=\\varnothing\\subseteq A$；若 $m>-2$，要使 $(m-1,2m+1)\\subseteq[-2,3]$，需 $m-1\\ge -2$ 且 $2m+1\\le 3$，得 $-1\\le m\\le 1$。",
+                  "solutionMarkdown": "答案受 $\\mathbb{N}$ 约定影响；第（2）问为 $m\\le -2$ 或 $-1\\le m\\le 1$。",
+                  "ocr": { "confidence": "medium", "notes": "第（1）问受 $\\mathbb{N}$ 是否含 0 影响；第（2）问按空区间也对应空集处理。" }
+                },
+                {
+                  "id": "1.2-advanced-q10",
+                  "no": "10",
+                  "status": "complete",
+                  "type": "short-answer",
+                  "group": "能力提升练",
+                  "title": "方程解集嵌套证明与求参",
+                  "source": "2024四川成都七中月考",
+                  "tags": ["证明", "方程解集", "参数范围"],
+                  "stemMarkdown": "已知 $a\\in\\mathbb{R}$，关于 $x$ 的方程 $x^2+a=x$ 的解组成的集合为 $A$（$A\\ne\\varnothing$），$(x^2+a)^2+a=x$ 的解组成的集合为 $B$。\n\n（1）求证：$A\\subseteq B$；\n\n（2）若 $A=B$，求实数 $a$ 的取值范围。",
+                  "options": [],
+                  "answer": "（1）$A\\subseteq B$；（2）$-\\frac{3}{4}\\le a\\le \\frac{1}{4}$",
+                  "analysisMarkdown": "设 $f(x)=x^2-x+a$。则 $A$ 为 $f(x)=0$ 的实根集。由\n$$\n(x^2+a)^2+a-x=(x^2-x+a)(x^2+x+a+1)\n$$\n可知 $B$ 的解包含 $f(x)=0$ 的全部实根，所以 $A\\subseteq B$。\n\n若 $A=B$，则第二个因子 $x^2+x+a+1=0$ 不能产生新的实根。其判别式为 $-4a-3$，故需 $-4a-3\\le0$，即 $a\\ge-\\frac34$。又因 $A\\ne\\varnothing$，故 $x^2-x+a=0$ 有实根，需 $1-4a\\ge0$，即 $a\\le\\frac14$。",
+                  "solutionMarkdown": "（1）由因式分解可得 $A\\subseteq B$。\n\n（2）$-\\frac{3}{4}\\le a\\le \\frac{1}{4}$。",
+                  "ocr": { "confidence": "high", "notes": "" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

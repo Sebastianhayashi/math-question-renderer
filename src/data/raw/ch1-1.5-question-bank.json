@@ -1,0 +1,401 @@
+{
+  "schemaVersion": "edu-question-bank/v1",
+  "book": {
+    "subject": "高中数学",
+    "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修第一册 人教A版"
+  },
+  "chapters": [
+    {
+      "id": "ch1",
+      "title": "第一章 集合与常用逻辑用语",
+      "sections": [
+        {
+          "id": "1.5",
+          "title": "1.5 全称量词与存在量词",
+          "sets": [
+            {
+              "id": "1.5-basic",
+              "title": "基础过关",
+              "questions": [
+                {
+                  "id": "1.5-basic-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组一 全称量词命题与存在量词命题及其真假判断",
+                  "title": "量词命题类型判断",
+                  "source": "基础过关",
+                  "tags": ["全称量词", "存在量词", "命题类型"],
+                  "stemMarkdown": "下列命题是全称量词命题的有 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "有些实数没有倒数" },
+                    { "label": "B", "text": "所有的矩形都有外接圆" },
+                    { "label": "C", "text": "存在一个实数与它的相反数的和为 0" },
+                    { "label": "D", "text": "过直线外一点有一条直线和已知直线平行" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 全称量词命题与存在量词命题及其真假判断",
+                  "title": "全称命题等价表述",
+                  "source": "2025 山东菏泽期中",
+                  "tags": ["全称量词", "等价表述", "真假判断"],
+                  "stemMarkdown": "下列命题与“$\\forall x\\in\\mathbb{R},\\ x^2+1\\ge 1$”的表述意思一致的是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "有且只有一个实数 $x$，使得 $x^2+1<1$ 成立" },
+                    { "label": "B", "text": "有些实数 $x$，使得 $x^2+1\\ge 1$ 成立" },
+                    { "label": "C", "text": "不存在实数 $x$，使得 $x^2+1<1$ 成立" },
+                    { "label": "D", "text": "有无数个实数 $x$，使得 $x^2+1\\ge 1$ 成立" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 全称量词命题与存在量词命题及其真假判断",
+                  "title": "存在命题真假判断",
+                  "source": "2024 山东青岛大学附属中学月考",
+                  "tags": ["存在量词", "真假判断", "空集"],
+                  "stemMarkdown": "“存在集合 $A$，使 $\\varnothing\\not\\subseteq A$”，关于这个命题，下面说法中正确的是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "它是全称量词命题，且是真命题" },
+                    { "label": "B", "text": "它是全称量词命题，且是假命题" },
+                    { "label": "C", "text": "它是存在量词命题，且是真命题" },
+                    { "label": "D", "text": "它是存在量词命题，且是假命题" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组一 全称量词命题与存在量词命题及其真假判断",
+                  "title": "真假命题综合判断",
+                  "source": "2025 海南海口中学期中",
+                  "tags": ["真假判断", "全称量词", "存在量词"],
+                  "stemMarkdown": "在下列命题中，真命题有 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$\\exists x\\in\\mathbb{R},\\ x^2+x+3=0$" },
+                    { "label": "B", "text": "$\\forall x\\in\\mathbb{Q},\\ \\dfrac13x^2+\\dfrac12x+1$ 是有理数" },
+                    { "label": "C", "text": "$\\exists x,y\\in\\mathbb{Z},\\ 3x-2y=10$" },
+                    { "label": "D", "text": "$\\forall x\\in\\mathbb{R},\\ x^2>|x|$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q5",
+                  "no": "5",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组一 全称量词命题与存在量词命题及其真假判断",
+                  "title": "集合命题真假判断",
+                  "source": "2025 山东菏泽第一中学月考",
+                  "tags": ["集合", "真假判断", "量词命题"],
+                  "stemMarkdown": "下列命题中，是真命题的有 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "设 $A,B$ 为两个集合，若 $A\\subseteq B$，则对任意 $x\\in A$，都有 $x\\in B$" },
+                    { "label": "B", "text": "设 $A,B$ 为两个集合，若 $A$ 不包含于 $B$，则存在 $x\\in A$，使得 $x\\notin B$" },
+                    { "label": "C", "text": "$\\forall x\\in\\{x\\mid x$ 是无理数$\\},\\ x^2$ 是有理数" },
+                    { "label": "D", "text": "$\\exists x\\in\\{x\\mid x$ 是无理数$\\},\\ x^3$ 是无理数" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q6",
+                  "no": "6",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组一 全称量词命题与存在量词命题及其真假判断",
+                  "title": "几何代数命题判断",
+                  "source": "2025 陕西西安部分学校期中",
+                  "tags": ["真假判断", "几何", "代数"],
+                  "stemMarkdown": "下列命题是真命题的有 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "所有平行四边形的对角线都互相平分" },
+                    { "label": "B", "text": "若 $x,y$ 是无理数，则 $xy$ 一定是有理数" },
+                    { "label": "C", "text": "若 $m<1$，则关于 $x$ 的方程 $x^2+2x+m=0$ 有两个负根" },
+                    { "label": "D", "text": "两个相似三角形的周长之比等于它们的对应边之比" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q7",
+                  "no": "7",
+                  "status": "complete",
+                  "type": "short-answer",
+                  "group": "题组一 全称量词命题与存在量词命题及其真假判断",
+                  "title": "量词命题分类辨析",
+                  "source": "教材习题改编",
+                  "tags": ["全称量词", "存在量词", "真假判断"],
+                  "stemMarkdown": "指出下列命题中，哪些是全称量词命题，哪些是存在量词命题，并判断其真假。\\n\\n（1）存在一个四边形不是平行四边形；\\n\\n（2）直角坐标系内任何一条直线都与 $x$ 轴有交点；\\n\\n（3）每个二次函数的图象都有最低点；\\n\\n（4）矩形有一个外接圆。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 全称量词命题和存在量词命题的否定及其真假判断",
+                  "title": "全称命题否定判断",
+                  "source": "教材习题改编",
+                  "tags": ["命题否定", "全称量词", "存在量词"],
+                  "stemMarkdown": "“对于任意 $a>0$，关于 $x$ 的方程 $x^3+ax+1=0$ 至多有三个实数根”的否定是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "对于任意 $a\\le 0$，关于 $x$ 的方程 $x^3+ax+1=0$ 至多有三个实数根" },
+                    { "label": "B", "text": "对于任意 $a>0$，关于 $x$ 的方程 $x^3+ax+1=0$ 至少有四个实数根" },
+                    { "label": "C", "text": "存在 $a>0$，关于 $x$ 的方程 $x^3+ax+1=0$ 至多有三个实数根" },
+                    { "label": "D", "text": "存在 $a>0$，关于 $x$ 的方程 $x^3+ax+1=0$ 至少有四个实数根" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q9",
+                  "no": "9",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 全称量词命题和存在量词命题的否定及其真假判断",
+                  "title": "全称命题否定表达",
+                  "source": "2025 江西抚州期中",
+                  "tags": ["命题否定", "全称量词", "真假判断"],
+                  "stemMarkdown": "命题“小数都是无理数”的否定为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "所有小数都不是无理数" },
+                    { "label": "B", "text": "有些小数是无理数" },
+                    { "label": "C", "text": "有些小数不是无理数" },
+                    { "label": "D", "text": "所有小数都是有理数" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q10",
+                  "no": "10",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 全称量词命题和存在量词命题的否定及其真假判断",
+                  "title": "存在命题否定形式",
+                  "source": "2025 山东淄博第七中学月考",
+                  "tags": ["命题否定", "存在量词", "实数范围"],
+                  "stemMarkdown": "已知命题 $p:\\exists x\\in\\mathbb{R},\\ 3x^2-2|x|+5=0$，则命题 $p$ 的否定是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$\\exists x\\in\\mathbb{R},\\ 3x^2-2|x|+5\\ne 0$" },
+                    { "label": "B", "text": "$\\exists x\\notin\\mathbb{R},\\ 3x^2-2|x|+5\\ne 0$" },
+                    { "label": "C", "text": "$\\forall x\\in\\mathbb{R},\\ 3x^2-2|x|+5\\ne 0$" },
+                    { "label": "D", "text": "$\\forall x\\notin\\mathbb{R},\\ 3x^2-2|x|+5\\ne 0$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q11",
+                  "no": "11",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组二 全称量词命题和存在量词命题的否定及其真假判断",
+                  "title": "否定命题真假判断",
+                  "source": "2025 黑龙江哈尔滨师范大学附属中学月考",
+                  "tags": ["命题否定", "真假判断", "量词命题"],
+                  "stemMarkdown": "下列命题的否定是全称量词命题且为真命题的有 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$\\exists x\\in\\mathbb{R},\\ x^2-x+\\frac14<0$" },
+                    { "label": "B", "text": "所有的正方形都是矩形" },
+                    { "label": "C", "text": "$\\exists x\\in\\mathbb{R},\\ x^2+2x+2>0$" },
+                    { "label": "D", "text": "至少有一个实数 $x$，使 $x^3+1=0$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q12",
+                  "no": "12",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组二 全称量词命题和存在量词命题的否定及其真假判断",
+                  "title": "命题与否命题综合",
+                  "source": "2025 湖南长沙南雅中学月考",
+                  "tags": ["否命题", "真假判断", "量词命题"],
+                  "stemMarkdown": "已知命题 $p:\\forall x\\in\\mathbb{R},\\ |x+1|>1$；命题 $q:\\exists x>0,\\ x^2>x$，则 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$\\neg q: \\forall x\\le 0,\\ x^2\\le x$" },
+                    { "label": "B", "text": "$\\neg p$ 是真命题" },
+                    { "label": "C", "text": "$p$ 和 $\\neg q$ 都是假命题" },
+                    { "label": "D", "text": "$\\neg p$ 和 $q$ 都是真命题" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q13",
+                  "no": "13",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组二 全称量词命题和存在量词命题的否定及其真假判断",
+                  "title": "全称命题否定填空",
+                  "source": "2025 山东菏泽期中",
+                  "tags": ["命题否定", "全称量词", "整除"],
+                  "stemMarkdown": "命题“所有能被 4 整除的正整数都能被 2 整除”的否定是 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q14",
+                  "no": "14",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 全称量词命题与存在量词命题及其否定的应用",
+                  "title": "存在命题假值求参",
+                  "source": "2025 广东潮州暨实高级中学月考",
+                  "tags": ["存在量词", "真假判断", "参数范围"],
+                  "stemMarkdown": "已知命题 $p:\\exists x\\in\\mathbb{R},\\ x^2+8x+a=0$。若命题 $p$ 是假命题，则实数 $a$ 的取值范围是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$a>16$" },
+                    { "label": "B", "text": "$a\\ge 16$" },
+                    { "label": "C", "text": "$a<0$" },
+                    { "label": "D", "text": "$a\\ge 4$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q15",
+                  "no": "15",
+                  "status": "complete",
+                  "type": "multiple-choice",
+                  "group": "题组三 全称量词命题与存在量词命题及其否定的应用",
+                  "title": "存在命题真值求参",
+                  "source": "2025 广东东莞翰林实验学校月考",
+                  "tags": ["存在量词", "多选", "参数范围"],
+                  "stemMarkdown": "已知命题 $p:\\exists x\\in\\mathbb{R},\\ ax^2-4x-4=0$。若 $p$ 为真命题，则 $a$ 的值可以为 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$-2$" },
+                    { "label": "B", "text": "$-1$" },
+                    { "label": "C", "text": "$0$" },
+                    { "label": "D", "text": "$3$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q16",
+                  "no": "16",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 全称量词命题与存在量词命题及其否定的应用",
+                  "title": "必要不充分条件求参",
+                  "source": "2025 重庆江津中学校月考",
+                  "tags": ["必要不充分", "全称量词", "参数范围"],
+                  "stemMarkdown": "命题“$\\forall x\\in\\{x\\mid 1\\le x\\le 3\\},\\ 3x^2-a\\ge 0$”为真命题的一个必要不充分条件是 $(\\ \\ )$",
+                  "options": [
+                    { "label": "A", "text": "$a\\le 4$" },
+                    { "label": "B", "text": "$a\\le 2$" },
+                    { "label": "C", "text": "$a\\ge 3$" },
+                    { "label": "D", "text": "$a\\le 0$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q17",
+                  "no": "17",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组三 全称量词命题与存在量词命题及其否定的应用",
+                  "title": "否命题真值求参",
+                  "source": "2025 云南红河州第一中学期中",
+                  "tags": ["命题否定", "存在量词", "参数范围"],
+                  "stemMarkdown": "已知命题 $p:\\exists x>3,\\ x\\le m$，若 $\\neg p$ 为真命题，则实数 $m$ 的取值范围是 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "1.5-basic-q18",
+                  "no": "18",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "题组三 全称量词命题与存在量词命题及其否定的应用",
+                  "title": "集合全称命题求参",
+                  "source": "2025 福建泉州安溪铭选中学月考",
+                  "tags": ["集合", "全称量词", "参数范围"],
+                  "stemMarkdown": "已知集合 $A=\\{x\\mid -1\\le x\\le 2\\}$，$B=\\{x\\mid 2a<x<a+3\\}$，且 $B\\ne\\varnothing$。若命题 $p:\\forall x\\in A,\\ x\\notin B$ 是真命题，则实数 $a$ 的取值范围是 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "参数综合题题干清楚，但求参过程较长，建议后续单独补答案与解析。" }
+                },
+                {
+                  "id": "1.5-basic-q19",
+                  "no": "19",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "题组三 全称量词命题与存在量词命题及其否定的应用",
+                  "title": "命题真假综合求参",
+                  "source": "2025 河南许昌高级中学月考",
+                  "tags": ["真假判断", "参数范围", "综合题"],
+                  "stemMarkdown": "已知命题 $$p:\\forall x\\in\\{x\\mid 1\\le x\\le 2\\},\\ x^2+x-a\\ge 0,\\quad q:\\exists x\\in\\mathbb{R},\\ x^2+3x+2-a=0.$$\\n\\n（1）当 $p$ 为假命题时，求实数 $a$ 的取值范围；\\n\\n（2）若 $p$ 和 $q$ 中有且只有一个是真命题，求实数 $a$ 的取值范围。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "综合题结构稳定，但后续更适合单独补充答案与解析。" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

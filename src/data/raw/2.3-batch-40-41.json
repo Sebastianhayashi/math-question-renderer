@@ -1,0 +1,386 @@
+{
+  "schemaVersion": "edu-question-bank/v1",
+  "book": {
+    "subject": "高中数学",
+    "title": "5年高考3年模拟 2026·高中同步53 高中数学 必修 第一册 人教A版"
+  },
+  "chapters": [
+    {
+      "id": "ch2",
+      "title": "第二章 一元二次函数、方程和不等式",
+      "sections": [
+        {
+          "id": "2.3",
+          "title": "2.3 二次函数与一元二次方程、不等式",
+          "sets": [
+            {
+              "id": "2.3-basic",
+              "title": "基础过关",
+              "questions": [
+                {
+                  "id": "2.3-basic-q1",
+                  "no": "1",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 一元二次不等式的解法",
+                  "title": "二次不等式解集判断",
+                  "source": "2025 湖南长沙芙蓉高级中学期中",
+                  "tags": ["一元二次不等式", "解集", "区间"],
+                  "stemMarkdown": "不等式 $x^2-\\frac{5}{6}x+\\frac{1}{6}>0$ 的解集是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\{x\\mid \\frac{1}{3}<x<\\frac{1}{2}\\}$" },
+                    { "label": "B", "text": "$\\{x\\mid x>\\frac{1}{2}\\}$" },
+                    { "label": "C", "text": "$\\{x\\mid x<\\frac{1}{3}\\}$" },
+                    { "label": "D", "text": "$\\{x\\mid x<\\frac{1}{3}\\text{ 或 }x>\\frac{1}{2}\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-basic-q2",
+                  "no": "2",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 一元二次不等式的解法",
+                  "title": "集合阴影部分判断",
+                  "source": "2025 江苏苏州六校期中联考",
+                  "tags": ["集合", "一元二次不等式", "Venn图"],
+                  "stemMarkdown": "设全集 $U$ 是实数集 $R$，$M=\\{x\\mid 5+4x-x^2\\ge 0\\}$，$N=\\{x\\mid x>2\\}$，则图中阴影部分所表示的集合是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\{x\\mid -1\\le x<2\\}$" },
+                    { "label": "B", "text": "$\\{x\\mid -1\\le x\\le 2\\}$" },
+                    { "label": "C", "text": "$\\{x\\mid 2<x\\le 5\\}$" },
+                    { "label": "D", "text": "$\\{x\\mid 2\\le x\\le 5\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-basic-q3",
+                  "no": "3",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组一 一元二次不等式的解法",
+                  "title": "充分不必要条件判断",
+                  "source": "2025 山东威海乳山银滩高级中学期中",
+                  "tags": ["分式不等式", "充分条件", "区间"],
+                  "stemMarkdown": "$\\frac{3x}{x-2}\\le 1$ 成立的一个充分不必要条件是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$-2<x<1$" },
+                    { "label": "B", "text": "$-2<x\\le 1$" },
+                    { "label": "C", "text": "$-1\\le x<2$" },
+                    { "label": "D", "text": "$-1<x<2$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-basic-q4",
+                  "no": "4",
+                  "status": "complete",
+                  "type": "fill-in",
+                  "group": "题组一 一元二次不等式的解法",
+                  "title": "分式不等式解集填空",
+                  "source": "2025 浙江绍兴期中",
+                  "tags": ["分式不等式", "解集", "填空"],
+                  "stemMarkdown": "不等式 $\\frac{2x-3}{x-1}<0$ 的解集为 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-basic-q5",
+                  "no": "5",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "题组一 一元二次不等式的解法",
+                  "title": "集合与参数范围",
+                  "source": "2025 安徽六安第二中学期中",
+                  "tags": ["集合", "参数范围", "一元二次不等式"],
+                  "stemMarkdown": "已知集合 $A=\\left\\{x\\mid \\frac{x-1}{2x-1}>0\\right\\}$，集合 $B=\\{x\\mid (x-a)(x-a-1)>0\\}$。\\n\\n（1）求集合 $A$；\\n\\n（2）若 $x\\in B$ 是 $x\\in A$ 的充分不必要条件，求 $a$ 的取值范围。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "题干可辨，但参数条件较长，后续补答案时需单题复核集合包含关系。" }
+                },
+                {
+                  "id": "2.3-basic-q6",
+                  "no": "6",
+                  "status": "complete",
+                  "type": "short-answer",
+                  "group": "题组一 一元二次不等式的解法",
+                  "title": "含参不等式解集",
+                  "source": "2025 山东淄博期中",
+                  "tags": ["含参不等式", "解集", "分类讨论"],
+                  "stemMarkdown": "求关于 $x$ 的不等式 $x^2+(1-2a)x-2a>0$ 的解集。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-basic-q7",
+                  "no": "7",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 三个“二次”之间的关系",
+                  "title": "图象与x轴交点求参",
+                  "source": "2025 重庆第十八中学月考",
+                  "tags": ["二次函数", "判别式", "参数范围"],
+                  "stemMarkdown": "已知二次函数 $y=(k-3)x^2+2x+1$ 的图象与 $x$ 轴有交点，则 $k$ 的取值范围是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$k<4$" },
+                    { "label": "B", "text": "$k\\le 4$" },
+                    { "label": "C", "text": "$k<4$ 且 $k\\ne 3$" },
+                    { "label": "D", "text": "$k\\le 4$ 且 $k\\ne 3$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-basic-q8",
+                  "no": "8",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 三个“二次”之间的关系",
+                  "title": "由解集反推不等式",
+                  "source": "2025 河北承德实验中学月考",
+                  "tags": ["一元二次不等式", "解集", "反推"],
+                  "stemMarkdown": "已知不等式 $ax^2+bx-1>0$ 的解集为 $\\left\\{x\\mid -\\frac{1}{2}<x<-\\frac{1}{3}\\right\\}$，则不等式 $x^2-bx-a\\ge 0$ 的解集为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\{x\\mid 2\\le x\\le 3\\}$" },
+                    { "label": "B", "text": "$\\{x\\mid -3\\le x\\le -2\\}$" },
+                    { "label": "C", "text": "$\\{x\\mid x\\le -3\\text{ 或 }x\\ge -2\\}$" },
+                    { "label": "D", "text": "$\\{x\\mid x\\le 2\\text{ 或 }x\\ge 3\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-basic-q9",
+                  "no": "9",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组二 三个“二次”之间的关系",
+                  "title": "分式不等式解集推断",
+                  "source": "2025 北京交通大学附属中学期中",
+                  "tags": ["分式不等式", "解集", "线性不等式"],
+                  "stemMarkdown": "若关于 $x$ 的不等式 $ax-b>0$ 的解集为 $\\{x\\mid x>1\\}$，则关于 $x$ 的不等式 $\\frac{ax+b}{x-2}>0$ 的解集为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\{x\\mid x<-2\\text{ 或 }x>1\\}$" },
+                    { "label": "B", "text": "$\\{x\\mid 1<x<2\\}$" },
+                    { "label": "C", "text": "$\\{x\\mid x<-1\\text{ 或 }x>2\\}$" },
+                    { "label": "D", "text": "$\\{x\\mid -2<x<-1\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-basic-q10",
+                  "no": "10",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "题组二 三个“二次”之间的关系",
+                  "title": "由解集求ab",
+                  "source": "2025 海南海口月考",
+                  "tags": ["一元二次不等式", "参数", "填空"],
+                  "stemMarkdown": "二次不等式 $ax^2+bx+1>0$ 的解集为 $\\left\\{x\\mid -1<x<\\frac{1}{3}\\right\\}$，则 $ab$ 的值为 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "题干稳定，但属于由解集反推系数的题，后续补答案时需复核开口方向与根的对应关系。" }
+                },
+                {
+                  "id": "2.3-basic-q11",
+                  "no": "11",
+                  "status": "complete",
+                  "type": "short-answer",
+                  "group": "题组二 三个“二次”之间的关系",
+                  "title": "由解集反求系数",
+                  "source": "2025 福建莆田第十五中学期中",
+                  "tags": ["一元二次不等式", "参数", "解集"],
+                  "stemMarkdown": "已知关于 $x$ 的不等式 $ax^2+bx-12\\ge 0$ 的解集为 $\\{x\\mid x\\le -3\\text{ 或 }x\\ge 4\\}$，求 $a,b$ 的值和不等式 $bx^2+ax+6\\ge 0$ 的解集。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-basic-q12",
+                  "no": "12",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 一元二次不等式的恒（能）成立问题",
+                  "title": "不等式有解求m",
+                  "source": "2025 广东开平开侨中学月考",
+                  "tags": ["恒成立", "参数范围", "判别式"],
+                  "stemMarkdown": "若关于 $x$ 的不等式 $-x^2+mx-1\\ge 0$ 有解，则实数 $m$ 的取值范围是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$\\{m\\mid m\\le -2\\text{ 或 }m\\ge 2\\}$" },
+                    { "label": "B", "text": "$\\{m\\mid -2\\le m\\le 2\\}$" },
+                    { "label": "C", "text": "$\\{m\\mid m<-2\\text{ 或 }m>2\\}$" },
+                    { "label": "D", "text": "$\\{m\\mid -2<m<2\\}$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-basic-q13",
+                  "no": "13",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 一元二次不等式的恒（能）成立问题",
+                  "title": "真命题条件关系",
+                  "source": "2025 山东泰安肥城一中月考",
+                  "tags": ["命题", "恒成立", "充分必要"],
+                  "stemMarkdown": "设 $m$ 为给定的一个实常数，命题 $p$：$\\forall x\\in R,\\ x^2-4x+2m\\ge 0$，则“$m\\ge 3$”是“命题 $p$ 为真命题”的（ ）",
+                  "options": [
+                    { "label": "A", "text": "充分不必要条件" },
+                    { "label": "B", "text": "必要不充分条件" },
+                    { "label": "C", "text": "充要条件" },
+                    { "label": "D", "text": "既不充分也不必要条件" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-basic-q14",
+                  "no": "14",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 一元二次不等式的恒（能）成立问题",
+                  "title": "解集为R求k",
+                  "source": "2025 广东江门第一中学月考",
+                  "tags": ["恒成立", "参数范围", "解集为R"],
+                  "stemMarkdown": "若不等式 $kx^2-6kx+k+8\\ge 0$ 的解集为 $R$，则实数 $k$ 的取值范围是（ ）",
+                  "options": [
+                    { "label": "A", "text": "$0\\le k\\le 1$" },
+                    { "label": "B", "text": "$0<k\\le 1$" },
+                    { "label": "C", "text": "$k<0\\text{ 或 }k>1$" },
+                    { "label": "D", "text": "$k\\le 0\\text{ 或 }k\\ge 1$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-basic-q15",
+                  "no": "15",
+                  "status": "complete",
+                  "type": "single-choice",
+                  "group": "题组三 一元二次不等式的恒（能）成立问题",
+                  "title": "假命题求参数",
+                  "source": "2025 陕西西安第八十五中学月考",
+                  "tags": ["命题", "参数范围", "一元二次不等式"],
+                  "stemMarkdown": "若命题“$\\exists x\\in R,\\ x^2+(a+1)x+1<0$”是假命题，则实数 $a$ 的取值范围为（ ）",
+                  "options": [
+                    { "label": "A", "text": "$1\\le a\\le 3$" },
+                    { "label": "B", "text": "$-1\\le a\\le 1$" },
+                    { "label": "C", "text": "$-3\\le a\\le 3$" },
+                    { "label": "D", "text": "$-3\\le a\\le 1$" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "high", "notes": "" }
+                },
+                {
+                  "id": "2.3-basic-q16",
+                  "no": "16",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "题组三 一元二次不等式的恒（能）成立问题",
+                  "title": "有解求a范围",
+                  "source": "2025 四川达州期中",
+                  "tags": ["恒成立", "参数范围", "填空"],
+                  "stemMarkdown": "已知关于 $x$ 的不等式 $-x^2+4x\\ge a^2-3a$ 在 $R$ 上有解，则 $a$ 的取值范围为 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "题干清楚，但需要联立二次函数最大值与参数方程，后续补答案时需复核。" }
+                },
+                {
+                  "id": "2.3-basic-q17",
+                  "no": "17",
+                  "status": "needs-review",
+                  "type": "fill-in",
+                  "group": "题组三 一元二次不等式的恒（能）成立问题",
+                  "title": "空集条件求k",
+                  "source": "2025 上海师范大学附属中学闵行分校期中",
+                  "tags": ["空集", "参数范围", "填空"],
+                  "stemMarkdown": "若关于 $x$ 的不等式 $2kx^2+kx+\\frac{1}{8}\\le 0$ 的解集为空集，则实数 $k$ 的取值范围是 ______。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "公式稳定，但需分类讨论 $k=0$ 与二次项存在时的情况。" }
+                },
+                {
+                  "id": "2.3-basic-q18",
+                  "no": "18",
+                  "status": "needs-review",
+                  "type": "single-choice",
+                  "group": "题组四 一元二次不等式的实际应用",
+                  "title": "礼服租价收入判断",
+                  "source": "2025 北京第十二中学期中",
+                  "tags": ["实际应用", "一元二次不等式", "最值"],
+                  "stemMarkdown": "某礼服租赁公司共有 300 套礼服供租赁，若每套礼服每天的租价为 200 元，则所有礼服均被租出；若将每套礼服每天的租价在 200 元的基础上提高 $10x$（$1\\le x\\le 20,\\ x\\in Z$）元，则被租出的礼服会减少 $10x$ 套。若要使该礼服租赁公司每天租赁礼服的收入超过 6.24 万元，则该礼服租赁公司每套礼服每天的租价应定为（ ）",
+                  "options": [
+                    { "label": "A", "text": "220 元" },
+                    { "label": "B", "text": "240 元" },
+                    { "label": "C", "text": "250 元" },
+                    { "label": "D", "text": "280 元" }
+                  ],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "题干稳定，但应用条件较长，后续补答案时需核对整数约束。 " }
+                },
+                {
+                  "id": "2.3-basic-q19",
+                  "no": "19",
+                  "status": "needs-review",
+                  "type": "short-answer",
+                  "group": "题组四 一元二次不等式的实际应用",
+                  "title": "货车平均利润最大",
+                  "source": "2025 上海师范大学第二附属中学期中",
+                  "tags": ["实际应用", "平均利润", "最值"],
+                  "stemMarkdown": "随着中国经济的腾飞，互联网的快速发展，网络购物需求不断增大。某物流公司为扩大经营，今年年初用 192 万元购进一批小型货车，公司每年需要付保险费共计 12 万元，除保险费外，从第 1 年到第 $n$（$n\\in N^*$）年所需维修费等各种费用总额为 $3n(n-1)$ 万元，且该批小型货车每年给公司带来 69 万元的收入。\\n\\n（1）购买该批小型货车后的第几年开始盈利？\\n\\n（2）求购买该批小型货车后的年平均利润 $y$（单位：万元）的最大值。",
+                  "options": [],
+                  "answer": null,
+                  "analysisMarkdown": null,
+                  "solutionMarkdown": null,
+                  "ocr": { "confidence": "medium", "notes": "题干清楚，但涉及累计利润与平均利润双层建模，后续补答案时需单题复核。" }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
