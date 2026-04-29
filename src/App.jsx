@@ -462,13 +462,13 @@ function SolvingToolPanel({
       style={
         isFloating
           ? {
-              left: windowLayout.x,
-              top: windowLayout.y,
-              width: windowLayout.width,
-              height: windowLayout.height,
-              background: "rgba(255,255,255,0.96)",
-              boxShadow: "0 24px 70px rgba(15,23,42,0.18), 0 0 0 1px rgba(255,255,255,0.88)",
-            }
+            left: windowLayout.x,
+            top: windowLayout.y,
+            width: windowLayout.width,
+            height: windowLayout.height,
+            background: "rgba(255,255,255,0.96)",
+            boxShadow: "0 24px 70px rgba(15,23,42,0.18), 0 0 0 1px rgba(255,255,255,0.88)",
+          }
           : undefined
       }
     >
@@ -645,75 +645,75 @@ function SolvingToolPanel({
         </section>
 
         {toolModules?.marks && (
-        <section className="mt-5">
-          <div className="mb-2 flex items-center justify-between">
-            <p className="text-[11px] font-black uppercase tracking-wider text-muted">标记疑点</p>
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-black text-muted">
-              {record?.marks?.length || 0}
-            </span>
-          </div>
-          <div className="grid gap-2">
-            {record?.marks?.length ? (
-              record.marks.map((mark) => {
-                const tag = MARK_TAGS.find((item) => item.id === mark.type) || MARK_TAGS[0];
-                return (
-                  <div key={mark.id} className="group flex gap-2 rounded-2xl border border-slate-100 bg-white p-3 shadow-sm">
-                    <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-amber-50 text-amber-600">
-                      <span className="material-symbols-outlined text-[17px]">{tag.icon}</span>
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="mb-1 text-[10px] font-black text-amber-600">[{tag.label}]</p>
-                      <p className="break-words text-[13px] font-bold leading-snug text-slate-700">
-                        <RichText content={[mark.text]} />
-                      </p>
+          <section className="mt-5">
+            <div className="mb-2 flex items-center justify-between">
+              <p className="text-[11px] font-black uppercase tracking-wider text-muted">标记疑点</p>
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-black text-muted">
+                {record?.marks?.length || 0}
+              </span>
+            </div>
+            <div className="grid gap-2">
+              {record?.marks?.length ? (
+                record.marks.map((mark) => {
+                  const tag = MARK_TAGS.find((item) => item.id === mark.type) || MARK_TAGS[0];
+                  return (
+                    <div key={mark.id} className="group flex gap-2 rounded-2xl border border-slate-100 bg-white p-3 shadow-sm">
+                      <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-amber-50 text-amber-600">
+                        <span className="material-symbols-outlined text-[17px]">{tag.icon}</span>
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="mb-1 text-[10px] font-black text-amber-600">[{tag.label}]</p>
+                        <p className="break-words text-[13px] font-bold leading-snug text-slate-700">
+                          <RichText content={[mark.text]} />
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => onRemoveMark(mark.id)}
+                        className="grid size-7 shrink-0 place-items-center rounded-lg text-slate-300 opacity-0 transition-all hover:bg-slate-100 hover:text-slate-500 group-hover:opacity-100"
+                        aria-label="删除标记"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">close</span>
+                      </button>
                     </div>
-                    <button
-                      onClick={() => onRemoveMark(mark.id)}
-                      className="grid size-7 shrink-0 place-items-center rounded-lg text-slate-300 opacity-0 transition-all hover:bg-slate-100 hover:text-slate-500 group-hover:opacity-100"
-                      aria-label="删除标记"
-                    >
-                      <span className="material-symbols-outlined text-[16px]">close</span>
-                    </button>
-                  </div>
-                );
-              })
-            ) : (
-              <p className="rounded-2xl border border-dashed border-slate-200 bg-white/60 px-3 py-5 text-center text-[12px] font-bold text-muted">
-                选中题目文字后，可标为不知道、不熟悉或重点。
-              </p>
-            )}
-          </div>
-        </section>
+                  );
+                })
+              ) : (
+                <p className="rounded-2xl border border-dashed border-slate-200 bg-white/60 px-3 py-5 text-center text-[12px] font-bold text-muted">
+                  选中题目文字后，可标为不知道、不熟悉或重点。
+                </p>
+              )}
+            </div>
+          </section>
         )}
 
         {toolModules?.review && (
-        <details className="mt-5 rounded-2xl border border-slate-100 bg-white p-3 shadow-sm">
-          <summary className="flex cursor-pointer items-center justify-between gap-3 text-[12px] font-black text-slate-700">
-            <span className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[17px] text-primary">reviews</span>
-              复盘队列
-            </span>
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-muted">
-              {reviewRecords.length}
-            </span>
-          </summary>
-          <div className="mt-3 grid gap-2">
-            {reviewRecords.length ? (
-              reviewRecords.slice(0, 8).map(([questionId, item]) => (
-                <div key={questionId} className="rounded-xl bg-slate-50 px-3 py-2">
-                  <p className="truncate text-[11px] font-black text-slate-700">
-                    {item.meta?.sectionTitle || "练习"} · 第 {item.meta?.questionNo || "?"} 题
-                  </p>
-                  <p className="mt-0.5 text-[10px] font-bold text-muted">
-                    {item.notes?.length || 0} 条条件 · {item.marks?.length || 0} 个疑点
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p className="py-3 text-center text-[11px] font-bold text-muted">还没有需要复盘的题目。</p>
-            )}
-          </div>
-        </details>
+          <details className="mt-5 rounded-2xl border border-slate-100 bg-white p-3 shadow-sm">
+            <summary className="flex cursor-pointer items-center justify-between gap-3 text-[12px] font-black text-slate-700">
+              <span className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[17px] text-primary">reviews</span>
+                复盘队列
+              </span>
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] text-muted">
+                {reviewRecords.length}
+              </span>
+            </summary>
+            <div className="mt-3 grid gap-2">
+              {reviewRecords.length ? (
+                reviewRecords.slice(0, 8).map(([questionId, item]) => (
+                  <div key={questionId} className="rounded-xl bg-slate-50 px-3 py-2">
+                    <p className="truncate text-[11px] font-black text-slate-700">
+                      {item.meta?.sectionTitle || "练习"} · 第 {item.meta?.questionNo || "?"} 题
+                    </p>
+                    <p className="mt-0.5 text-[10px] font-bold text-muted">
+                      {item.notes?.length || 0} 条条件 · {item.marks?.length || 0} 个疑点
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="py-3 text-center text-[11px] font-bold text-muted">还没有需要复盘的题目。</p>
+              )}
+            </div>
+          </details>
         )}
       </div>
       {isFloating && (
@@ -1112,10 +1112,10 @@ function App() {
           cards.map((card) =>
             card.id === session.cardId
               ? {
-                  ...card,
-                  x: Math.min(window.innerWidth - 90, Math.max(76, session.startX + event.clientX - session.pointerX)),
-                  y: Math.min(window.innerHeight - 60, Math.max(76, session.startY + event.clientY - session.pointerY)),
-                }
+                ...card,
+                x: Math.min(window.innerWidth - 90, Math.max(76, session.startX + event.clientX - session.pointerX)),
+                y: Math.min(window.innerHeight - 60, Math.max(76, session.startY + event.clientY - session.pointerY)),
+              }
               : card
           )
         );
