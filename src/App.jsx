@@ -8,6 +8,10 @@ import { cx } from "./lib/cx.js";
 import topicFunctionIcon from "./assets/topic-function.png";
 import topicInequalityIcon from "./assets/topic-inequality.png";
 import topicSetsIcon from "./assets/topic-sets.png";
+import englishListeningIcon from "./assets/english-listening.png";
+import englishReadingIcon from "./assets/english-reading.png";
+import englishTranslationIcon from "./assets/english-translation.png";
+import englishWritingIcon from "./assets/english-writing.png";
 
 const TOPIC_ORDER = ["sets", "inequality", "function"];
 const TOPIC_META = {
@@ -65,10 +69,11 @@ const ENG_TOPIC_META = {
   },
 };
 const ENG_TOPIC_ICON_SRC = {
-  writing: topicFunctionIcon,
-  listening: topicSetsIcon,
-  reading: topicInequalityIcon,
-  translation: topicFunctionIcon,
+  english: englishReadingIcon,
+  writing: englishWritingIcon,
+  listening: englishListeningIcon,
+  reading: englishReadingIcon,
+  translation: englishTranslationIcon,
 };
 const SUBJECT_CONFIG = {
   math: {
@@ -102,7 +107,7 @@ const SUBJECT_CONFIG = {
     courseTitle: "大学英语六级真题",
     courseSubtitle: "写作 / 听力 / 阅读 / 翻译",
     topicPrefix: "英语六级",
-    mainIcon: "reading",
+    mainIcon: "english",
     searchPlaceholder: "搜索套卷、题型、关键词...",
     pathLabel: "真题路径",
     mapTitle: "CET-6 Map",
@@ -384,6 +389,7 @@ function getTopicMeta(type) {
 }
 
 function TopicIcon({ type = "sets", size = 24, className }) {
+  const isEnglishIcon = Boolean(ENG_TOPIC_ICON_SRC[type]);
   const iconSrc =
     ENG_TOPIC_ICON_SRC[type] || TOPIC_ICON_SRC[type] || TOPIC_ICON_SRC.sets;
   return (
@@ -393,11 +399,15 @@ function TopicIcon({ type = "sets", size = 24, className }) {
       aria-hidden="true"
       width={size}
       height={size}
-      className={cx("block rounded-[22%] object-cover", className)}
+      className={cx(
+        "block rounded-[22%]",
+        isEnglishIcon ? "object-contain" : "object-cover",
+        className
+      )}
       style={{
         width: size,
         height: size,
-        transform: "scale(1.28)",
+        transform: isEnglishIcon ? "scale(1)" : "scale(1.28)",
       }}
     />
   );
@@ -438,6 +448,17 @@ function matchesKeyword(page, question, keyword) {
   return haystack.includes(keyword.toLowerCase());
 }
 
+function isPlayableQuestion(question, subject = "math") {
+  return subject !== "english" || question.status !== "incomplete";
+}
+
+function countPlayableQuestions(pages, subject = "math") {
+  return pages.reduce(
+    (sum, page) => sum + page.questions.filter((question) => isPlayableQuestion(question, subject)).length,
+    0
+  );
+}
+
 function groupPagesBySection(pages) {
   return pages.reduce((sections, page) => {
     const sectionTitle = page.sectionTitle || "未分章节";
@@ -469,14 +490,17 @@ function groupSectionsByTopic(sections, subject = "math") {
     ...(meta[type] || {}),
     sections: [],
     questionsCount: 0,
+    playableQuestionsCount: 0,
   }));
 
   sections.forEach((section) => {
     const topicType = getTopicType(section, subject);
     const topic = grouped.find((item) => item.type === topicType) || grouped[0];
     const questionsCount = section.pages.reduce((sum, page) => sum + page.questions.length, 0);
+    const playableQuestionsCount = countPlayableQuestions(section.pages, subject);
     topic.sections.push(section);
     topic.questionsCount += questionsCount;
+    topic.playableQuestionsCount += playableQuestionsCount;
   });
 
   return grouped.filter((topic) => topic.sections.length > 0);
@@ -508,6 +532,7 @@ function computeSolarMap(pages, subject = "math") {
         page: section.pages[0],
         pagesCount: section.pages.length,
         questionsCount: section.pages.reduce((sum, page) => sum + page.questions.length, 0),
+        playableQuestionsCount: countPlayableQuestions(section.pages, subject),
         x: Math.round(cx + Math.cos(angle) * rx),
         y: Math.round(cy + Math.sin(angle) * ry),
         angle,
@@ -934,6 +959,7 @@ function HomePage({
   onKeywordChange,
   topicStats,
   totalQuestions,
+  playableTotalQuestions,
   reviewCount,
 }) {
   const config = subjectConfig || SUBJECT_CONFIG.math;
@@ -945,6 +971,7 @@ function HomePage({
       subtitle: config.courseSubtitle,
       icon: config.mainIcon,
       count: totalQuestions,
+      playableCount: playableTotalQuestions ?? totalQuestions,
       action: onContinue,
     },
     ...topicStats.map((topic) => ({
@@ -953,6 +980,7 @@ function HomePage({
       subtitle: topic.subtitle,
       icon: topic.type,
       count: topic.questionsCount,
+      playableCount: topic.playableQuestionsCount,
       action: () => onOpenMap(topic.type),
     })),
   ];
@@ -1022,7 +1050,7 @@ function HomePage({
       <div className="grid gap-7 px-10 pb-10">
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-float">
           <h3 className="text-[18px] font-black text-slate-900">继续学习</h3>
-          <div className="mt-5 flex items-center gap-6">
+          <div className="mt-5 flex flex-col gap-5 xl:flex-row xl:items-center">
             <div className="grid size-24 shrink-0 place-items-center overflow-hidden rounded-2xl bg-primary/10">
               <TopicIcon type={getTopicType(currentPage, subject)} size={86} />
             </div>
@@ -1038,16 +1066,16 @@ function HomePage({
                 <div className="h-full rounded-full bg-primary" style={{ width: `${progress}%` }} />
               </div>
             </div>
-            <div className="flex shrink-0 gap-3">
+            <div className="flex flex-wrap gap-3 xl:shrink-0">
               <button
                 onClick={onContinue}
-                className="node-button rounded-xl bg-primary px-8 py-3 text-[14px] font-black text-white shadow-3d-node-primary"
+                className="node-button min-w-[148px] flex-1 rounded-xl bg-primary px-8 py-3 text-[14px] font-black text-white shadow-3d-node-primary xl:flex-none"
               >
                 继续学习
               </button>
               <button
                 onClick={() => onOpenMap()}
-                className="node-button flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-[14px] font-black text-slate-600 shadow-sm"
+                className="node-button flex min-w-[132px] flex-1 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-[14px] font-black text-slate-600 shadow-sm xl:flex-none"
               >
                 <span className="material-symbols-outlined text-[20px]">map</span>
                 查看地图
@@ -1077,9 +1105,11 @@ function HomePage({
                 </div>
                 <div className="mt-8 flex items-center gap-2 text-[12px] font-bold text-muted">
                   <span className="material-symbols-outlined text-[17px]">article</span>
-                  {card.count} 题
+                  {subject === "english" && card.playableCount !== card.count
+                    ? `${card.playableCount}/${card.count} 可练`
+                    : `${card.count} 题`}
                 </div>
-                <div className="mt-4 grid grid-cols-2 gap-2">
+                <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
                   <button
                     onClick={card.action}
                     className="node-button rounded-lg bg-primary px-3 py-2.5 text-[12px] font-black text-white shadow-3d-node-primary"
@@ -1181,6 +1211,10 @@ function App() {
     () => activeBank.pages.reduce((sum, page) => sum + page.questions.length, 0),
     [activeBank]
   );
+  const playableTotalQuestions = useMemo(
+    () => countPlayableQuestions(activeBank.pages, subject),
+    [activeBank, subject]
+  );
 
   const activePage =
     filteredPages.find((page) => page.id === pageId) ||
@@ -1197,7 +1231,9 @@ function App() {
   const activeQuestionIndex = visibleQuestions.findIndex((q) => q.id === activeQuestion?.id);
   const activeQuestionId = activeQuestion?.id || "";
   const activeRecord = records[activeQuestionId] || createEmptyRecord();
-  const activeAnswer = answerRecords[activeQuestionId]?.selected || [];
+  const activeAnswerRecord = answerRecords[activeQuestionId] || {};
+  const activeAnswer = activeAnswerRecord.selected || [];
+  const activeAnswerText = activeAnswerRecord.text || "";
   const reviewRecords = useMemo(
     () =>
       Object.entries(records)
@@ -1268,8 +1304,12 @@ function App() {
   }, []);
 
   function startQuiz(page) {
+    const firstQuestion =
+      subject === "english"
+        ? page.questions.find((question) => isPlayableQuestion(question, subject)) || page.questions[0]
+        : page.questions[0];
     setPageId(page.id);
-    setQuestionId(page.questions[0]?.id || "");
+    setQuestionId(firstQuestion?.id || "");
     setCollapsedTopics((previous) => ({
       ...previous,
       [getTopicType(page, subject)]: false,
@@ -1400,6 +1440,7 @@ function App() {
 
     setAnswerRecords((previous) => {
       const selected = previous[activeQuestionId]?.selected || [];
+      const currentText = previous[activeQuestionId]?.text || "";
       const nextSelected = isMultiple
         ? selected.includes(label)
           ? selected.filter((item) => item !== label)
@@ -1411,6 +1452,28 @@ function App() {
         ...previous,
         [activeQuestionId]: {
           selected: nextSelected,
+          text: currentText,
+          updatedAt: new Date().toISOString(),
+          subject,
+          pageId: activePage?.id,
+          questionNo: activeQuestion?.no ?? activeQuestionIndex + 1,
+        },
+      };
+      saveAnswerRecords(next);
+      return next;
+    });
+  }
+
+  function updateTextAnswer(text) {
+    if (!activeQuestionId) return;
+
+    setAnswerRecords((previous) => {
+      const current = previous[activeQuestionId] || {};
+      const next = {
+        ...previous,
+        [activeQuestionId]: {
+          selected: current.selected || [],
+          text,
           updatedAt: new Date().toISOString(),
           subject,
           pageId: activePage?.id,
@@ -1647,7 +1710,9 @@ function App() {
                 view === "quiz" && "justify-center px-0"
               )}
             >
-              <div className="size-10 shrink-0 rounded-full border-2 border-background bg-primary shadow-sm" />
+              <div className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm">
+                <TopicIcon type={subjectConfig.mainIcon} size={42} />
+              </div>
               {view !== "quiz" && (
                 <div className="flex flex-col min-w-0">
                   <h1 className="font-display text-[17px] font-bold leading-tight truncate">{subjectConfig.appName}</h1>
@@ -1784,7 +1849,9 @@ function App() {
                             color: isTopicActive ? "var(--color-primary)" : "#94a3b8",
                           }}
                         >
-                          {topic.questionsCount}
+                          {subject === "english" && topic.playableQuestionsCount !== topic.questionsCount
+                            ? `${topic.playableQuestionsCount}/${topic.questionsCount}`
+                            : topic.questionsCount}
                         </span>
                         <span
                           className="material-symbols-outlined shrink-0 text-[18px] text-muted transition-transform"
@@ -1830,6 +1897,7 @@ function App() {
                                 <div className="ml-2 mt-1 flex flex-col gap-1">
                                   {section.pages.map((page) => {
                                     const isActive = page.id === activePage?.id;
+                                    const pagePlayableCount = countPlayableQuestions([page], subject);
                                     return (
                                       <button
                                         key={page.id}
@@ -1856,7 +1924,9 @@ function App() {
                                             color: isActive ? "var(--color-primary)" : "#94a3b8",
                                           }}
                                         >
-                                          {page.questions.length}
+                                          {subject === "english" && pagePlayableCount !== page.questions.length
+                                            ? `${pagePlayableCount}/${page.questions.length}`
+                                            : page.questions.length}
                                         </span>
                                       </button>
                                     );
@@ -1902,7 +1972,7 @@ function App() {
       {/* Main Content */}
       <div className="relative flex-1 overflow-hidden min-w-0">
         {view === "home" ? (
-          <HomePage
+        <HomePage
             subject={subject}
             subjectConfig={subjectConfig}
             currentPage={activePage || activeBank.pages[0]}
@@ -1913,6 +1983,7 @@ function App() {
             onKeywordChange={setKeyword}
             topicStats={topicStats}
             totalQuestions={totalQuestions}
+            playableTotalQuestions={playableTotalQuestions}
             reviewCount={reviewRecords.length}
           />
         ) : view === "map" ? (
@@ -1922,7 +1993,11 @@ function App() {
               <div className="min-w-0">
                 <h2 className="font-display text-[28px] font-bold leading-tight">{subjectConfig.mapTitle}</h2>
                 <p className="mt-1 text-xs font-bold text-muted">
-                  {activeBank.pages.length} 个{subjectConfig.pathLabel} · {totalQuestions} 道题 · {subjectConfig.mapSubtitle}
+                  {activeBank.pages.length} 个{subjectConfig.pathLabel} ·{" "}
+                  {subject === "english" && playableTotalQuestions !== totalQuestions
+                    ? `${playableTotalQuestions}/${totalQuestions} 道可练`
+                    : `${totalQuestions} 道题`}{" "}
+                  · {subjectConfig.mapSubtitle}
                 </p>
               </div>
               <div className="flex items-center gap-3 rounded-full border-b-[4px] border-[#CBD5E1] bg-surface p-2 pr-5 shadow-float">
@@ -2045,7 +2120,10 @@ function App() {
                     <div key={topic.type}>
                       <button
                         onClick={() => {
-                          const firstPage = topic.satellites[0]?.page;
+                          const firstPlayableSatellite =
+                            topic.satellites.find((satellite) => satellite.playableQuestionsCount > 0) ||
+                            topic.satellites[0];
+                          const firstPage = firstPlayableSatellite?.page;
                           if (firstPage) startQuiz(firstPage);
                         }}
                         className="node-button absolute z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 rounded-[32px] border border-white bg-white px-5 py-5 text-center shadow-float"
@@ -2067,7 +2145,10 @@ function App() {
                           className="mt-1 rounded-full px-2.5 py-1 text-[10px] font-black leading-none"
                           style={{ background: topic.soft, color: topic.accent }}
                         >
-                          {topic.sections.length} 个章节 · {topic.questionsCount} 题
+                          {topic.sections.length} 个章节 ·{" "}
+                          {subject === "english" && topic.playableQuestionsCount !== topic.questionsCount
+                            ? `${topic.playableQuestionsCount}/${topic.questionsCount} 可练`
+                            : `${topic.questionsCount} 题`}
                         </span>
                       </button>
 
@@ -2106,7 +2187,10 @@ function App() {
                                 {satellite.section.title}
                               </span>
                               <span className="mt-1 block truncate text-[10px] font-bold leading-none text-muted">
-                                {satellite.pagesCount} 组 · {satellite.questionsCount} 题
+                                {satellite.pagesCount} 组 ·{" "}
+                                {subject === "english" && satellite.playableQuestionsCount !== satellite.questionsCount
+                                  ? `${satellite.playableQuestionsCount}/${satellite.questionsCount} 可练`
+                                  : `${satellite.questionsCount} 题`}
                               </span>
                             </span>
                           </button>
@@ -2184,6 +2268,8 @@ function App() {
                             question={activeQuestion}
                             selectedAnswers={activeAnswer}
                             onSelectAnswer={selectAnswer}
+                            textAnswer={activeAnswerText}
+                            onTextAnswerChange={updateTextAnswer}
                           />
                         ) : (
                           <QuestionBlocks
@@ -2200,12 +2286,15 @@ function App() {
                       {/* Question dots */}
                       <div className="flex flex-wrap gap-2">
                         {visibleQuestions.map((q, idx) => {
-                          const hasAnswer = (answerRecords[q.id]?.selected || []).length > 0;
+                          const record = answerRecords[q.id] || {};
+                          const selected = record.selected || [];
+                          const hasAnswer = selected.length > 0 || Boolean(record.text?.trim());
+                          const answerTitle = selected.length > 0 ? `已选择 ${selected.join("、")}` : "已填写答案";
                           return (
                             <button
                               key={q.id}
                               onClick={() => setQuestionId(q.id)}
-                              title={hasAnswer ? `已选择 ${(answerRecords[q.id]?.selected || []).join("、")}` : undefined}
+                              title={hasAnswer ? answerTitle : undefined}
                               className={cx(
                                 "relative size-9 rounded-full text-sm font-bold transition-all",
                                 q.id === activeQuestion?.id

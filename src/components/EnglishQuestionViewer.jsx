@@ -122,6 +122,51 @@ function SelectionSummary({ selectedAnswers }) {
   );
 }
 
+function TextAnswerBox({ value = "", onChange, variant = "short", title = "我的答案" }) {
+  const isLong = variant === "long";
+
+  return (
+    <div className="rounded-2xl border border-blue-100 bg-white p-4 shadow-sm">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <span className="grid size-8 place-items-center rounded-xl bg-blue-50 text-blue-600">
+            <span className="material-symbols-outlined text-[18px]">
+              {isLong ? "edit_note" : "stylus_note"}
+            </span>
+          </span>
+          <div>
+            <p className="text-[13px] font-black text-slate-800">{title}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              自动保留
+            </p>
+          </div>
+        </div>
+        {value?.trim() && (
+          <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-black text-blue-600">
+            已记录
+          </span>
+        )}
+      </div>
+      {isLong ? (
+        <textarea
+          value={value}
+          onChange={(event) => onChange?.(event.target.value)}
+          rows={7}
+          placeholder="在这里写提纲、译文或完整答案..."
+          className="min-h-[168px] w-full resize-y rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-[14px] font-semibold leading-relaxed text-slate-800 outline-none transition focus:border-blue-300 focus:bg-white focus:ring-4 focus:ring-blue-100 placeholder:text-slate-400"
+        />
+      ) : (
+        <input
+          value={value}
+          onChange={(event) => onChange?.(event.target.value)}
+          placeholder="填写这一空的答案..."
+          className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-[15px] font-bold text-slate-800 outline-none transition focus:border-blue-300 focus:bg-white focus:ring-4 focus:ring-blue-100 placeholder:text-slate-400"
+        />
+      )}
+    </div>
+  );
+}
+
 function OptionBank({
   options,
   label = "Word Bank",
@@ -163,6 +208,42 @@ function OptionBank({
             <span className={compact ? "line-clamp-3 leading-relaxed" : ""}>{opt.text || "待补录"}</span>
           </button>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function LetterPicker({ options, selectedAnswers = [], onSelectAnswer }) {
+  if (!options?.length) return null;
+
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white p-4">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+          选择匹配段落
+        </p>
+        <span className="text-[10px] font-black text-blue-500">只保留段落字母</span>
+      </div>
+      <div className="grid grid-cols-5 gap-2 sm:grid-cols-8">
+        {options.map((opt) => {
+          const isSelected = selectedAnswers.includes(opt.label);
+          return (
+            <button
+              key={opt.label}
+              type="button"
+              onClick={() => onSelectAnswer?.(opt.label)}
+              title={opt.text || opt.label}
+              className={cx(
+                "grid h-11 place-items-center rounded-xl border text-[14px] font-black transition-all",
+                isSelected
+                  ? "border-blue-300 bg-blue-600 text-white shadow-sm"
+                  : "border-slate-200 bg-slate-50 text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+              )}
+            >
+              {opt.label}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -337,7 +418,13 @@ function IncompleteWarning() {
 
 // ─── Main export ──────────────────────────────────────────────────────────────
 
-export function EnglishQuestionViewer({ question, selectedAnswers = [], onSelectAnswer }) {
+export function EnglishQuestionViewer({
+  question,
+  selectedAnswers = [],
+  onSelectAnswer,
+  textAnswer = "",
+  onTextAnswerChange,
+}) {
   if (!question) return null;
 
   const status = STATUS_BADGE[question.status] || STATUS_BADGE.incomplete;
@@ -347,6 +434,11 @@ export function EnglishQuestionViewer({ question, selectedAnswers = [], onSelect
   const isChoice = question.options?.length > 0 && !isWordBank && !isMatching;
   const isIncomplete = question.status === "incomplete";
   const isTask = question.type === "short-answer" && !question.materialMarkdown;
+  const needsTextAnswer =
+    !isIncomplete &&
+    (isTask ||
+      (question.type === "fill-in" && !question.options?.length) ||
+      /Translation|翻译|Writing|写作/i.test(question.group || ""));
   const passageLabel = isMatching ? "Article" : /听写|Listening/i.test(question.group || "") ? "Script" : "Passage";
 
   return (
@@ -372,6 +464,23 @@ export function EnglishQuestionViewer({ question, selectedAnswers = [], onSelect
         ))}
       </div>
 
+      {isMatching && !isIncomplete && (
+        <div className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
+          <p className="mb-2 text-[10px] font-black uppercase tracking-widest text-blue-500">
+            当前题目
+          </p>
+          <StemBlock text={question.stemMarkdown} fallback={question.title} />
+        </div>
+      )}
+
+      {isMatching && (
+        <LetterPicker
+          options={question.options}
+          selectedAnswers={selectedAnswers}
+          onSelectAnswer={onSelectAnswer}
+        />
+      )}
+
       {/* Passage */}
       {question.materialMarkdown && (
         <PassageBlock text={question.materialMarkdown} label={passageLabel} />
@@ -382,9 +491,9 @@ export function EnglishQuestionViewer({ question, selectedAnswers = [], onSelect
         <IncompleteWarning />
       ) : isTask ? (
         <TaskCard question={question} />
-      ) : (
+      ) : !isMatching ? (
         <StemBlock text={question.stemMarkdown} fallback={question.title} />
-      )}
+      ) : null}
 
       {/* Blank context */}
       {question.blankContextMarkdown && !isIncomplete && (
@@ -403,22 +512,21 @@ export function EnglishQuestionViewer({ question, selectedAnswers = [], onSelect
         />
       )}
 
-      {isMatching && (
-        <OptionBank
-          options={question.options}
-          label="Paragraph Bank"
-          compact
-          selectedAnswers={selectedAnswers}
-          onSelectAnswer={onSelectAnswer}
-        />
-      )}
-
       {/* Choice options */}
       {isChoice && !isIncomplete && (
         <ChoiceBlock
           options={question.options}
           selectedAnswers={selectedAnswers}
           onSelectAnswer={onSelectAnswer}
+        />
+      )}
+
+      {needsTextAnswer && (
+        <TextAnswerBox
+          value={textAnswer}
+          onChange={onTextAnswerChange}
+          variant={isTask || /Translation|翻译|Writing|写作/i.test(question.group || "") ? "long" : "short"}
+          title={isTask || /Translation|翻译|Writing|写作/i.test(question.group || "") ? "我的草稿" : "我的答案"}
         />
       )}
 
