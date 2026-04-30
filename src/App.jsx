@@ -126,6 +126,29 @@ const SUBJECT_CONFIG = {
 const SOLVING_RECORDS_KEY = "astro-math-solving-records-v1";
 const ANSWER_RECORDS_KEY = "astro-math-answer-records-v1";
 const NOTE_TAGS = SUBJECT_CONFIG.math.noteTags;
+const MATH_CHAIN_STAGES = [
+  { id: "read", title: "读题", subtitle: "把题目拆成条件和目标", icon: "travel_explore" },
+  { id: "reason", title: "推理", subtitle: "假设、转化、推出关系", icon: "account_tree" },
+  { id: "answer", title: "作答", subtitle: "验证并落到答案", icon: "task_alt" },
+];
+const MATH_CHAIN_TAGS = [
+  { id: "known", label: "已知", icon: "rule", hint: "题目直接给出的条件", stage: "read" },
+  { id: "target", label: "目标", icon: "flag", hint: "要求证明或求出的内容", stage: "read" },
+  { id: "assumption", label: "假设", icon: "psychology_alt", hint: "临时假设或分类讨论", stage: "reason" },
+  { id: "translate", label: "转化", icon: "sync_alt", hint: "把题目翻译成数学语言", stage: "reason" },
+  { id: "infer", label: "推出", icon: "fork_right", hint: "由前面得到的新结论", stage: "reason" },
+  { id: "verify", label: "验证", icon: "fact_check", hint: "代回或检查条件", stage: "answer" },
+  { id: "answer", label: "答案", icon: "check_circle", hint: "最终选择或结果", stage: "answer" },
+];
+const MATH_CHAIN_RELATION = {
+  known: "给出",
+  target: "要求",
+  assumption: "假设",
+  translate: "转化",
+  infer: "所以",
+  verify: "验证",
+  answer: "得到",
+};
 const MARK_TAGS = [
   { id: "unknown", label: "不知道", icon: "help" },
   { id: "unfamiliar", label: "不熟悉", icon: "priority_high" },
@@ -166,6 +189,19 @@ function createEmptyRecord(meta = {}) {
     marks: [],
     updatedAt: null,
   };
+}
+
+function getMathChainTag(type) {
+  return MATH_CHAIN_TAGS.find((tag) => tag.id === type) || MATH_CHAIN_TAGS[0];
+}
+
+function getMathChainStage(note) {
+  if (note?.stage) return note.stage;
+  return getMathChainTag(note?.type).stage || "read";
+}
+
+function getMathChainOrder(note, fallbackIndex) {
+  return Number.isFinite(note?.order) ? note.order : fallbackIndex;
 }
 
 function loadSolvingRecords() {
@@ -546,7 +582,395 @@ function computeSolarMap(pages, subject = "math") {
   return { topics: solarTopics, canvasW: CANVAS_W, canvasH: CANVAS_H };
 }
 
+function MathReasoningBuilder({
+  record,
+  activeTag,
+  onActiveTagChange,
+  noteDraft,
+  onNoteDraftChange,
+  onAddNote,
+  onRemoveNote,
+  onMoveNote,
+}) {
+  const [draggingNoteId, setDraggingNoteId] = useState(null);
+  const notes = record?.notes || [];
+  const groupedNotes = Object.fromEntries(MATH_CHAIN_STAGES.map((stage) => [stage.id, []]));
+
+  notes.forEach((note, index) => {
+    const stage = getMathChainStage(note);
+    const target = groupedNotes[stage] || groupedNotes.read;
+    target.push({ ...note, fallbackOrder: index });
+  });
+
+  Object.values(groupedNotes).forEach((items) => {
+    items.sort((a, b) => getMathChainOrder(a, a.fallbackOrder) - getMathChainOrder(b, b.fallbackOrder));
+  });
+
+  return (
+    <div className="grid gap-4">
+      <section className="rounded-[22px] border border-blue-100 bg-gradient-to-br from-blue-50/90 to-white p-3 shadow-sm">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[13px] font-black text-slate-800">解题链 Builder</p>
+            <p className="mt-0.5 text-[10px] font-bold text-muted">用短模块搭出推理顺序</p>
+          </div>
+          <span className="grid size-9 place-items-center rounded-2xl bg-white text-primary shadow-sm">
+            <span className="material-symbols-outlined text-[20px]">account_tree</span>
+          </span>
+        </div>
+
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          {MATH_CHAIN_STAGES.map((stage, index) => (
+            <div key={stage.id} className="rounded-2xl bg-white/80 px-2 py-2 text-center ring-1 ring-blue-100">
+              <span className="mx-auto grid size-7 place-items-center rounded-xl bg-primary/10 text-primary">
+                <span className="material-symbols-outlined text-[16px]">{stage.icon}</span>
+              </span>
+              <p className="mt-1 text-[10px] font-black text-slate-700">{stage.title}</p>
+              {index < MATH_CHAIN_STAGES.length - 1 && (
+                <span className="material-symbols-outlined absolute text-[0px]">arrow_forward</span>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3">
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <p className="text-[11px] font-black uppercase tracking-wider text-muted">模块标签</p>
+          <p className="text-[10px] font-bold text-slate-400">点一下，写一句</p>
+        </div>
+        <div className="grid grid-cols-4 gap-2">
+          {MATH_CHAIN_TAGS.map((tag) => (
+            <button
+              key={tag.id}
+              onClick={() => onActiveTagChange(tag.id)}
+              title={tag.hint}
+              aria-label={tag.label}
+              className="flex flex-col items-center gap-1 rounded-xl px-1.5 py-2 text-center transition-all"
+              style={{
+                background: activeTag === tag.id ? "rgba(46,103,248,0.12)" : "#fff",
+                color: activeTag === tag.id ? "var(--color-primary)" : "var(--color-muted)",
+                boxShadow: activeTag === tag.id ? "inset 0 0 0 1px rgba(46,103,248,0.22)" : "inset 0 0 0 1px #e2e8f0",
+              }}
+            >
+              <span className="material-symbols-outlined text-[19px]">{tag.icon}</span>
+              <span className="text-[10px] font-black leading-none">{tag.label}</span>
+            </button>
+          ))}
+        </div>
+
+        <form onSubmit={onAddNote} className="mt-3 flex items-center gap-2 rounded-2xl bg-white p-2 shadow-inner">
+          <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+            <span className="material-symbols-outlined text-[18px]">
+              {getMathChainTag(activeTag)?.icon || "edit_note"}
+            </span>
+          </span>
+          <input
+            value={noteDraft}
+            onChange={(event) => onNoteDraftChange(event.target.value)}
+            placeholder={`${getMathChainTag(activeTag)?.label || "模块"}：尽量写短`}
+            className="min-w-0 flex-1 bg-transparent text-[13px] font-bold text-slate-700 outline-none placeholder:text-slate-300"
+          />
+          <button
+            type="submit"
+            className="grid size-8 shrink-0 place-items-center rounded-xl bg-primary text-white shadow-sm transition-transform hover:-translate-y-0.5"
+            aria-label="添加解题链模块"
+          >
+            <span className="material-symbols-outlined text-[18px]">add</span>
+          </button>
+        </form>
+      </section>
+
+      <section className="grid gap-3">
+        {MATH_CHAIN_STAGES.map((stage) => {
+          const stageNotes = groupedNotes[stage.id] || [];
+          return (
+            <div
+              key={stage.id}
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={(event) => {
+                event.preventDefault();
+                const noteId = event.dataTransfer.getData("text/plain");
+                if (noteId) onMoveNote(noteId, stage.id, stageNotes.length);
+                setDraggingNoteId(null);
+              }}
+              className={cx(
+                "rounded-[22px] border bg-white p-3 shadow-sm transition-all",
+                draggingNoteId ? "border-blue-200 ring-4 ring-blue-50" : "border-slate-100"
+              )}
+            >
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="grid size-8 place-items-center rounded-xl bg-slate-50 text-primary ring-1 ring-slate-100">
+                    <span className="material-symbols-outlined text-[17px]">{stage.icon}</span>
+                  </span>
+                  <div>
+                    <p className="text-[12px] font-black text-slate-800">{stage.title}</p>
+                    <p className="text-[9px] font-bold text-muted">{stage.subtitle}</p>
+                  </div>
+                </div>
+                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-black text-muted">
+                  {stageNotes.length}
+                </span>
+              </div>
+
+              <div className="grid gap-2">
+                {stageNotes.length ? (
+                  stageNotes.map((note, index) => {
+                    const tag = getMathChainTag(note.type);
+                    return (
+                      <div
+                        key={note.id}
+                        draggable
+                        onDragStart={(event) => {
+                          event.dataTransfer.setData("text/plain", note.id);
+                          event.dataTransfer.effectAllowed = "move";
+                          setDraggingNoteId(note.id);
+                        }}
+                        onDragEnd={() => setDraggingNoteId(null)}
+                        onDragOver={(event) => event.preventDefault()}
+                        onDrop={(event) => {
+                          event.preventDefault();
+                          const noteId = event.dataTransfer.getData("text/plain");
+                          if (noteId) onMoveNote(noteId, stage.id, index);
+                          setDraggingNoteId(null);
+                        }}
+                        className={cx(
+                          "group rounded-2xl border bg-white p-2.5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md",
+                          draggingNoteId === note.id ? "opacity-45" : "opacity-100"
+                        )}
+                      >
+                        <div className="flex items-start gap-2">
+                          <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                            <span className="material-symbols-outlined text-[17px]">{tag.icon}</span>
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <div className="mb-1 flex items-center gap-1.5">
+                              <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[9px] font-black text-primary">
+                                {tag.label}
+                              </span>
+                              <span className="text-[9px] font-black text-slate-300">
+                                {MATH_CHAIN_RELATION[note.type] || "连接"}
+                              </span>
+                            </div>
+                            <p className="break-words text-[13px] font-bold leading-snug text-slate-700">
+                              <RichText content={[note.text]} />
+                            </p>
+                          </div>
+                          <span
+                            className="mt-1 grid size-7 shrink-0 cursor-grab place-items-center rounded-lg text-slate-300 transition-colors group-hover:bg-slate-50 group-hover:text-slate-500"
+                            title="拖动模块"
+                          >
+                            <span className="material-symbols-outlined text-[17px]">drag_indicator</span>
+                          </span>
+                          <button
+                            onClick={() => onRemoveNote(note.id)}
+                            className="mt-1 grid size-7 shrink-0 place-items-center rounded-lg text-slate-300 opacity-0 transition-all hover:bg-slate-100 hover:text-slate-500 group-hover:opacity-100"
+                            aria-label="删除模块"
+                          >
+                            <span className="material-symbols-outlined text-[16px]">close</span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/70 px-3 py-4 text-center text-[11px] font-bold text-muted">
+                    拖入模块，或点上方标签开始搭建。
+                  </p>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </section>
+    </div>
+  );
+}
+
+function MathPencilPalette({
+  activeTag,
+  onActiveTagChange,
+  noteDraft,
+  onNoteDraftChange,
+  onAddBlock,
+  layout,
+  onStartDrag,
+}) {
+  const active = getMathChainTag(activeTag);
+
+  return (
+    <div
+      className="fixed z-40 flex max-w-[calc(100vw-112px)] items-center gap-2 rounded-[28px] border border-white/80 bg-white/92 p-2 shadow-[0_18px_54px_rgba(15,23,42,0.18)] ring-1 ring-slate-200/70 backdrop-blur-xl"
+      style={{ left: layout.x, top: layout.y }}
+    >
+      <div
+        onPointerDown={onStartDrag}
+        className="flex cursor-grab items-center gap-2 rounded-2xl bg-slate-50 px-3 py-2 active:cursor-grabbing"
+        title="拖动工具条"
+      >
+        <span className="grid size-8 place-items-center rounded-xl bg-primary text-white shadow-sm">
+          <span className="material-symbols-outlined text-[18px]">draw</span>
+        </span>
+        <div className="hidden min-w-[72px] sm:block">
+          <p className="text-[11px] font-black leading-none text-slate-800">构建工具</p>
+          <p className="mt-1 text-[9px] font-bold leading-none text-muted">点选模块放上去</p>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-1 overflow-x-auto py-0.5">
+        {MATH_CHAIN_TAGS.map((tag) => (
+          <button
+            key={tag.id}
+            onClick={() => onActiveTagChange(tag.id)}
+            title={tag.hint}
+            className={cx(
+              "grid size-10 shrink-0 place-items-center rounded-2xl transition-all",
+              activeTag === tag.id
+                ? "bg-primary text-white shadow-md"
+                : "bg-white text-slate-500 ring-1 ring-slate-200 hover:bg-blue-50 hover:text-primary"
+            )}
+          >
+            <span className="material-symbols-outlined text-[20px]">{tag.icon}</span>
+          </button>
+        ))}
+      </div>
+
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          onAddBlock(activeTag);
+        }}
+        className="flex h-11 min-w-[210px] items-center gap-2 rounded-2xl bg-slate-50 px-2 ring-1 ring-slate-100"
+      >
+        <span className="hidden shrink-0 rounded-lg bg-white px-2 py-1 text-[10px] font-black text-primary shadow-sm sm:inline">
+          {active.label}
+        </span>
+        <input
+          value={noteDraft}
+          onChange={(event) => onNoteDraftChange(event.target.value)}
+          placeholder="写最少的字..."
+          className="min-w-0 flex-1 bg-transparent text-[13px] font-bold text-slate-700 outline-none placeholder:text-slate-300"
+        />
+        <button
+          type="submit"
+          className="grid size-8 shrink-0 place-items-center rounded-xl bg-primary text-white shadow-sm transition-transform hover:-translate-y-0.5"
+          aria-label="放到工作台"
+          title="放到工作台"
+        >
+          <span className="material-symbols-outlined text-[18px]">add</span>
+        </button>
+      </form>
+    </div>
+  );
+}
+
+function QuizMetadataChip({
+  source,
+  sectionTitle,
+  isMinimized,
+  layout,
+  onToggleMinimized,
+  onStartDrag,
+}) {
+  return (
+    <div
+      className={cx(
+        "fixed z-30 border border-white/85 bg-white/94 shadow-[0_14px_34px_rgba(15,23,42,0.14)] ring-1 ring-slate-200/70 backdrop-blur-xl transition-all",
+        isMinimized ? "rounded-2xl p-1.5" : "rounded-full p-1.5"
+      )}
+      style={{ left: layout.x, top: layout.y }}
+    >
+      <div className="flex items-center gap-1.5">
+        <button
+          onPointerDown={onStartDrag}
+          className="grid size-8 cursor-grab place-items-center rounded-xl text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600 active:cursor-grabbing"
+          title="拖动元数据"
+          aria-label="拖动元数据"
+        >
+          <span className="material-symbols-outlined text-[18px]">drag_indicator</span>
+        </button>
+        {isMinimized ? (
+          <button
+            onClick={onToggleMinimized}
+            className="grid size-8 place-items-center rounded-xl bg-primary/10 text-primary transition-colors hover:bg-primary/15"
+            title="展开题目信息"
+            aria-label="展开题目信息"
+          >
+            <span className="material-symbols-outlined text-[18px]">info</span>
+          </button>
+        ) : (
+          <>
+            <div className="holo-tag max-w-[220px] truncate rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-holographic">
+              {source || "题库"}
+            </div>
+            <div className="max-w-[180px] truncate rounded-full bg-background px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-primary">
+              {sectionTitle}
+            </div>
+            <button
+              onClick={onToggleMinimized}
+              className="grid size-8 place-items-center rounded-xl text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600"
+              title="最小化题目信息"
+              aria-label="最小化题目信息"
+            >
+              <span className="material-symbols-outlined text-[17px]">remove</span>
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MathWorkbenchBlock({ note, index, onPointerDown, onRemove }) {
+  const tag = getMathChainTag(note.type);
+  const stage = MATH_CHAIN_STAGES.find((item) => item.id === getMathChainStage(note)) || MATH_CHAIN_STAGES[0];
+  const left = Number.isFinite(note.x) ? note.x : Math.max(88, Math.min(window.innerWidth - 300, window.innerWidth - 390));
+  const top = Number.isFinite(note.y) ? note.y : 118 + index * 72;
+
+  return (
+    <div
+      className="fixed z-30 w-[260px] rounded-[22px] border border-white/90 bg-white/94 p-3 shadow-[0_16px_42px_rgba(15,23,42,0.16)] ring-1 ring-slate-200/80 backdrop-blur-xl transition-transform hover:-translate-y-0.5"
+      style={{ left, top }}
+    >
+      <div
+        onPointerDown={(event) => onPointerDown(event, note)}
+        className="flex cursor-grab items-start gap-2 active:cursor-grabbing"
+      >
+        <span className="grid size-9 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
+          <span className="material-symbols-outlined text-[18px]">{tag.icon}</span>
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="mb-1 flex items-center gap-1.5">
+            <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[9px] font-black text-primary">
+              {tag.label}
+            </span>
+            <span className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[9px] font-black text-slate-400">
+              {stage.title}
+            </span>
+          </div>
+          <p className="line-clamp-4 break-words text-[13px] font-bold leading-snug text-slate-700">
+            <RichText content={[note.text || tag.hint]} />
+          </p>
+        </div>
+        <span className="mt-1 grid size-7 shrink-0 place-items-center rounded-lg text-slate-300">
+          <span className="material-symbols-outlined text-[17px]">drag_indicator</span>
+        </span>
+        <button
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={() => onRemove(note.id)}
+          className="mt-1 grid size-7 shrink-0 place-items-center rounded-lg text-slate-300 transition-colors hover:bg-slate-100 hover:text-slate-500"
+          aria-label="删除模块"
+        >
+          <span className="material-symbols-outlined text-[16px]">close</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function SolvingToolPanel({
+  subject = "math",
   isOpen,
   onToggle,
   windowMode,
@@ -564,6 +988,7 @@ function SolvingToolPanel({
   onAddNote,
   onRemoveNote,
   onRemoveMark,
+  onMoveNote,
   noteTags = NOTE_TAGS,
   notesTitle = "本题条件",
   notesEmpty = "先把题目翻译成一两条条件。",
@@ -645,8 +1070,14 @@ function SolvingToolPanel({
             />
           </div>
           <div className="min-w-0">
-            <h3 className="truncate text-[15px] font-black text-slate-800">解题记录</h3>
-            {!isFloating && <p className="mt-0.5 text-[10px] font-bold text-muted">拖动标题栏可浮出</p>}
+            <h3 className="truncate text-[15px] font-black text-slate-800">
+              {subject === "math" ? "解题链" : "解题记录"}
+            </h3>
+            {!isFloating && (
+              <p className="mt-0.5 text-[10px] font-bold text-muted">
+                {subject === "math" ? "拖模块搭建思路" : "拖动标题栏可浮出"}
+              </p>
+            )}
           </div>
         </div>
         {isFloating && (
@@ -703,6 +1134,19 @@ function SolvingToolPanel({
           </div>
         </section>
 
+        {subject === "math" ? (
+          <MathReasoningBuilder
+            record={record}
+            activeTag={activeTag}
+            onActiveTagChange={onActiveTagChange}
+            noteDraft={noteDraft}
+            onNoteDraftChange={onNoteDraftChange}
+            onAddNote={onAddNote}
+            onRemoveNote={onRemoveNote}
+            onMoveNote={onMoveNote}
+          />
+        ) : (
+          <>
         <section className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3">
           <div className="mb-3 flex items-center justify-between gap-2">
             <p className="text-[11px] font-black uppercase tracking-wider text-muted">快速标签</p>
@@ -788,6 +1232,8 @@ function SolvingToolPanel({
             )}
           </div>
         </section>
+          </>
+        )}
 
         {toolModules?.marks && (
           <section className="mt-5">
@@ -875,15 +1321,27 @@ function SolvingToolPanel({
   );
 }
 
-function SelectionMarkMenu({ menu, onMark, onStartDragOut, onClose }) {
+function SelectionMarkMenu({ menu, subject = "math", onMark, onAddSelectionNote, onStartDragOut, onClose }) {
   if (!menu) return null;
 
   return (
     <div
-      className="fixed z-50 flex items-center gap-1 rounded-2xl border border-slate-100 bg-white/95 p-1.5 shadow-float backdrop-blur"
+      className="fixed z-50 flex max-w-[min(620px,calc(100vw-32px))] flex-wrap items-center gap-1 rounded-2xl border border-slate-100 bg-white/95 p-1.5 shadow-float backdrop-blur"
       style={{ left: menu.x, top: menu.y, transform: "translateX(-50%)" }}
       onMouseDown={(event) => event.preventDefault()}
     >
+      {subject === "math" &&
+        MATH_CHAIN_TAGS.slice(0, 5).map((tag) => (
+          <button
+            key={tag.id}
+            onClick={() => onAddSelectionNote(tag.id)}
+            className="flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-[11px] font-black text-slate-600 transition-colors hover:bg-primary/10 hover:text-primary"
+            title={`加入解题链：${tag.label}`}
+          >
+            <span className="material-symbols-outlined text-[16px]">{tag.icon}</span>
+            {tag.label}
+          </button>
+        ))}
       {MARK_TAGS.map((tag) => (
         <button
           key={tag.id}
@@ -1183,6 +1641,15 @@ function App() {
     width: 340,
     height: typeof window === "undefined" ? 620 : Math.min(660, Math.max(460, window.innerHeight - 126)),
   }));
+  const [mathPaletteLayout, setMathPaletteLayout] = useState(() => ({
+    x: typeof window === "undefined" ? 240 : Math.max(88, Math.round((window.innerWidth - 680) / 2)),
+    y: typeof window === "undefined" ? 640 : Math.max(420, window.innerHeight - 88),
+  }));
+  const [metadataLayout, setMetadataLayout] = useState(() => ({
+    x: typeof window === "undefined" ? 360 : Math.max(112, Math.round(window.innerWidth / 2 - 245)),
+    y: 86,
+  }));
+  const [metadataMinimized, setMetadataMinimized] = useState(false);
   const [activeNoteTag, setActiveNoteTag] = useState("known");
   const [noteDraft, setNoteDraft] = useState("");
   const [selectionMenu, setSelectionMenu] = useState(null);
@@ -1286,6 +1753,39 @@ function App() {
           )
         );
       }
+
+      if (session.type === "chain-note-move") {
+        const nextX = Math.min(window.innerWidth - 90, Math.max(76, session.startX + event.clientX - session.pointerX));
+        const nextY = Math.min(window.innerHeight - 60, Math.max(76, session.startY + event.clientY - session.pointerY));
+        setRecords((previous) => {
+          const current = previous[session.questionId];
+          if (!current) return previous;
+          const nextRecord = {
+            ...current,
+            notes: (current.notes || []).map((note) =>
+              note.id === session.noteId ? { ...note, x: nextX, y: nextY } : note
+            ),
+            updatedAt: new Date().toISOString(),
+          };
+          const next = { ...previous, [session.questionId]: nextRecord };
+          saveSolvingRecords(next);
+          return next;
+        });
+      }
+
+      if (session.type === "palette-move") {
+        setMathPaletteLayout({
+          x: Math.min(window.innerWidth - 120, Math.max(76, session.startX + event.clientX - session.pointerX)),
+          y: Math.min(window.innerHeight - 68, Math.max(76, session.startY + event.clientY - session.pointerY)),
+        });
+      }
+
+      if (session.type === "metadata-move") {
+        setMetadataLayout({
+          x: Math.min(window.innerWidth - 80, Math.max(76, session.startX + event.clientX - session.pointerX)),
+          y: Math.min(window.innerHeight - 60, Math.max(72, session.startY + event.clientY - session.pointerY)),
+        });
+      }
     }
 
     function handlePointerUp() {
@@ -1324,6 +1824,7 @@ function App() {
     setQuestionId(nextBank.pages[0]?.questions[0]?.id || "");
     setKeyword("");
     setCollapsedTopics(getInitialCollapsedTopics(nextSubject));
+    setActiveNoteTag("known");
     setSelectionMenu(null);
     setFloatingCards([]);
   }
@@ -1425,6 +1926,8 @@ function App() {
         {
           id: createId("note"),
           type: activeNoteTag,
+          stage: subject === "math" ? getMathChainTag(activeNoteTag).stage : undefined,
+          order: record.notes?.length || 0,
           text,
           createdAt: new Date().toISOString(),
         },
@@ -1432,6 +1935,92 @@ function App() {
     }));
     setNoteDraft("");
     setNotesOpen(true);
+  }
+
+  function addSelectionNote(type) {
+    if (!selectionMenu?.text) return;
+    const tag = getMathChainTag(type);
+    updateActiveRecord((record) => ({
+      ...record,
+      notes: [
+        ...(record.notes || []),
+        {
+          id: createId("note"),
+          type,
+          stage: tag.stage,
+          order: record.notes?.length || 0,
+          x: Math.min(window.innerWidth - 300, Math.max(76, selectionMenu.x - 130)),
+          y: Math.min(window.innerHeight - 180, Math.max(76, selectionMenu.y + 46)),
+          text: selectionMenu.text,
+          createdAt: new Date().toISOString(),
+        },
+      ],
+    }));
+    applySoftSelectionHighlight(selectionMenu.range);
+    window.getSelection?.()?.removeAllRanges();
+    setSelectionMenu(null);
+    setNotesOpen(true);
+  }
+
+  function addWorkbenchBlock(type = activeNoteTag) {
+    const tag = getMathChainTag(type);
+    const text = noteDraft.trim() || tag.hint;
+    const count = activeRecord.notes?.length || 0;
+
+    updateActiveRecord((record) => ({
+      ...record,
+      notes: [
+        ...(record.notes || []),
+        {
+          id: createId("note"),
+          type,
+          stage: tag.stage,
+          order: record.notes?.length || 0,
+          x: Math.min(window.innerWidth - 300, Math.max(92, window.innerWidth - 390)),
+          y: Math.min(window.innerHeight - 170, 118 + count * 18),
+          text,
+          createdAt: new Date().toISOString(),
+        },
+      ],
+    }));
+    setNoteDraft("");
+  }
+
+  function moveNote(noteId, targetStage, targetIndex) {
+    updateActiveRecord((record) => {
+      const movingNote = (record.notes || []).find((note) => note.id === noteId);
+      if (!movingNote) return record;
+
+      const remaining = (record.notes || []).filter((note) => note.id !== noteId);
+      const grouped = Object.fromEntries(MATH_CHAIN_STAGES.map((stage) => [stage.id, []]));
+      remaining.forEach((note, index) => {
+        const stage = getMathChainStage(note);
+        (grouped[stage] || grouped.read).push({ ...note, fallbackOrder: index });
+      });
+      Object.values(grouped).forEach((items) => {
+        items.sort((a, b) => getMathChainOrder(a, a.fallbackOrder) - getMathChainOrder(b, b.fallbackOrder));
+      });
+
+      const target = grouped[targetStage] || grouped.read;
+      const boundedIndex = Math.min(Math.max(targetIndex, 0), target.length);
+      target.splice(boundedIndex, 0, {
+        ...movingNote,
+        stage: targetStage,
+      });
+
+      const nextNotes = MATH_CHAIN_STAGES.flatMap((stage) =>
+        (grouped[stage.id] || []).map((note, index) => ({
+          ...note,
+          stage: stage.id,
+          order: index,
+        }))
+      );
+
+      return {
+        ...record,
+        notes: nextNotes,
+      };
+    });
   }
 
   function selectAnswer(label) {
@@ -1669,6 +2258,46 @@ function App() {
       pointerY: event.clientY,
       startX: card.x,
       startY: card.y,
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  }
+
+  function startChainNoteDrag(event, note) {
+    if (event.button !== 0) return;
+    const left = Number.isFinite(note.x) ? note.x : Math.max(88, Math.min(window.innerWidth - 300, window.innerWidth - 390));
+    const top = Number.isFinite(note.y) ? note.y : 118;
+    dragSessionRef.current = {
+      type: "chain-note-move",
+      questionId: activeQuestionId,
+      noteId: note.id,
+      pointerX: event.clientX,
+      pointerY: event.clientY,
+      startX: left,
+      startY: top,
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  }
+
+  function startPaletteDrag(event) {
+    if (event.button !== 0) return;
+    dragSessionRef.current = {
+      type: "palette-move",
+      pointerX: event.clientX,
+      pointerY: event.clientY,
+      startX: mathPaletteLayout.x,
+      startY: mathPaletteLayout.y,
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  }
+
+  function startMetadataDrag(event) {
+    if (event.button !== 0) return;
+    dragSessionRef.current = {
+      type: "metadata-move",
+      pointerX: event.clientX,
+      pointerY: event.clientY,
+      startX: metadataLayout.x,
+      startY: metadataLayout.y,
     };
     event.currentTarget.setPointerCapture?.(event.pointerId);
   }
@@ -2242,26 +2871,25 @@ function App() {
 
             {/* Quiz Body */}
             <div className="relative flex-1 overflow-hidden">
+              <QuizMetadataChip
+                source={activeQuestion?.source || "题库"}
+                sectionTitle={activePage?.sectionTitle}
+                isMinimized={metadataMinimized}
+                layout={metadataLayout}
+                onToggleMinimized={() => setMetadataMinimized((value) => !value)}
+                onStartDrag={startMetadataDrag}
+              />
               <div className="grid h-full grid-cols-[minmax(0,1fr)_auto]">
                 <div className="overflow-auto">
                   <div className="mx-auto max-w-3xl px-6 pb-8 pt-10">
                     {/* Question card with floating tag */}
                     <div className="relative mb-8">
-                      <div className="absolute -top-5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full border border-slate-100 bg-white px-5 py-2 shadow-lg whitespace-nowrap">
-                        <div className="holo-tag rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-holographic">
-                          {activeQuestion?.source || "题库"}
-                        </div>
-                        <div className="rounded-full bg-background px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-primary">
-                          {activePage?.sectionTitle}
-                        </div>
-                      </div>
-
                       <div
                         ref={questionShellRef}
                         onPointerDown={handleQuestionPointerDown}
                         onMouseUp={handleQuestionSelection}
                         onKeyUp={handleQuestionSelection}
-                        className="rounded-2xl bg-background p-8 pt-12 shadow-float"
+                        className="rounded-2xl bg-background p-8 shadow-float"
                       >
                         {subject === "english" ? (
                           <EnglishQuestionViewer
@@ -2335,36 +2963,64 @@ function App() {
                   </div>
                 </div>
 
-                <SolvingToolPanel
-                  isOpen={notesOpen}
-                  onToggle={() => setNotesOpen((value) => !value)}
-                  windowMode={notesWindowMode}
-                  windowLayout={notesWindowLayout}
-                  onDock={dockNotesWindow}
-                  onFloat={floatNotesWindow}
-                  onZoomIn={() => zoomNotesWindow(56)}
-                  onZoomOut={() => zoomNotesWindow(-56)}
-                  onStartWindowDrag={startNotesWindowDrag}
-                  onStartWindowResize={startNotesWindowResize}
-                  activeTag={activeNoteTag}
-                  onActiveTagChange={setActiveNoteTag}
-                  noteDraft={noteDraft}
-                  onNoteDraftChange={setNoteDraft}
-                  onAddNote={addNote}
-                  onRemoveNote={removeNote}
-                  onRemoveMark={removeMark}
-                  noteTags={subjectConfig.noteTags}
-                  notesTitle={subjectConfig.notesTitle}
-                  notesEmpty={subjectConfig.notesEmpty}
-                  toolModules={toolModules}
-                  onToggleToolModule={updateToolModule}
-                  record={activeRecord}
-                  reviewRecords={reviewRecords}
-                />
+                {subject !== "math" && (
+                  <SolvingToolPanel
+                    subject={subject}
+                    isOpen={notesOpen}
+                    onToggle={() => setNotesOpen((value) => !value)}
+                    windowMode={notesWindowMode}
+                    windowLayout={notesWindowLayout}
+                    onDock={dockNotesWindow}
+                    onFloat={floatNotesWindow}
+                    onZoomIn={() => zoomNotesWindow(56)}
+                    onZoomOut={() => zoomNotesWindow(-56)}
+                    onStartWindowDrag={startNotesWindowDrag}
+                    onStartWindowResize={startNotesWindowResize}
+                    activeTag={activeNoteTag}
+                    onActiveTagChange={setActiveNoteTag}
+                    noteDraft={noteDraft}
+                    onNoteDraftChange={setNoteDraft}
+                    onAddNote={addNote}
+                    onRemoveNote={removeNote}
+                    onRemoveMark={removeMark}
+                    onMoveNote={moveNote}
+                    noteTags={subjectConfig.noteTags}
+                    notesTitle={subjectConfig.notesTitle}
+                    notesEmpty={subjectConfig.notesEmpty}
+                    toolModules={toolModules}
+                    onToggleToolModule={updateToolModule}
+                    record={activeRecord}
+                    reviewRecords={reviewRecords}
+                  />
+                )}
               </div>
+              {subject === "math" && (
+                <>
+                  <MathPencilPalette
+                    activeTag={activeNoteTag}
+                    onActiveTagChange={setActiveNoteTag}
+                    noteDraft={noteDraft}
+                    onNoteDraftChange={setNoteDraft}
+                    onAddBlock={addWorkbenchBlock}
+                    layout={mathPaletteLayout}
+                    onStartDrag={startPaletteDrag}
+                  />
+                  {(activeRecord.notes || []).map((note, index) => (
+                    <MathWorkbenchBlock
+                      key={note.id}
+                      note={note}
+                      index={index}
+                      onPointerDown={startChainNoteDrag}
+                      onRemove={removeNote}
+                    />
+                  ))}
+                </>
+              )}
               <SelectionMarkMenu
                 menu={selectionMenu}
+                subject={subject}
                 onMark={addSelectionMark}
+                onAddSelectionNote={addSelectionNote}
                 onStartDragOut={startSelectionDragOut}
                 onClose={() => setSelectionMenu(null)}
               />
