@@ -147,7 +147,16 @@ function Option({ label, content, visuals = [], isSelected = false, onSelect }) 
 
   return (
     <div
-      className="node-button group relative flex w-full items-center gap-4 rounded-xl border px-5 py-4 text-left outline-none transition-all"
+      role="button"
+      tabIndex={0}
+      onClick={handleClick}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          handleClick();
+        }
+      }}
+      className="node-button group relative flex w-full cursor-pointer items-center gap-4 rounded-xl border px-5 py-4 text-left outline-none transition-all focus-visible:ring-4 focus-visible:ring-primary/15"
       style={{
         minHeight: 72,
         background: isSelected ? "rgba(46,103,248,0.08)" : "#fff",
@@ -158,18 +167,15 @@ function Option({ label, content, visuals = [], isSelected = false, onSelect }) 
         transform: isSelected ? "translateY(1px)" : "translateY(0)",
       }}
     >
-      <button
-        type="button"
-        onClick={handleClick}
+      <div
         className="flex size-10 shrink-0 items-center justify-center rounded-full font-display text-sm font-bold transition-colors"
         style={{
           background: isSelected ? "var(--color-primary)" : "var(--color-background)",
           color: isSelected ? "#fff" : "var(--color-muted)",
         }}
-        aria-label={`选择 ${label}`}
       >
         {label}
-      </button>
+      </div>
       <div
         className="grid flex-1 select-text gap-3 font-body text-base font-semibold leading-snug transition-colors"
         style={{
@@ -189,40 +195,21 @@ function Option({ label, content, visuals = [], isSelected = false, onSelect }) 
           </div>
         ) : null}
       </div>
-      <button
-        type="button"
-        onClick={handleClick}
-        className={cx(
-          "hidden shrink-0 rounded-xl px-3 py-2 text-[11px] font-black transition-colors sm:block",
-          isSelected ? "bg-primary text-white" : "bg-slate-50 text-slate-400 hover:bg-primary/10 hover:text-primary"
-        )}
-        aria-label={`切换选择 ${label}`}
-      >
-        {isSelected ? "已选" : "选择"}
-      </button>
     </div>
   );
 }
 
 function OptionsBlock({ options, selectedAnswers = [], onSelectAnswer }) {
   return (
-    <div className="grid gap-4">
-      {selectedAnswers.length > 0 && (
-        <div className="flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-4 py-2 text-[13px] font-black text-primary">
-          <span className="material-symbols-outlined text-[18px]">check_circle</span>
-          已选择 {selectedAnswers.join("、")}
-        </div>
-      )}
-      <div className="grid gap-4 md:grid-cols-2">
-        {options.map((option) => (
-          <Option
-            key={option.label}
-            {...option}
-            isSelected={selectedAnswers.includes(option.label)}
-            onSelect={onSelectAnswer}
-          />
-        ))}
-      </div>
+    <div className="grid gap-4 md:grid-cols-2">
+      {options.map((option) => (
+        <Option
+          key={option.label}
+          {...option}
+          isSelected={selectedAnswers.includes(option.label)}
+          onSelect={onSelectAnswer}
+        />
+      ))}
     </div>
   );
 }

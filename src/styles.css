@@ -182,3 +182,26 @@ summary::-webkit-details-marker {
 .question-visual svg [fill="currentColor"] {
   fill: var(--color-text-main);
 }
+
+.workspace-link-flow-line {
+  stroke-dasharray: 14 28;
+  animation: workspace-link-flow 2.6s linear infinite;
+  filter: drop-shadow(0 0 3px rgba(46, 103, 248, 0.12));
+}
+
+.workspace-link-pulse {
+  filter: drop-shadow(0 0 5px rgba(46, 103, 248, 0.22));
+}
+
+.workspace-link-pulse--reverse {
+  filter: drop-shadow(0 0 5px rgba(0, 240, 255, 0.18));
+}
+
+@keyframes workspace-link-flow {
+  from {
+    stroke-dashoffset: 42;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}

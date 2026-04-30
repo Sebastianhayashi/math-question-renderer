@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { QuestionBlocks } from "./components/QuestionBlocks.jsx";
 import { EnglishQuestionViewer } from "./components/EnglishQuestionViewer.jsx";
-import { RichText } from "./components/RichText.jsx";
+import { MarkdownRichText, RichText } from "./components/RichText.jsx";
 import { questionBank } from "./data/questionBank.js";
 import { cet6QuestionBank } from "./data/cet6QuestionBank.js";
 import { cx } from "./lib/cx.js";
@@ -152,6 +152,24 @@ const MATH_CHAIN_RELATION = {
   verify: "验证",
   answer: "得到",
 };
+const MATH_CHAIN_THEME = {
+  known: { bg: "rgba(46,103,248,0.11)", border: "rgba(46,103,248,0.28)", text: "#2E67F8" },
+  unknown: { bg: "rgba(100,116,139,0.12)", border: "rgba(100,116,139,0.22)", text: "#64748B" },
+  target: { bg: "rgba(20,184,166,0.13)", border: "rgba(20,184,166,0.26)", text: "#0F766E" },
+  assumption: { bg: "rgba(168,85,247,0.12)", border: "rgba(168,85,247,0.24)", text: "#7E22CE" },
+  translate: { bg: "rgba(14,165,233,0.12)", border: "rgba(14,165,233,0.24)", text: "#0369A1" },
+  infer: { bg: "rgba(245,158,11,0.16)", border: "rgba(245,158,11,0.28)", text: "#B45309" },
+  verify: { bg: "rgba(34,197,94,0.13)", border: "rgba(34,197,94,0.26)", text: "#15803D" },
+  answer: { bg: "rgba(239,68,68,0.12)", border: "rgba(239,68,68,0.24)", text: "#B91C1C" },
+};
+const WORKSPACE_ZONE_MIN = { width: 300, height: 190 };
+const LINK_MODES = [
+  { id: "directed", label: "单向", icon: "arrow_forward" },
+  { id: "bidirectional", label: "双向", icon: "sync_alt" },
+  { id: "plain", label: "连接", icon: "horizontal_rule" },
+];
+const LINK_LABELS = ["因为", "所以", "等价于", "用到定义", "反例", "检查"];
+const MODULE_SIZE = { width: 236, height: 92 };
 const MARK_TAGS = [
   { id: "unknown", label: "不知道", icon: "help" },
   { id: "unfamiliar", label: "不熟悉", icon: "priority_high" },
@@ -234,6 +252,8 @@ function createEmptyRecord(meta = {}) {
     meta,
     notes: [],
     marks: [],
+    zones: [],
+    links: [],
     updatedAt: null,
   };
 }
@@ -247,6 +267,20 @@ function getMathChainStage(note) {
   return getMathChainTag(note?.type).stage || "read";
 }
 
+function getMathChainTheme(type) {
+  return MATH_CHAIN_THEME[type] || MATH_CHAIN_THEME.known;
+}
+
+function hexToRgba(hex, alpha = 1) {
+  const normalized = String(hex || "").replace("#", "");
+  if (normalized.length !== 6) return `rgba(46,103,248,${alpha})`;
+  const value = Number.parseInt(normalized, 16);
+  const r = (value >> 16) & 255;
+  const g = (value >> 8) & 255;
+  const b = value & 255;
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 function getMathChainOrder(note, fallbackIndex) {
   return Number.isFinite(note?.order) ? note.order : fallbackIndex;
 }
@@ -255,43 +289,131 @@ function clampNumber(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
 
-function getWorkbenchBounds() {
+function getViewportBounds(width = 260, height = 80) {
   if (typeof window === "undefined") {
-    return { minX: 76, maxX: 980, minY: 76, maxY: 620 };
+    return { minX: 16, maxX: 980, minY: 16, maxY: 620 };
   }
 
   return {
-    minX: 76,
-    maxX: Math.max(76, window.innerWidth - 290),
-    minY: 76,
-    maxY: Math.max(76, window.innerHeight - 178),
+    minX: 12,
+    maxX: Math.max(12, window.innerWidth - width - 12),
+    minY: 12,
+    maxY: Math.max(12, window.innerHeight - height - 12),
   };
 }
 
-function getPaletteRailBounds() {
+function getWorkbenchBounds() {
   if (typeof window === "undefined") {
-    return { minX: 88, maxX: 760, minY: 640, maxY: 640 };
+    return { minX: 16, maxX: 980, minY: 16, maxY: 620 };
   }
 
   return {
-    minX: 88,
-    maxX: Math.max(88, window.innerWidth - 700),
-    minY: Math.max(320, window.innerHeight - 104),
-    maxY: Math.max(320, window.innerHeight - 72),
+    minX: 12,
+    maxX: Math.max(12, window.innerWidth - 272),
+    minY: 12,
+    maxY: Math.max(12, window.innerHeight - 88),
   };
+}
+
+function getPaletteRailBounds(isMinimized = false) {
+  return getViewportBounds(isMinimized ? 190 : 760, 76);
 }
 
 function getMetadataRailBounds(isMinimized = false) {
-  if (typeof window === "undefined") {
-    return { minX: 96, maxX: 760, minY: 82, maxY: 136 };
-  }
+  return getViewportBounds(isMinimized ? 72 : 520, 56);
+}
 
+function getDefaultZoneLayout(index = 0) {
+  const bounds = getViewportBounds(460, 280);
+  const preferredY = typeof window === "undefined" ? 420 : Math.max(360, window.innerHeight - 470);
   return {
-    minX: 96,
-    maxX: Math.max(96, window.innerWidth - (isMinimized ? 104 : 520)),
-    minY: 76,
-    maxY: 142,
+    x: clampNumber(132 + index * 26, bounds.minX, bounds.maxX),
+    y: clampNumber(preferredY + index * 22, bounds.minY, bounds.maxY),
+    width: 460,
+    height: 280,
   };
+}
+
+function getDefaultModulePosition(index = 0, width = 260, height = 96) {
+  const bounds = getWorkbenchBounds();
+  const x = typeof window === "undefined" ? 720 : window.innerWidth - width - 42;
+  const y = 420 + index * (height + 14);
+  return {
+    x: clampNumber(x, bounds.minX, bounds.maxX),
+    y: clampNumber(y, bounds.minY, bounds.maxY),
+  };
+}
+
+function isPointInZone(x, y, zone) {
+  return x >= zone.x && x <= zone.x + zone.width && y >= zone.y && y <= zone.y + zone.height;
+}
+
+function findZoneAtPoint(zones = [], x, y) {
+  return [...zones].reverse().find((zone) => isPointInZone(x, y, zone));
+}
+
+function isPointInModule(x, y, note) {
+  const width = MODULE_SIZE.width;
+  const height = MODULE_SIZE.height;
+  return x >= note.x && x <= note.x + width && y >= note.y && y <= note.y + height;
+}
+
+function findNoteAtPoint(notes = [], x, y, excludedId) {
+  return [...notes]
+    .reverse()
+    .find((note) => note.id !== excludedId && Number.isFinite(note.x) && Number.isFinite(note.y) && isPointInModule(x, y, note));
+}
+
+function getNextZoneOrder(record, zoneId) {
+  const notesCount = (record.notes || []).filter((note) => note.zoneId === zoneId).length;
+  const marksCount = (record.marks || []).filter((mark) => mark.zoneId === zoneId).length;
+  return notesCount + marksCount;
+}
+
+function snapBlockToZone(zone, order = 0, width = MODULE_SIZE.width, height = MODULE_SIZE.height) {
+  const gap = 14;
+  const header = 50;
+  const columns = Math.max(1, Math.floor((zone.width - 32) / (width + gap)));
+  const col = order % columns;
+  const row = Math.floor(order / columns);
+  const x = zone.x + 16 + col * (width + gap);
+  const y = zone.y + header + row * (height + gap);
+  return {
+    x: clampNumber(x, zone.x + 12, zone.x + zone.width - width - 12),
+    y: clampNumber(y, zone.y + header, zone.y + zone.height - height - 12),
+  };
+}
+
+function getBlockCenter(item, width = MODULE_SIZE.width, height = MODULE_SIZE.height) {
+  return {
+    x: (Number.isFinite(item?.x) ? item.x : 0) + width / 2,
+    y: (Number.isFinite(item?.y) ? item.y : 0) + height / 2,
+  };
+}
+
+function getLinkPath(from, to) {
+  const midX = (from.x + to.x) / 2;
+  return `M ${from.x} ${from.y} C ${midX} ${from.y}, ${midX} ${to.y}, ${to.x} ${to.y}`;
+}
+
+function getLinkLabelPosition(from, to) {
+  return {
+    x: (from.x + to.x) / 2,
+    y: (from.y + to.y) / 2,
+  };
+}
+
+function getRectFromPoints(startX, startY, endX, endY) {
+  return {
+    x: Math.min(startX, endX),
+    y: Math.min(startY, endY),
+    width: Math.abs(endX - startX),
+    height: Math.abs(endY - startY),
+  };
+}
+
+function rectsOverlap(a, b) {
+  return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
 }
 
 function loadSolvingRecords() {
@@ -890,6 +1012,15 @@ function MathPencilPalette({
   onNoteDraftChange,
   onAddBlock,
   onArrangeBlocks,
+  onAddZone,
+  selectionMode,
+  selectedCount,
+  onToggleSelectionMode,
+  activeLinkMode,
+  linkSourceId,
+  onActiveLinkModeChange,
+  isMinimized,
+  onToggleMinimized,
   layout,
   onStartDrag,
   onStartModuleDrag,
@@ -898,24 +1029,36 @@ function MathPencilPalette({
 
   return (
     <div
-      className="fixed z-40 flex max-w-[calc(100vw-112px)] items-center gap-2 rounded-[28px] border border-white/80 bg-white/92 p-2 shadow-[0_18px_54px_rgba(15,23,42,0.18)] ring-1 ring-slate-200/70 backdrop-blur-xl"
+      className={cx(
+        "fixed z-40 flex items-center gap-1.5 border border-white/80 bg-white/88 p-1.5 shadow-[0_14px_42px_rgba(15,23,42,0.14)] ring-1 ring-slate-200/70 backdrop-blur-xl transition-all",
+        isMinimized ? "rounded-[20px]" : "max-w-[calc(100vw-72px)] rounded-[24px]"
+      )}
       style={{ left: layout.x, top: layout.y }}
     >
       <div
         onPointerDown={onStartDrag}
-        className="flex cursor-grab items-center gap-2 rounded-2xl bg-slate-50 px-3 py-2 active:cursor-grabbing"
+        className={cx(
+          "grid size-10 shrink-0 cursor-grab place-items-center rounded-2xl text-primary transition-colors hover:bg-slate-50 active:cursor-grabbing",
+          isMinimized && "bg-primary text-white"
+        )}
         title="拖动工具条"
       >
-        <span className="grid size-8 place-items-center rounded-xl bg-primary text-white shadow-sm">
-          <span className="material-symbols-outlined text-[18px]">draw</span>
-        </span>
-        <div className="hidden min-w-[72px] sm:block">
-          <p className="text-[11px] font-black leading-none text-slate-800">构建工具</p>
-          <p className="mt-1 text-[9px] font-bold leading-none text-muted">模块轨道</p>
-        </div>
+        <span className="material-symbols-outlined text-[19px]">draw</span>
       </div>
 
-      <div className="flex items-center gap-1 overflow-x-auto py-0.5">
+      {isMinimized ? (
+        <button
+          onClick={onToggleMinimized}
+          className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white text-primary ring-1 ring-slate-200 transition-colors hover:bg-blue-50"
+          title="展开构建工具"
+          aria-label="展开构建工具"
+        >
+          <span className="material-symbols-outlined text-[20px]">keyboard_arrow_up</span>
+        </button>
+      ) : (
+        <>
+
+      <div className="flex max-w-[292px] items-center gap-1 overflow-x-auto rounded-2xl bg-slate-50/80 p-1">
         {MATH_CHAIN_TAGS.map((tag) => (
           <button
             key={tag.id}
@@ -923,26 +1066,13 @@ function MathPencilPalette({
             onPointerDown={(event) => onStartModuleDrag(event, tag.id)}
             title={tag.hint}
             className={cx(
-              "relative flex h-12 w-12 shrink-0 cursor-grab flex-col items-center justify-center gap-0.5 rounded-2xl transition-all active:cursor-grabbing",
+              "flex h-9 min-w-11 shrink-0 cursor-grab items-center justify-center rounded-xl px-2 text-[11px] font-black transition-all active:cursor-grabbing",
               activeTag === tag.id
-                ? "bg-primary text-white shadow-md"
-                : "bg-white text-slate-500 ring-1 ring-slate-200 hover:bg-blue-50 hover:text-primary"
+                ? "bg-primary text-white shadow-sm"
+                : "text-slate-500 hover:bg-white hover:text-primary"
             )}
           >
-            <span className="material-symbols-outlined text-[19px]">{tag.icon}</span>
-            <span className="text-[9px] font-black leading-none">{tag.label}</span>
-            <span
-              className={cx(
-                "absolute -top-1 left-1/2 size-2 -translate-x-1/2 rounded-full ring-2 ring-white",
-                activeTag === tag.id ? "bg-white/90" : "bg-slate-200"
-              )}
-            />
-            <span
-              className={cx(
-                "absolute -bottom-1 left-1/2 h-1.5 w-5 -translate-x-1/2 rounded-full ring-2 ring-white",
-                activeTag === tag.id ? "bg-white/80" : "bg-slate-100"
-              )}
-            />
+            {tag.label}
           </button>
         ))}
       </div>
@@ -952,14 +1082,21 @@ function MathPencilPalette({
           event.preventDefault();
           onAddBlock(activeTag);
         }}
-        className="flex h-11 min-w-[210px] items-center gap-2 rounded-2xl bg-slate-50 px-2 ring-1 ring-slate-100"
+        className="flex h-10 min-w-[220px] items-center gap-2 rounded-2xl bg-slate-50/85 px-2 ring-1 ring-slate-100"
       >
-        <span className="hidden shrink-0 rounded-lg bg-white px-2 py-1 text-[10px] font-black text-primary shadow-sm sm:inline">
+        <span className="hidden shrink-0 rounded-lg bg-white px-2 py-1 text-[10px] font-black text-primary sm:inline">
           {active.label}
         </span>
         <input
           value={noteDraft}
-          onChange={(event) => onNoteDraftChange(event.target.value)}
+        onChange={(event) => onNoteDraftChange(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key !== "Tab") return;
+            event.preventDefault();
+            const currentIndex = MATH_CHAIN_TAGS.findIndex((tag) => tag.id === activeTag);
+            const nextTag = MATH_CHAIN_TAGS[(currentIndex + 1) % MATH_CHAIN_TAGS.length];
+            onActiveTagChange(nextTag.id);
+          }}
           placeholder="写最少的字..."
           className="min-w-0 flex-1 bg-transparent text-[13px] font-bold text-slate-700 outline-none placeholder:text-slate-300"
         />
@@ -974,12 +1111,57 @@ function MathPencilPalette({
       </form>
       <button
         onClick={onArrangeBlocks}
-        className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-slate-500 ring-1 ring-slate-200 transition-colors hover:bg-blue-50 hover:text-primary"
+        className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white/90 text-slate-500 ring-1 ring-slate-200 transition-colors hover:bg-blue-50 hover:text-primary"
         title="整理积木"
         aria-label="整理积木"
       >
         <span className="material-symbols-outlined text-[20px]">auto_fix_high</span>
       </button>
+      <button
+        onClick={onToggleSelectionMode}
+        className={cx(
+          "grid size-10 shrink-0 place-items-center rounded-2xl ring-1 transition-colors",
+          selectionMode ? "bg-primary text-white ring-primary/20" : "bg-white text-slate-500 ring-slate-200 hover:bg-blue-50 hover:text-primary"
+        )}
+        title={selectedCount ? `已框选 ${selectedCount} 个模块` : "框选模块"}
+        aria-label="框选模块"
+      >
+        <span className="material-symbols-outlined text-[20px]">capture</span>
+      </button>
+      <button
+        onClick={onAddZone}
+        className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white/90 text-slate-500 ring-1 ring-slate-200 transition-colors hover:bg-blue-50 hover:text-primary"
+        title="拉出整理区域"
+        aria-label="拉出整理区域"
+      >
+        <span className="material-symbols-outlined text-[20px]">select</span>
+      </button>
+      <div className="flex items-center gap-0.5 rounded-2xl bg-slate-50/85 p-1 ring-1 ring-slate-100">
+        {LINK_MODES.map((mode) => (
+          <button
+            key={mode.id}
+            onClick={() => onActiveLinkModeChange(activeLinkMode === mode.id ? null : mode.id)}
+            className={cx(
+              "grid size-8 place-items-center rounded-xl transition-colors",
+              activeLinkMode === mode.id ? "bg-primary text-white shadow-sm" : "text-slate-400 hover:bg-white hover:text-primary"
+            )}
+            title={`连接模式：${mode.label}`}
+            aria-label={`连接模式：${mode.label}`}
+          >
+            <span className="material-symbols-outlined text-[18px]">{mode.icon}</span>
+          </button>
+        ))}
+      </div>
+      <button
+        onClick={onToggleMinimized}
+        className="grid size-9 shrink-0 place-items-center rounded-2xl text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600"
+        title="收起构建工具"
+        aria-label="收起构建工具"
+      >
+        <span className="material-symbols-outlined text-[20px]">keyboard_arrow_down</span>
+      </button>
+        </>
+      )}
     </div>
   );
 }
@@ -1041,58 +1223,143 @@ function QuizMetadataChip({
   );
 }
 
-function MathWorkbenchBlock({ note, index, onPointerDown, onRemove }) {
+function MathWorkbenchBlock({
+  note,
+  index,
+  isLinkSource,
+  isLinkTarget,
+  isSelected,
+  isDimmed,
+  activeLinkMode,
+  onPointerDown,
+  onRemove,
+  onUpdateText,
+  onLinkClick,
+  onStartLinkDrag,
+}) {
   const tag = getMathChainTag(note.type);
-  const stage = MATH_CHAIN_STAGES.find((item) => item.id === getMathChainStage(note)) || MATH_CHAIN_STAGES[0];
+  const theme = getMathChainTheme(note.type);
+  const [isEditing, setIsEditing] = useState(false);
+  const [draft, setDraft] = useState(note.text || tag.hint);
+  useEffect(() => {
+    if (!isEditing) setDraft(note.text || tag.hint);
+  }, [isEditing, note.text, tag.hint]);
   const bounds = getWorkbenchBounds();
   const left = Number.isFinite(note.x)
     ? clampNumber(note.x, bounds.minX, bounds.maxX)
-    : clampNumber(typeof window === "undefined" ? 720 : window.innerWidth - 390, bounds.minX, bounds.maxX);
+    : getDefaultModulePosition(index).x;
   const top = Number.isFinite(note.y)
     ? clampNumber(note.y, bounds.minY, bounds.maxY)
-    : clampNumber(118 + index * 72, bounds.minY, bounds.maxY);
+    : getDefaultModulePosition(index).y;
 
   return (
     <div
-      className="fixed z-30 w-[260px] rounded-[22px] border border-white/90 bg-white/94 p-3 shadow-[0_16px_42px_rgba(15,23,42,0.16)] ring-1 ring-slate-200/80 backdrop-blur-xl transition-transform hover:-translate-y-0.5"
-      style={{ left, top }}
+      className={cx(
+        "group fixed z-30 w-[236px] cursor-grab overflow-hidden rounded-[22px] border bg-white/92 px-4 py-3 shadow-[0_12px_34px_rgba(15,23,42,0.10)] ring-1 backdrop-blur-xl transition-transform hover:-translate-y-0.5 active:cursor-grabbing",
+        isSelected && "border-primary/50 ring-4 ring-primary/15",
+        isDimmed && "opacity-30",
+        isLinkSource && "border-primary/40 ring-primary/30",
+        isLinkTarget && "border-primary/50 ring-4 ring-primary/15",
+        !isSelected && !isLinkSource && !isLinkTarget && "border-white/90 ring-slate-200/80"
+      )}
+      style={{
+        left,
+        top,
+        borderColor: isSelected || isLinkSource || isLinkTarget ? undefined : theme.border,
+      }}
     >
-      <span className="absolute -top-1.5 left-8 size-3 rounded-full bg-white ring-1 ring-slate-200" />
-      <span className="absolute -bottom-1.5 left-8 size-3 rounded-full bg-slate-100 ring-1 ring-slate-200" />
+      <span
+        className="pointer-events-none absolute left-0 top-0 h-full w-12"
+        style={{ background: `linear-gradient(90deg, ${theme.bg}, rgba(255,255,255,0))` }}
+      />
       <div
-        onPointerDown={(event) => onPointerDown(event, note)}
-        className="flex cursor-grab items-start gap-2 active:cursor-grabbing"
+        onPointerDown={(event) => {
+          if (isEditing) return;
+          onPointerDown(event, note);
+        }}
+        onDoubleClick={(event) => {
+          event.stopPropagation();
+          setDraft(note.text || "");
+          setIsEditing(true);
+        }}
+        className="min-h-[56px] pr-6"
       >
-        <span className="grid size-9 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
-          <span className="material-symbols-outlined text-[18px]">{tag.icon}</span>
-        </span>
-        <div className="min-w-0 flex-1">
-          <div className="mb-1 flex items-center gap-1.5">
-            <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[9px] font-black text-primary">
-              {tag.label}
-            </span>
-            <span className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[9px] font-black text-slate-400">
-              {stage.title}
-            </span>
-            <span className="rounded-md bg-slate-50 px-1.5 py-0.5 text-[9px] font-black text-slate-300">
-              {MATH_CHAIN_RELATION[note.type] || "连接"}
-            </span>
-          </div>
-          <p className="line-clamp-4 break-words text-[13px] font-bold leading-snug text-slate-700">
-            <RichText content={[note.text || tag.hint]} />
-          </p>
+        <div className="relative z-10 mb-1">
+          <span className="text-[10px] font-black leading-none opacity-70" style={{ color: theme.text }}>
+            {tag.label}
+          </span>
         </div>
-        <span className="mt-1 grid size-7 shrink-0 place-items-center rounded-lg text-slate-300">
-          <span className="material-symbols-outlined text-[17px]">drag_indicator</span>
+        {isEditing ? (
+          <textarea
+            autoFocus
+            value={draft}
+            onPointerDown={(event) => event.stopPropagation()}
+            onChange={(event) => setDraft(event.target.value)}
+            onBlur={() => {
+              onUpdateText(note.id, draft.trim() || tag.hint);
+              setIsEditing(false);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") {
+                event.preventDefault();
+                setDraft(note.text || "");
+                setIsEditing(false);
+              }
+              if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+                event.preventDefault();
+                onUpdateText(note.id, draft.trim() || tag.hint);
+                setIsEditing(false);
+              }
+            }}
+            className="relative z-10 min-h-[58px] w-full resize-none bg-transparent text-[13px] font-bold leading-[1.45] text-slate-700 outline-none placeholder:text-slate-300"
+            placeholder="写想法，支持 $x^2=1$"
+          />
+        ) : (
+          <div className="relative z-10 line-clamp-4 break-words text-[13px] font-bold leading-[1.45] text-slate-700">
+            <MarkdownRichText value={note.text || tag.hint} />
+          </div>
+        )}
+        <span className="pointer-events-none absolute right-3 top-3 grid size-6 place-items-center rounded-lg text-slate-200/70 transition-opacity group-hover:opacity-0">
+          <span className="material-symbols-outlined text-[16px]">drag_indicator</span>
         </span>
-        <button
-          onPointerDown={(event) => event.stopPropagation()}
-          onClick={() => onRemove(note.id)}
-          className="mt-1 grid size-7 shrink-0 place-items-center rounded-lg text-slate-300 transition-colors hover:bg-slate-100 hover:text-slate-500"
-          aria-label="删除模块"
-        >
-          <span className="material-symbols-outlined text-[16px]">close</span>
-        </button>
+        <div className="absolute right-2 top-2 z-20 flex rounded-xl bg-white/72 p-0.5 opacity-0 ring-1 ring-slate-200/70 backdrop-blur transition-opacity group-hover:opacity-100">
+          <button
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation();
+              setDraft(note.text || "");
+              setIsEditing(true);
+            }}
+            className="grid size-6 place-items-center rounded-lg text-slate-300 transition-colors hover:bg-slate-100 hover:text-slate-500"
+            aria-label="编辑模块"
+            title="编辑模块"
+          >
+            <span className="material-symbols-outlined text-[15px]">edit</span>
+          </button>
+          <button
+            onPointerDown={(event) => {
+              event.stopPropagation();
+              onStartLinkDrag(event, note.id);
+            }}
+            onClick={(event) => event.stopPropagation()}
+            className={cx(
+              "grid size-6 place-items-center rounded-lg transition-colors",
+              activeLinkMode ? "text-primary hover:bg-primary/10" : "text-slate-300 hover:bg-slate-100 hover:text-slate-500"
+            )}
+            aria-label="连接模块"
+            title={activeLinkMode ? "选择连接目标" : "先在工具条选择连接模式"}
+          >
+            <span className="material-symbols-outlined text-[15px]">hub</span>
+          </button>
+          <button
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={() => onRemove(note.id)}
+            className="grid size-6 place-items-center rounded-lg text-slate-300 transition-colors hover:bg-slate-100 hover:text-slate-500"
+            aria-label="删除模块"
+          >
+            <span className="material-symbols-outlined text-[15px]">close</span>
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -1150,34 +1417,262 @@ function MathModuleDragPreview({ preview }) {
   if (!preview) return null;
 
   const tag = getMathChainTag(preview.type);
-  const stage = MATH_CHAIN_STAGES.find((item) => item.id === tag.stage) || MATH_CHAIN_STAGES[0];
+  const theme = getMathChainTheme(preview.type);
 
   return (
     <div
-      className="pointer-events-none fixed z-[60] w-[230px] rounded-[22px] border border-primary/20 bg-white/90 p-3 shadow-[0_22px_56px_rgba(46,103,248,0.22)] ring-1 ring-white/90 backdrop-blur-xl"
-      style={{ left: preview.x, top: preview.y, transform: "translate(-50%, -50%) rotate(-1deg)" }}
+      className="pointer-events-none fixed z-[60] w-[220px] overflow-hidden rounded-[22px] border bg-white/94 px-4 py-3 shadow-[0_22px_56px_rgba(46,103,248,0.18)] ring-1 ring-white/90 backdrop-blur-xl"
+      style={{
+        left: preview.x,
+        top: preview.y,
+        transform: "translate(-50%, -50%) rotate(-1deg)",
+        borderColor: theme.border,
+      }}
     >
-      <span className="absolute -top-1.5 left-8 size-3 rounded-full bg-white ring-1 ring-primary/20" />
-      <span className="absolute -bottom-1.5 left-8 size-3 rounded-full bg-blue-50 ring-1 ring-primary/15" />
-      <div className="flex items-start gap-2">
-        <span className="grid size-9 shrink-0 place-items-center rounded-2xl bg-primary text-white shadow-sm">
-          <span className="material-symbols-outlined text-[18px]">{tag.icon}</span>
-        </span>
-        <div className="min-w-0 flex-1">
-          <div className="mb-1 flex items-center gap-1.5">
-            <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[9px] font-black text-primary">
-              {tag.label}
-            </span>
-            <span className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[9px] font-black text-slate-400">
-              {stage.title}
-            </span>
-          </div>
-          <p className="line-clamp-2 text-[12px] font-bold leading-snug text-slate-600">
-            {preview.text || tag.hint}
-          </p>
-        </div>
-      </div>
+      <span className="absolute inset-x-0 top-0 h-1" style={{ background: theme.text, opacity: 0.38 }} />
+      <span className="mb-1.5 inline-flex rounded-md px-1.5 py-0.5 text-[10px] font-black leading-none" style={{ color: theme.text }}>
+        {tag.label}
+      </span>
+      <p className="line-clamp-2 text-[12px] font-bold leading-snug text-slate-600">
+        {preview.text || tag.hint}
+      </p>
     </div>
+  );
+}
+
+function MathWorkspaceZone({ zone, notesCount, isSnapTarget, isFocused, isDimmed, onPointerDown, onResizePointerDown, onRemove, onFocus, onExitFocus }) {
+  return (
+    <section
+      className={cx(
+        "fixed z-20 overflow-hidden rounded-[24px] border bg-white/55 shadow-[0_18px_48px_rgba(15,23,42,0.10)] ring-1 backdrop-blur-xl transition-all",
+        isFocused && "z-[35] border-primary/55 bg-white/76 ring-4 ring-primary/15",
+        isDimmed && "opacity-35",
+        isSnapTarget ? "border-primary/45 ring-4 ring-primary/15" : "border-primary/20 ring-white/80"
+      )}
+      style={{ left: zone.x, top: zone.y, width: zone.width, height: zone.height }}
+    >
+      <header
+        onPointerDown={(event) => onPointerDown(event, zone)}
+        className="flex h-12 cursor-grab items-center justify-between gap-2 border-b border-white/80 bg-white/72 px-4 active:cursor-grabbing"
+      >
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="grid size-8 place-items-center rounded-xl bg-primary/10 text-primary">
+            <span className="material-symbols-outlined text-[17px]">dashboard_customize</span>
+          </span>
+          <div className="min-w-0">
+            <p className="truncate text-[12px] font-black text-slate-800">{zone.title || "整理区域"}</p>
+            <p className="text-[9px] font-bold text-muted">{notesCount} 个模块</p>
+          </div>
+        </div>
+        <button
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={() => (isFocused ? onExitFocus() : onFocus(zone.id))}
+          className="grid size-7 shrink-0 place-items-center rounded-lg text-slate-300 transition-colors hover:bg-blue-50 hover:text-primary"
+          aria-label={isFocused ? "退出聚焦" : "聚焦区域"}
+          title={isFocused ? "退出聚焦" : "聚焦区域"}
+        >
+          <span className="material-symbols-outlined text-[16px]">{isFocused ? "center_focus_weak" : "center_focus_strong"}</span>
+        </button>
+        <button
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={() => onRemove(zone.id)}
+          className="grid size-7 shrink-0 place-items-center rounded-lg text-slate-300 transition-colors hover:bg-slate-100 hover:text-slate-500"
+          aria-label="删除区域"
+          title="删除区域"
+        >
+          <span className="material-symbols-outlined text-[16px]">close</span>
+        </button>
+      </header>
+      <div
+        className={cx(
+          "absolute inset-x-4 bottom-4 top-[64px] rounded-2xl border border-dashed transition-all",
+          isSnapTarget ? "border-primary/45 bg-primary/10" : "border-primary/15 bg-primary/5"
+        )}
+        aria-hidden="true"
+      />
+      <button
+        onPointerDown={(event) => onResizePointerDown(event, zone)}
+        className="absolute bottom-2 right-2 grid size-8 cursor-nwse-resize place-items-center rounded-xl text-primary/45 transition-colors hover:bg-white/80 hover:text-primary"
+        aria-label="调整区域大小"
+        title="调整区域大小"
+      >
+        <span className="material-symbols-outlined rotate-90 text-[18px]">drag_handle</span>
+      </button>
+    </section>
+  );
+}
+
+function MathSelectionOverlay({ active, rect, selectedCount, onPointerDown }) {
+  if (!active && !rect) return null;
+
+  return (
+    <>
+      {active && (
+        <div
+          className="fixed inset-0 z-[24] cursor-crosshair"
+          onPointerDown={onPointerDown}
+          aria-hidden="true"
+        />
+      )}
+      {rect && (
+        <div
+          className="pointer-events-none fixed z-[55] rounded-[22px] border border-primary/50 bg-primary/10 shadow-[0_0_0_1px_rgba(255,255,255,0.9)_inset]"
+          style={{ left: rect.x, top: rect.y, width: rect.width, height: rect.height }}
+        >
+          <span className="absolute -top-7 left-2 rounded-full bg-primary px-2.5 py-1 text-[10px] font-black text-white shadow-sm">
+            {selectedCount || "框选"}
+          </span>
+        </div>
+      )}
+    </>
+  );
+}
+
+function MathFocusBar({ zone, onExit }) {
+  if (!zone) return null;
+
+  return (
+    <button
+      onClick={onExit}
+      className="fixed left-1/2 top-20 z-[45] flex -translate-x-1/2 items-center gap-2 rounded-full border border-primary/20 bg-white/92 px-4 py-2 text-[12px] font-black text-primary shadow-[0_16px_38px_rgba(46,103,248,0.18)] ring-1 ring-white/90 backdrop-blur-xl"
+      aria-label="退出区域聚焦"
+      title="退出区域聚焦"
+    >
+      <span className="material-symbols-outlined text-[17px]">center_focus_weak</span>
+      聚焦：{zone.title || "整理区域"}
+      <span className="material-symbols-outlined text-[16px]">close</span>
+    </button>
+  );
+}
+
+function MathWorkspaceLinks({ notes = [], links = [], preview, onUpdateLabel }) {
+  const [editingLinkId, setEditingLinkId] = useState(null);
+  const [labelDraft, setLabelDraft] = useState("");
+  if (!links.length && !preview) return null;
+  const noteById = new Map(notes.map((note) => [note.id, note]));
+  const previewFrom = preview ? noteById.get(preview.fromId) : null;
+  const previewPath = previewFrom ? getLinkPath(getBlockCenter(previewFrom), { x: preview.x, y: preview.y }) : null;
+
+  return (
+    <svg className="pointer-events-none fixed inset-0 z-[25] h-screen w-screen overflow-visible">
+      <defs>
+        {links.map((link) => {
+          const from = noteById.get(link.fromId);
+          const theme = getMathChainTheme(from?.type);
+          return (
+            <linearGradient key={`gradient-${link.id}`} id={`workspace-link-flow-${link.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor={hexToRgba(theme.text, 0)} />
+              <stop offset="58%" stopColor={hexToRgba(theme.text, 0.78)} />
+              <stop offset="100%" stopColor={hexToRgba(theme.text, 0.18)} />
+            </linearGradient>
+          );
+        })}
+        {previewFrom && (
+          <linearGradient id="workspace-link-flow-preview" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={hexToRgba(getMathChainTheme(previewFrom.type).text, 0)} />
+            <stop offset="58%" stopColor={hexToRgba(getMathChainTheme(previewFrom.type).text, 0.74)} />
+            <stop offset="100%" stopColor={hexToRgba(getMathChainTheme(previewFrom.type).text, 0.18)} />
+          </linearGradient>
+        )}
+      </defs>
+      {links.map((link) => {
+        const from = noteById.get(link.fromId);
+        const to = noteById.get(link.toId);
+        if (!from || !to) return null;
+        const theme = getMathChainTheme(from.type);
+        const path = getLinkPath(getBlockCenter(from), getBlockCenter(to));
+        const labelPosition = getLinkLabelPosition(getBlockCenter(from), getBlockCenter(to));
+        const isDirectional = link.mode !== "plain";
+
+        return (
+          <g key={link.id} className="workspace-link">
+            <path
+              d={path}
+              fill="none"
+              stroke={hexToRgba(theme.text, 0.16)}
+              strokeLinecap="round"
+              strokeWidth="2"
+              strokeDasharray={link.mode === "plain" ? "5 9" : undefined}
+            />
+            {isDirectional && (
+              <>
+                <path
+                  d={path}
+                  className="workspace-link-flow-line"
+                  fill="none"
+                  stroke={`url(#workspace-link-flow-${link.id})`}
+                  strokeLinecap="round"
+                  strokeWidth="2"
+                />
+                <circle r="3.5" fill={hexToRgba(theme.text, 0.76)} className="workspace-link-pulse">
+                  <animateMotion dur="2.8s" repeatCount="indefinite" path={path} rotate="auto" />
+                </circle>
+              </>
+            )}
+            {link.mode === "bidirectional" && (
+              <circle r="3" fill={hexToRgba(theme.text, 0.54)} className="workspace-link-pulse workspace-link-pulse--reverse">
+                <animateMotion dur="2.8s" repeatCount="indefinite" path={path} rotate="auto" keyPoints="1;0" keyTimes="0;1" calcMode="linear" />
+              </circle>
+            )}
+            <foreignObject x={labelPosition.x - 48} y={labelPosition.y - 13} width="96" height="28" className="pointer-events-auto overflow-visible opacity-60 transition-opacity hover:opacity-100">
+              {editingLinkId === link.id ? (
+                <input
+                  autoFocus
+                  value={labelDraft}
+                  onChange={(event) => setLabelDraft(event.target.value)}
+                  onBlur={() => {
+                    onUpdateLabel(link.id, labelDraft.trim() || (link.mode === "plain" ? "关联" : "所以"));
+                    setEditingLinkId(null);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === "Escape") {
+                      event.preventDefault();
+                      setEditingLinkId(null);
+                    }
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      onUpdateLabel(link.id, labelDraft.trim() || (link.mode === "plain" ? "关联" : "所以"));
+                      setEditingLinkId(null);
+                    }
+                  }}
+                  className="h-7 w-24 rounded-full border border-primary/20 bg-white/90 px-2 text-center text-[10px] font-black text-primary outline-none ring-2 ring-primary/10 backdrop-blur-xl"
+                />
+              ) : (
+                <button
+                  onClick={() => {
+                    setLabelDraft(link.label || (link.mode === "plain" ? "关联" : "所以"));
+                    setEditingLinkId(link.id);
+                  }}
+                  className="h-6 max-w-24 rounded-full border border-white/70 bg-white/70 px-2 text-[9px] font-black text-primary backdrop-blur-xl transition-colors hover:bg-primary hover:text-white"
+                  title="编辑推理关系"
+                >
+                  <span className="block max-w-[80px] truncate">
+                    {link.label || (link.mode === "plain" ? "关联" : "所以")}
+                  </span>
+                </button>
+              )}
+            </foreignObject>
+          </g>
+        );
+      })}
+      {previewPath && (
+        <g className="workspace-link workspace-link-preview">
+          <path
+            d={previewPath}
+            fill="none"
+            stroke={hexToRgba(getMathChainTheme(previewFrom?.type).text, 0.28)}
+            strokeLinecap="round"
+            strokeWidth="2"
+            strokeDasharray="8 9"
+          />
+          {preview.mode !== "plain" && (
+            <circle r="3.5" fill={hexToRgba(getMathChainTheme(previewFrom?.type).text, 0.68)} className="workspace-link-pulse">
+              <animateMotion dur="1.6s" repeatCount="indefinite" path={previewPath} rotate="auto" />
+            </circle>
+          )}
+        </g>
+      )}
+    </svg>
   );
 }
 
@@ -1872,23 +2367,35 @@ function App() {
     height: typeof window === "undefined" ? 620 : Math.min(660, Math.max(460, window.innerHeight - 126)),
   }));
   const [mathPaletteLayout, setMathPaletteLayout] = useState(() => ({
-    x: typeof window === "undefined" ? 240 : clampNumber(Math.round((window.innerWidth - 680) / 2), getPaletteRailBounds().minX, getPaletteRailBounds().maxX),
-    y: typeof window === "undefined" ? 640 : getPaletteRailBounds().minY,
+    x: typeof window === "undefined" ? 240 : clampNumber(Math.round((window.innerWidth - 680) / 2), getPaletteRailBounds(false).minX, getPaletteRailBounds(false).maxX),
+    y: typeof window === "undefined" ? 640 : getPaletteRailBounds(false).maxY,
   }));
   const [metadataLayout, setMetadataLayout] = useState(() => ({
     x: typeof window === "undefined" ? 360 : clampNumber(Math.round(window.innerWidth / 2 - 245), getMetadataRailBounds(false).minX, getMetadataRailBounds(false).maxX),
     y: getMetadataRailBounds(false).minY,
   }));
   const [metadataMinimized, setMetadataMinimized] = useState(false);
+  const [mathPaletteMinimized, setMathPaletteMinimized] = useState(false);
   const [activeNoteTag, setActiveNoteTag] = useState("known");
   const [noteDraft, setNoteDraft] = useState("");
   const [selectionMenu, setSelectionMenu] = useState(null);
   const [moduleDragPreview, setModuleDragPreview] = useState(null);
+  const [linkDragPreview, setLinkDragPreview] = useState(null);
+  const [snapTargetZoneId, setSnapTargetZoneId] = useState(null);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectionRect, setSelectionRect] = useState(null);
+  const [selectedNoteIds, setSelectedNoteIds] = useState([]);
+  const [focusZoneId, setFocusZoneId] = useState(null);
   const [floatingCards, setFloatingCards] = useState([]);
   const [toolModules, setToolModules] = useState(loadToolModules);
+  const [activeLinkMode, setActiveLinkMode] = useState(null);
+  const [linkSourceId, setLinkSourceId] = useState(null);
   const normalizedKeyword = keyword.trim();
   const questionShellRef = useRef(null);
   const dragSessionRef = useRef(null);
+  const activeLinkModeRef = useRef(null);
+  const linkSourceIdRef = useRef(null);
+  const recordsRef = useRef(records);
 
   const filteredPages = useMemo(() => {
     return activeBank.pages
@@ -1929,6 +2436,7 @@ function App() {
   const activeQuestionIndex = visibleQuestions.findIndex((q) => q.id === activeQuestion?.id);
   const activeQuestionId = activeQuestion?.id || "";
   const activeRecord = records[activeQuestionId] || createEmptyRecord();
+  const focusedZone = focusZoneId ? (activeRecord.zones || []).find((zone) => zone.id === focusZoneId) : null;
   const activeAnswerRecord = answerRecords[activeQuestionId] || {};
   const activeAnswer = activeAnswerRecord.selected || [];
   const activeAnswerText = activeAnswerRecord.text || "";
@@ -1949,6 +2457,10 @@ function App() {
   );
 
   useEffect(() => {
+    recordsRef.current = records;
+  }, [records]);
+
+  useEffect(() => {
     if (!activePage?.id || !activeQuestionId) return;
     saveLastSession({
       subject,
@@ -1960,6 +2472,9 @@ function App() {
 
   useEffect(() => {
     setSelectionMenu(null);
+    setSelectionRect(null);
+    setSelectedNoteIds([]);
+    setFocusZoneId(null);
     if (typeof window !== "undefined" && window.CSS?.highlights) {
       window.__astroStudyHighlightRanges = [];
       window.CSS.highlights.delete("study-mark");
@@ -1970,6 +2485,10 @@ function App() {
     function handlePointerMove(event) {
       const session = dragSessionRef.current;
       if (!session) return;
+      if (event.pointerType !== "touch" && event.buttons === 0) {
+        handlePointerUp(event);
+        return;
+      }
 
       if (session.type === "notes-move") {
         const nextX = session.startX + event.clientX - session.pointerX;
@@ -2003,18 +2522,44 @@ function App() {
         );
       }
 
+      if (session.type === "box-select") {
+        const rect = getRectFromPoints(session.pointerX, session.pointerY, event.clientX, event.clientY);
+        const current = recordsRef.current[session.questionId] || createEmptyRecord();
+        const selectedIds = (current.notes || [])
+          .filter((note) =>
+            rectsOverlap(rect, {
+              x: Number.isFinite(note.x) ? note.x : getDefaultModulePosition(0).x,
+              y: Number.isFinite(note.y) ? note.y : getDefaultModulePosition(0).y,
+              width: MODULE_SIZE.width,
+              height: MODULE_SIZE.height,
+            })
+          )
+          .map((note) => note.id);
+        setSelectionRect(rect);
+        setSelectedNoteIds(selectedIds);
+      }
+
       if (session.type === "chain-note-move") {
         const bounds = getWorkbenchBounds();
-        const nextX = clampNumber(session.startX + event.clientX - session.pointerX, bounds.minX, bounds.maxX);
-        const nextY = clampNumber(session.startY + event.clientY - session.pointerY, bounds.minY, bounds.maxY);
+        const deltaX = event.clientX - session.pointerX;
+        const deltaY = event.clientY - session.pointerY;
+        const current = recordsRef.current[session.questionId];
+        setSnapTargetZoneId(findZoneAtPoint(current?.zones || [], event.clientX, event.clientY)?.id || null);
         setRecords((previous) => {
           const current = previous[session.questionId];
           if (!current) return previous;
+          const movingIds = new Set(session.selectedIds || [session.noteId]);
           const nextRecord = {
             ...current,
-            notes: (current.notes || []).map((note) =>
-              note.id === session.noteId ? { ...note, x: nextX, y: nextY } : note
-            ),
+            notes: (current.notes || []).map((note) => {
+              if (!movingIds.has(note.id)) return note;
+              const start = session.noteStarts?.[note.id] || { x: session.startX, y: session.startY };
+              return {
+                ...note,
+                x: clampNumber(start.x + deltaX, bounds.minX, bounds.maxX),
+                y: clampNumber(start.y + deltaY, bounds.minY, bounds.maxY),
+              };
+            }),
             updatedAt: new Date().toISOString(),
           };
           const next = { ...previous, [session.questionId]: nextRecord };
@@ -2027,6 +2572,8 @@ function App() {
         const bounds = getWorkbenchBounds();
         const nextX = clampNumber(session.startX + event.clientX - session.pointerX, bounds.minX, bounds.maxX);
         const nextY = clampNumber(session.startY + event.clientY - session.pointerY, bounds.minY, bounds.maxY);
+        const current = recordsRef.current[session.questionId];
+        setSnapTargetZoneId(findZoneAtPoint(current?.zones || [], event.clientX, event.clientY)?.id || null);
         setRecords((previous) => {
           const current = previous[session.questionId];
           if (!current) return previous;
@@ -2044,7 +2591,7 @@ function App() {
       }
 
       if (session.type === "palette-move") {
-        const bounds = getPaletteRailBounds();
+        const bounds = getPaletteRailBounds(session.isMinimized);
         setMathPaletteLayout({
           x: clampNumber(session.startX + event.clientX - session.pointerX, bounds.minX, bounds.maxX),
           y: clampNumber(session.startY + event.clientY - session.pointerY, bounds.minY, bounds.maxY),
@@ -2059,6 +2606,57 @@ function App() {
         });
       }
 
+      if (session.type === "zone-move") {
+        const bounds = getViewportBounds(session.startWidth, session.startHeight);
+        const nextX = clampNumber(session.startX + event.clientX - session.pointerX, bounds.minX, bounds.maxX);
+        const nextY = clampNumber(session.startY + event.clientY - session.pointerY, bounds.minY, bounds.maxY);
+        const deltaX = nextX - session.startX;
+        const deltaY = nextY - session.startY;
+        setRecords((previous) => {
+          const current = previous[session.questionId];
+          if (!current) return previous;
+          const nextRecord = {
+            ...current,
+            zones: (current.zones || []).map((zone) =>
+              zone.id === session.zoneId ? { ...zone, x: nextX, y: nextY } : zone
+            ),
+            notes: (current.notes || []).map((note) =>
+              note.zoneId === session.zoneId ? { ...note, x: session.noteStarts?.[note.id]?.x + deltaX, y: session.noteStarts?.[note.id]?.y + deltaY } : note
+            ),
+            marks: (current.marks || []).map((mark) =>
+              mark.zoneId === session.zoneId ? { ...mark, x: session.markStarts?.[mark.id]?.x + deltaX, y: session.markStarts?.[mark.id]?.y + deltaY } : mark
+            ),
+            updatedAt: new Date().toISOString(),
+          };
+          const next = { ...previous, [session.questionId]: nextRecord };
+          saveSolvingRecords(next);
+          return next;
+        });
+      }
+
+      if (session.type === "zone-resize") {
+        setRecords((previous) => {
+          const current = previous[session.questionId];
+          if (!current) return previous;
+          const nextRecord = {
+            ...current,
+            zones: (current.zones || []).map((zone) =>
+              zone.id === session.zoneId
+                ? {
+                  ...zone,
+                  width: Math.max(WORKSPACE_ZONE_MIN.width, session.startWidth + event.clientX - session.pointerX),
+                  height: Math.max(WORKSPACE_ZONE_MIN.height, session.startHeight + event.clientY - session.pointerY),
+                }
+                : zone
+            ),
+            updatedAt: new Date().toISOString(),
+          };
+          const next = { ...previous, [session.questionId]: nextRecord };
+          saveSolvingRecords(next);
+          return next;
+        });
+      }
+
       if (session.type === "module-pickup") {
         const deltaX = event.clientX - session.pointerX;
         const deltaY = event.clientY - session.pointerY;
@@ -2068,6 +2666,8 @@ function App() {
 
         if (session.isDragging) {
           const bounds = getWorkbenchBounds();
+          const current = recordsRef.current[session.questionId];
+          setSnapTargetZoneId(findZoneAtPoint(current?.zones || [], event.clientX, event.clientY)?.id || null);
           setModuleDragPreview({
             type: session.blockType,
             text: session.text,
@@ -2076,19 +2676,140 @@ function App() {
           });
         }
       }
+
+      if (session.type === "link-drag") {
+        const deltaX = event.clientX - session.pointerX;
+        const deltaY = event.clientY - session.pointerY;
+        if (!session.isDragging && Math.hypot(deltaX, deltaY) > 8) {
+          session.isDragging = true;
+        }
+        if (!session.isDragging) return;
+        const current = recordsRef.current[session.questionId] || createEmptyRecord();
+        const target = findNoteAtPoint(current.notes || [], event.clientX, event.clientY, session.sourceId);
+        setLinkDragPreview({
+          fromId: session.sourceId,
+          mode: session.mode,
+          x: event.clientX,
+          y: event.clientY,
+          targetId: target?.id || null,
+        });
+      }
     }
 
     function handlePointerUp(event) {
       const session = dragSessionRef.current;
+      if (session?.type === "link-drag") {
+        const current = recordsRef.current[session.questionId] || createEmptyRecord();
+        const target = findNoteAtPoint(current.notes || [], event.clientX, event.clientY, session.sourceId);
+        const sourceId = session.isDragging ? session.sourceId : session.previousSourceId;
+        const noteId = session.isDragging ? target?.id : session.sourceId;
+        if (sourceId && noteId && sourceId !== noteId) {
+          const mode = session.mode;
+          setRecords((previous) => {
+            const currentRecord = previous[session.questionId] || createEmptyRecord();
+            const noteIds = new Set((currentRecord.notes || []).map((note) => note.id));
+            if (!noteIds.has(sourceId) || !noteIds.has(noteId)) return previous;
+            const nextRecord = {
+              ...currentRecord,
+              links: [
+                ...(currentRecord.links || []),
+                {
+                  id: createId("link"),
+                  fromId: sourceId,
+                  toId: noteId,
+                  mode,
+                  label: mode === "plain" ? "关联" : "所以",
+                  createdAt: new Date().toISOString(),
+                },
+              ],
+              updatedAt: new Date().toISOString(),
+            };
+            const next = { ...previous, [session.questionId]: nextRecord };
+            saveSolvingRecords(next);
+            return next;
+          });
+          linkSourceIdRef.current = null;
+          setLinkSourceId(null);
+        } else {
+          linkSourceIdRef.current = session.sourceId;
+          setLinkSourceId(session.sourceId);
+        }
+      }
+
+      if (session?.type === "box-select") {
+        setSelectionRect(null);
+        setSelectionMode(false);
+      }
+
+      if (session?.type === "chain-note-move" && session.questionId) {
+        setRecords((previous) => {
+          const current = previous[session.questionId];
+          if (!current) return previous;
+          const zone = findZoneAtPoint(current.zones || [], event.clientX, event.clientY);
+          const movingIds = new Set(session.selectedIds || [session.noteId]);
+          const movingNotes = (current.notes || []).filter((note) => movingIds.has(note.id));
+          const baseOrder = zone ? getNextZoneOrder(current, zone.id) : undefined;
+          const nextRecord = {
+            ...current,
+            notes: (current.notes || []).map((note) => {
+              if (!movingIds.has(note.id)) return note;
+              const movingIndex = movingNotes.findIndex((item) => item.id === note.id);
+              const order = zone ? baseOrder + Math.max(0, movingIndex) : undefined;
+              const snapped = zone ? snapBlockToZone(zone, order, MODULE_SIZE.width, MODULE_SIZE.height) : null;
+              return {
+                ...note,
+                ...(snapped || {}),
+                zoneId: zone?.id,
+                zoneOrder: order,
+              };
+            }),
+            updatedAt: new Date().toISOString(),
+          };
+          const next = { ...previous, [session.questionId]: nextRecord };
+          saveSolvingRecords(next);
+          return next;
+        });
+      }
+
+      if (session?.type === "mark-move" && session.questionId) {
+        setRecords((previous) => {
+          const current = previous[session.questionId];
+          if (!current) return previous;
+          const zone = findZoneAtPoint(current.zones || [], event.clientX, event.clientY);
+          const order = zone ? getNextZoneOrder(current, zone.id) : undefined;
+          const snapped = zone ? snapBlockToZone(zone, order, 240, 88) : null;
+          const nextRecord = {
+            ...current,
+            marks: (current.marks || []).map((mark) =>
+              mark.id === session.markId
+                ? {
+                  ...mark,
+                  ...(snapped || {}),
+                  zoneId: zone?.id,
+                  zoneOrder: order,
+                }
+                : mark
+            ),
+            updatedAt: new Date().toISOString(),
+          };
+          const next = { ...previous, [session.questionId]: nextRecord };
+          saveSolvingRecords(next);
+          return next;
+        });
+      }
+
       if (session?.type === "module-pickup" && session.isDragging && session.questionId) {
         const tag = getMathChainTag(session.blockType);
         const bounds = getWorkbenchBounds();
-        const nextX = clampNumber(event.clientX - 120, bounds.minX, bounds.maxX);
-        const nextY = clampNumber(event.clientY - 34, bounds.minY, bounds.maxY);
         const text = session.text || tag.hint;
 
         setRecords((previous) => {
           const current = previous[session.questionId] || createEmptyRecord();
+          const zone = findZoneAtPoint(current.zones || [], event.clientX, event.clientY);
+          const order = zone ? getNextZoneOrder(current, zone.id) : current.notes?.length || 0;
+          const snapped = zone ? snapBlockToZone(zone, order, MODULE_SIZE.width, MODULE_SIZE.height) : null;
+          const nextX = snapped?.x ?? clampNumber(event.clientX - 120, bounds.minX, bounds.maxX);
+          const nextY = snapped?.y ?? clampNumber(event.clientY - 34, bounds.minY, bounds.maxY);
           const nextRecord = {
             ...current,
             meta: session.meta,
@@ -2101,6 +2822,8 @@ function App() {
                 order: current.notes?.length || 0,
                 x: nextX,
                 y: nextY,
+                zoneId: zone?.id,
+                zoneOrder: zone ? order : undefined,
                 text,
                 createdAt: new Date().toISOString(),
               },
@@ -2116,17 +2839,19 @@ function App() {
       }
 
       setModuleDragPreview(null);
+      setLinkDragPreview(null);
+      setSnapTargetZoneId(null);
       dragSessionRef.current = null;
     }
 
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", handlePointerUp);
-    window.addEventListener("pointercancel", handlePointerUp);
+    window.addEventListener("pointermove", handlePointerMove, true);
+    window.addEventListener("pointerup", handlePointerUp, true);
+    window.addEventListener("pointercancel", handlePointerUp, true);
 
     return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerup", handlePointerUp);
-      window.removeEventListener("pointercancel", handlePointerUp);
+      window.removeEventListener("pointermove", handlePointerMove, true);
+      window.removeEventListener("pointerup", handlePointerUp, true);
+      window.removeEventListener("pointercancel", handlePointerUp, true);
     };
   }, [metadataMinimized]);
 
@@ -2344,61 +3069,264 @@ function App() {
   function addWorkbenchBlock(type = activeNoteTag) {
     const tag = getMathChainTag(type);
     const text = noteDraft.trim() || tag.hint;
-    const count = activeRecord.notes?.length || 0;
-    const bounds = getWorkbenchBounds();
 
-    updateActiveRecord((record) => ({
-      ...record,
-      notes: [
-        ...(record.notes || []),
-        {
-          id: createId("note"),
-          type,
-          stage: tag.stage,
-          order: record.notes?.length || 0,
-          x: clampNumber(typeof window === "undefined" ? 720 : window.innerWidth - 390, bounds.minX, bounds.maxX),
-          y: clampNumber(118 + count * 18, bounds.minY, bounds.maxY),
-          text,
-          createdAt: new Date().toISOString(),
-        },
-      ],
-    }));
+    updateActiveRecord((record) => {
+      const zones = record.zones?.length
+        ? record.zones
+        : [
+          {
+            id: createId("zone"),
+            title: "思考区",
+            ...getDefaultZoneLayout(0),
+            createdAt: new Date().toISOString(),
+          },
+        ];
+      const targetZone = zones[0];
+      const order = getNextZoneOrder({ ...record, zones }, targetZone.id);
+      const position = snapBlockToZone(targetZone, order, MODULE_SIZE.width, MODULE_SIZE.height);
+
+      return {
+        ...record,
+        zones,
+        notes: [
+          ...(record.notes || []),
+          {
+            id: createId("note"),
+            type,
+            stage: tag.stage,
+            order: record.notes?.length || 0,
+            x: position.x,
+            y: position.y,
+            zoneId: targetZone.id,
+            zoneOrder: order,
+            text,
+            createdAt: new Date().toISOString(),
+          },
+        ],
+      };
+    });
     setNoteDraft("");
   }
 
   function arrangeWorkbenchBlocks() {
-    const bounds = getWorkbenchBounds();
-    const stageAnchors = {
-      read: { x: bounds.minX + 18, y: 104 },
-      reason: { x: Math.min(bounds.maxX, bounds.minX + 300), y: 156 },
-      answer: { x: Math.min(bounds.maxX, bounds.minX + 600), y: 208 },
-    };
-
     updateActiveRecord((record) => {
-      const grouped = Object.fromEntries(MATH_CHAIN_STAGES.map((stage) => [stage.id, []]));
-      (record.notes || []).forEach((note, index) => {
-        const stage = getMathChainStage(note);
-        (grouped[stage] || grouped.read).push({ ...note, fallbackOrder: index });
+      const zones = record.zones?.length
+        ? record.zones
+        : [
+          {
+            id: createId("zone"),
+            title: "思考区",
+            ...getDefaultZoneLayout(0),
+            createdAt: new Date().toISOString(),
+          },
+        ];
+      const targetZone = {
+        ...zones[0],
+        title: zones[0].title || "思考区",
+        width: Math.max(zones[0].width || 0, 520),
+        height: Math.max(zones[0].height || 0, 320),
+      };
+      const sortedNotes = [...(record.notes || [])].sort((a, b) => {
+        const stageA = MATH_CHAIN_STAGES.findIndex((stage) => stage.id === getMathChainStage(a));
+        const stageB = MATH_CHAIN_STAGES.findIndex((stage) => stage.id === getMathChainStage(b));
+        if (stageA !== stageB) return stageA - stageB;
+        return getMathChainOrder(a, 0) - getMathChainOrder(b, 0);
       });
-      Object.values(grouped).forEach((items) => {
-        items.sort((a, b) => getMathChainOrder(a, a.fallbackOrder) - getMathChainOrder(b, b.fallbackOrder));
-      });
+      const orderById = new Map(sortedNotes.map((note, index) => [note.id, index]));
 
-      const nextNotes = MATH_CHAIN_STAGES.flatMap((stage) =>
-        (grouped[stage.id] || []).map((note, index) => {
-          const anchor = stageAnchors[stage.id] || stageAnchors.read;
+      return {
+        ...record,
+        zones: zones.map((zone, index) => (index === 0 ? targetZone : zone)),
+        notes: (record.notes || []).map((note) => {
+          const order = orderById.get(note.id) || 0;
           return {
             ...note,
-            stage: stage.id,
-            order: index,
-            x: clampNumber(anchor.x, bounds.minX, bounds.maxX),
-            y: clampNumber(anchor.y + index * 92, bounds.minY, bounds.maxY),
+            order,
+            zoneId: targetZone.id,
+            zoneOrder: order,
+            ...snapBlockToZone(targetZone, order, MODULE_SIZE.width, MODULE_SIZE.height),
           };
-        })
-      );
-
-      return { ...record, notes: nextNotes };
+        }),
+      };
     });
+  }
+
+  function startBoxSelect(event) {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    setSelectedNoteIds([]);
+    setSelectionRect(getRectFromPoints(event.clientX, event.clientY, event.clientX, event.clientY));
+    dragSessionRef.current = {
+      type: "box-select",
+      questionId: activeQuestionId,
+      pointerX: event.clientX,
+      pointerY: event.clientY,
+    };
+  }
+
+  function toggleSelectionMode() {
+    setSelectionMode((value) => {
+      const next = !value;
+      if (!next) {
+        setSelectionRect(null);
+        setSelectedNoteIds([]);
+      }
+      return next;
+    });
+  }
+
+  function updateLinkLabel(linkId, label) {
+    updateActiveRecord((record) => ({
+      ...record,
+      links: (record.links || []).map((link) => {
+        if (link.id !== linkId) return link;
+        return { ...link, label };
+      }),
+    }));
+  }
+
+  function addWorkspaceZone() {
+    updateActiveRecord((record) => {
+      const layout = getDefaultZoneLayout(record.zones?.length || 0);
+      return {
+        ...record,
+        zones: [
+          ...(record.zones || []),
+          {
+            id: createId("zone"),
+            title: `整理区域 ${(record.zones?.length || 0) + 1}`,
+            ...layout,
+            createdAt: new Date().toISOString(),
+          },
+        ],
+      };
+    });
+  }
+
+  function removeWorkspaceZone(zoneId) {
+    updateActiveRecord((record) => ({
+      ...record,
+      zones: (record.zones || []).filter((zone) => zone.id !== zoneId),
+      notes: (record.notes || []).map((note) =>
+        note.zoneId === zoneId ? { ...note, zoneId: undefined, zoneOrder: undefined } : note
+      ),
+      marks: (record.marks || []).map((mark) =>
+        mark.zoneId === zoneId ? { ...mark, zoneId: undefined, zoneOrder: undefined } : mark
+      ),
+    }));
+    if (focusZoneId === zoneId) setFocusZoneId(null);
+  }
+
+  function startZoneDrag(event, zone) {
+    if (event.button !== 0) return;
+    const current = records[activeQuestionId] || createEmptyRecord();
+    dragSessionRef.current = {
+      type: "zone-move",
+      questionId: activeQuestionId,
+      zoneId: zone.id,
+      pointerX: event.clientX,
+      pointerY: event.clientY,
+      startX: zone.x,
+      startY: zone.y,
+      startWidth: zone.width,
+      startHeight: zone.height,
+      noteStarts: Object.fromEntries(
+        (current.notes || [])
+          .filter((note) => note.zoneId === zone.id)
+          .map((note) => [note.id, { x: note.x, y: note.y }])
+      ),
+      markStarts: Object.fromEntries(
+        (current.marks || [])
+          .filter((mark) => mark.zoneId === zone.id)
+          .map((mark) => [mark.id, { x: mark.x, y: mark.y }])
+      ),
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  }
+
+  function startZoneResize(event, zone) {
+    if (event.button !== 0) return;
+    event.stopPropagation();
+    dragSessionRef.current = {
+      type: "zone-resize",
+      questionId: activeQuestionId,
+      zoneId: zone.id,
+      pointerX: event.clientX,
+      pointerY: event.clientY,
+      startWidth: zone.width,
+      startHeight: zone.height,
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  }
+
+  function handleModuleLinkClick(noteId) {
+    const mode = activeLinkModeRef.current || activeLinkMode;
+    const sourceId = linkSourceIdRef.current || linkSourceId;
+    if (!mode) return;
+    if (!sourceId) {
+      linkSourceIdRef.current = noteId;
+      setLinkSourceId(noteId);
+      return;
+    }
+    if (sourceId === noteId) {
+      return;
+    }
+
+    setRecords((previous) => {
+      const current = previous[activeQuestionId] || createEmptyRecord();
+      const noteIds = new Set((current.notes || []).map((note) => note.id));
+      if (!noteIds.has(sourceId) || !noteIds.has(noteId)) return previous;
+      const nextRecord = {
+        ...current,
+        links: [
+          ...(current.links || []),
+          {
+            id: createId("link"),
+            fromId: sourceId,
+            toId: noteId,
+            mode,
+            label: mode === "plain" ? "关联" : "所以",
+            createdAt: new Date().toISOString(),
+          },
+        ],
+        meta: {
+          pageTitle: activePage?.partTitle,
+          sectionTitle: activePage?.sectionTitle,
+          questionNo: activeQuestion?.no ?? activeQuestionIndex + 1,
+        },
+        updatedAt: new Date().toISOString(),
+      };
+      const next = { ...previous, [activeQuestionId]: nextRecord };
+      saveSolvingRecords(next);
+      return next;
+    });
+    linkSourceIdRef.current = null;
+    setLinkSourceId(null);
+  }
+
+  function startModuleLinkDrag(event, noteId) {
+    if (event.button !== 0) return;
+    const mode = activeLinkModeRef.current || activeLinkMode || "directed";
+    if (!activeLinkModeRef.current && !activeLinkMode) {
+      activeLinkModeRef.current = mode;
+      setActiveLinkMode(mode);
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    setLinkSourceId(noteId);
+    dragSessionRef.current = {
+      type: "link-drag",
+      questionId: activeQuestionId,
+      sourceId: noteId,
+      previousSourceId: linkSourceIdRef.current,
+      mode,
+      pointerX: event.clientX,
+      pointerY: event.clientY,
+      isDragging: false,
+    };
+    setLinkDragPreview(null);
+    event.currentTarget.setPointerCapture?.(event.pointerId);
   }
 
   function moveNote(noteId, targetStage, targetIndex) {
@@ -2495,6 +3423,21 @@ function App() {
     updateActiveRecord((record) => ({
       ...record,
       notes: (record.notes || []).filter((note) => note.id !== noteId),
+      links: (record.links || []).filter((link) => link.fromId !== noteId && link.toId !== noteId),
+    }));
+    setSelectedNoteIds((ids) => ids.filter((id) => id !== noteId));
+    if (linkSourceIdRef.current === noteId || linkSourceId === noteId) {
+      linkSourceIdRef.current = null;
+      setLinkSourceId(null);
+    }
+  }
+
+  function updateWorkbenchNoteText(noteId, text) {
+    updateActiveRecord((record) => ({
+      ...record,
+      notes: (record.notes || []).map((note) =>
+        note.id === noteId ? { ...note, text } : note
+      ),
     }));
   }
 
@@ -2722,16 +3665,30 @@ function App() {
     const bounds = getWorkbenchBounds();
     const left = Number.isFinite(note.x)
       ? clampNumber(note.x, bounds.minX, bounds.maxX)
-      : clampNumber(typeof window === "undefined" ? 720 : window.innerWidth - 390, bounds.minX, bounds.maxX);
-    const top = Number.isFinite(note.y) ? clampNumber(note.y, bounds.minY, bounds.maxY) : 118;
+      : getDefaultModulePosition(0).x;
+    const top = Number.isFinite(note.y) ? clampNumber(note.y, bounds.minY, bounds.maxY) : getDefaultModulePosition(0).y;
+    const selectedIds = selectedNoteIds.includes(note.id) ? selectedNoteIds : [note.id];
+    const current = recordsRef.current[activeQuestionId] || createEmptyRecord();
     dragSessionRef.current = {
       type: "chain-note-move",
       questionId: activeQuestionId,
       noteId: note.id,
+      selectedIds,
       pointerX: event.clientX,
       pointerY: event.clientY,
       startX: left,
       startY: top,
+      noteStarts: Object.fromEntries(
+        (current.notes || [])
+          .filter((item) => selectedIds.includes(item.id))
+          .map((item) => [
+            item.id,
+            {
+              x: Number.isFinite(item.x) ? item.x : getDefaultModulePosition(0).x,
+              y: Number.isFinite(item.y) ? item.y : getDefaultModulePosition(0).y,
+            },
+          ])
+      ),
     };
     event.currentTarget.setPointerCapture?.(event.pointerId);
   }
@@ -2759,6 +3716,7 @@ function App() {
     if (event.button !== 0) return;
     dragSessionRef.current = {
       type: "palette-move",
+      isMinimized: mathPaletteMinimized,
       pointerX: event.clientX,
       pointerY: event.clientY,
       startX: mathPaletteLayout.x,
@@ -2809,6 +3767,18 @@ function App() {
     });
   }
 
+  function toggleMathPaletteMinimized() {
+    setMathPaletteMinimized((value) => {
+      const nextValue = !value;
+      const bounds = getPaletteRailBounds(nextValue);
+      setMathPaletteLayout((layout) => ({
+        x: clampNumber(layout.x, bounds.minX, bounds.maxX),
+        y: clampNumber(layout.y, bounds.minY, bounds.maxY),
+      }));
+      return nextValue;
+    });
+  }
+
   function removeFloatingCard(cardId) {
     setFloatingCards((cards) => cards.filter((card) => card.id !== cardId));
   }
@@ -2834,7 +3804,7 @@ function App() {
       <aside
         className={cx(
           "relative flex h-full flex-col bg-surface shadow-float z-10 transition-all duration-300",
-          view === "quiz" ? "w-[68px]" : "w-[260px]"
+          view === "quiz" ? "w-0 overflow-hidden" : "w-[260px]"
         )}
       >
         <div className="flex h-full flex-col justify-between overflow-hidden">
@@ -3344,20 +4314,20 @@ function App() {
           </div>
         ) : (
           /* ── Quiz View ── */
-          <div className="flex h-full flex-col">
+	          <div className="flex h-full flex-col">
             {/* Quiz Header */}
-            <header className="flex h-[64px] shrink-0 items-center gap-4 border-b-2 border-background bg-surface px-6 shadow-sm">
+            <header className="flex h-[46px] shrink-0 items-center gap-3 border-b border-slate-100 bg-white/90 px-4 shadow-sm backdrop-blur-xl">
               <button
                 onClick={() => setView("map")}
-                className="flex shrink-0 items-center gap-2 font-bold text-muted transition-colors hover:text-text-main"
+                className="grid size-9 shrink-0 place-items-center rounded-xl text-muted transition-colors hover:bg-slate-50 hover:text-text-main"
+                aria-label="返回地图"
               >
                 <span className="material-symbols-outlined text-[20px]">arrow_back</span>
-                <span className="text-sm hidden sm:inline">Map</span>
               </button>
 
               {/* Progress bar */}
               <div className="flex flex-1 items-center gap-3 min-w-0">
-                <div className="h-3 flex-1 rounded-full bg-background overflow-hidden">
+                <div className="h-2 flex-1 rounded-full bg-background overflow-hidden">
                   <div
                     className="glass-tube h-full rounded-full bg-primary transition-all duration-700 ease-out"
                     style={{ width: `${progress}%` }}
@@ -3368,16 +4338,6 @@ function App() {
                 </span>
               </div>
 
-              {/* Stars */}
-              <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-background px-3 py-1.5 font-bold">
-                <span
-                  className="material-symbols-outlined text-gold text-[18px]"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  stars
-                </span>
-                <span className="text-sm">1,250</span>
-              </div>
             </header>
 
             {/* Quiz Body */}
@@ -3392,7 +4352,7 @@ function App() {
               />
               <div className="grid h-full grid-cols-[minmax(0,1fr)_auto]">
                 <div className="overflow-auto">
-                  <div className="mx-auto max-w-3xl px-6 pb-8 pt-10">
+                  <div className="mx-auto max-w-4xl px-6 pb-8 pt-8">
                     {/* Question card with floating tag */}
                     <div className="relative mb-8">
                       <div
@@ -3400,7 +4360,7 @@ function App() {
                         onPointerDown={handleQuestionPointerDown}
                         onMouseUp={handleQuestionSelection}
                         onKeyUp={handleQuestionSelection}
-                        className="rounded-2xl bg-background p-8 shadow-float"
+                        className="rounded-2xl bg-background p-7 shadow-float"
                       >
                         {subject === "english" ? (
                           <EnglishQuestionViewer
@@ -3516,19 +4476,72 @@ function App() {
                     onNoteDraftChange={setNoteDraft}
                     onAddBlock={addWorkbenchBlock}
                     onArrangeBlocks={arrangeWorkbenchBlocks}
+                    onAddZone={addWorkspaceZone}
+                    selectionMode={selectionMode}
+                    selectedCount={selectedNoteIds.length}
+                    onToggleSelectionMode={toggleSelectionMode}
+                    activeLinkMode={activeLinkMode}
+                    linkSourceId={linkSourceId}
+                    onActiveLinkModeChange={(mode) => {
+                      activeLinkModeRef.current = mode;
+                      linkSourceIdRef.current = null;
+                      setActiveLinkMode(mode);
+                      setLinkSourceId(null);
+                    }}
+                    isMinimized={mathPaletteMinimized}
+                    onToggleMinimized={toggleMathPaletteMinimized}
                     layout={mathPaletteLayout}
                     onStartDrag={startPaletteDrag}
                     onStartModuleDrag={startPaletteModuleDrag}
                   />
+                  <MathWorkspaceLinks
+                    notes={activeRecord.notes || []}
+                    links={activeRecord.links || []}
+                    preview={linkDragPreview}
+                    onUpdateLabel={updateLinkLabel}
+                  />
+                  <MathFocusBar zone={focusedZone} onExit={() => setFocusZoneId(null)} />
+                  {(activeRecord.zones || []).map((zone) => (
+                    <MathWorkspaceZone
+                      key={zone.id}
+                      zone={zone}
+                      isSnapTarget={snapTargetZoneId === zone.id}
+                      isFocused={focusZoneId === zone.id}
+                      isDimmed={Boolean(focusZoneId && focusZoneId !== zone.id)}
+                      notesCount={[
+                        ...(activeRecord.notes || []),
+                        ...(activeRecord.marks || []),
+                      ].filter((item) => item.zoneId === zone.id).length}
+                      onPointerDown={startZoneDrag}
+                      onResizePointerDown={startZoneResize}
+                      onRemove={removeWorkspaceZone}
+                      onFocus={setFocusZoneId}
+                      onExitFocus={() => setFocusZoneId(null)}
+                    />
+                  ))}
                   {(activeRecord.notes || []).map((note, index) => (
                     <MathWorkbenchBlock
                       key={note.id}
                       note={note}
                       index={index}
+                      isLinkSource={linkSourceId === note.id}
+                      isLinkTarget={linkDragPreview?.targetId === note.id}
+                      isSelected={selectedNoteIds.includes(note.id)}
+                      isDimmed={Boolean(focusZoneId && note.zoneId !== focusZoneId)}
+                      activeLinkMode={activeLinkMode}
                       onPointerDown={startChainNoteDrag}
                       onRemove={removeNote}
+                      onUpdateText={updateWorkbenchNoteText}
+                      onLinkClick={handleModuleLinkClick}
+                      onStartLinkDrag={startModuleLinkDrag}
                     />
                   ))}
+                  <MathSelectionOverlay
+                    active={selectionMode}
+                    rect={selectionRect}
+                    selectedCount={selectedNoteIds.length}
+                    onPointerDown={startBoxSelect}
+                  />
                   {(activeRecord.marks || []).map((mark, index) => (
                     <MathMarkBlock
                       key={mark.id}
