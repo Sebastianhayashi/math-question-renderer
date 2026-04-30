@@ -111,27 +111,57 @@ function BlankContextBlock({ text }) {
 
 // ─── Word bank options (Section A: A–O word list) ────────────────────────────
 
-function OptionBank({ options, label = "Word Bank", compact = false }) {
+function SelectionSummary({ selectedAnswers }) {
+  if (!selectedAnswers?.length) return null;
+
+  return (
+    <div className="flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-[13px] font-black text-blue-700">
+      <span className="material-symbols-outlined text-[18px]">check_circle</span>
+      已选择 {selectedAnswers.join("、")}
+    </div>
+  );
+}
+
+function OptionBank({
+  options,
+  label = "Word Bank",
+  compact = false,
+  selectedAnswers = [],
+  onSelectAnswer,
+}) {
   if (!options?.length) return null;
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-4">
-      <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-slate-400">
-        {label}
-      </p>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+          {label}
+        </p>
+        <span className="text-[10px] font-black text-blue-500">点击保留选择</span>
+      </div>
       <div className={cx("gap-2", compact ? "grid sm:grid-cols-2" : "flex flex-wrap")}>
         {options.map((opt) => (
-          <span
+          <button
             key={opt.label}
+            type="button"
+            onClick={() => onSelectAnswer?.(opt.label)}
             className={cx(
-              "inline-flex gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-[13px] font-bold text-slate-700",
-              compact ? "items-start" : "items-center"
+              "inline-flex gap-1.5 rounded-lg border px-3 py-1.5 text-left text-[13px] font-bold transition-all",
+              compact ? "items-start" : "items-center",
+              selectedAnswers.includes(opt.label)
+                ? "border-blue-300 bg-blue-50 text-blue-800 shadow-sm"
+                : "border-slate-200 bg-slate-50 text-slate-700 hover:border-blue-200 hover:bg-blue-50/40"
             )}
           >
-            <span className="min-w-[14px] text-[11px] font-black text-slate-400">
+            <span
+              className={cx(
+                "min-w-[14px] text-[11px] font-black",
+                selectedAnswers.includes(opt.label) ? "text-blue-600" : "text-slate-400"
+              )}
+            >
               {opt.label}.
             </span>
             <span className={compact ? "line-clamp-3 leading-relaxed" : ""}>{opt.text || "待补录"}</span>
-          </span>
+          </button>
         ))}
       </div>
     </div>
@@ -140,15 +170,13 @@ function OptionBank({ options, label = "Word Bank", compact = false }) {
 
 // ─── Choice options (single / multiple choice) ────────────────────────────────
 
-function ChoiceOption({ label, text }) {
-  const [selected, setSelected] = useState(false);
-
+function ChoiceOption({ label, text, isSelected = false, onSelect }) {
   return (
     <button
-      onClick={() => setSelected((v) => !v)}
+      onClick={() => onSelect?.(label)}
       className={cx(
         "flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-[14px] font-bold transition-all",
-        selected
+        isSelected
           ? "border-blue-300 bg-blue-50 text-blue-800"
           : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:bg-blue-50/40"
       )}
@@ -156,7 +184,7 @@ function ChoiceOption({ label, text }) {
       <span
         className={cx(
           "grid size-7 shrink-0 place-items-center rounded-full text-[12px] font-black transition-colors",
-          selected ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-400"
+          isSelected ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-400"
         )}
       >
         {label}
@@ -166,7 +194,7 @@ function ChoiceOption({ label, text }) {
   );
 }
 
-function ChoiceBlock({ options }) {
+function ChoiceBlock({ options, selectedAnswers = [], onSelectAnswer }) {
   const normalizedOptions = options.filter((option) => option.text?.trim());
 
   if (normalizedOptions.length < options.length) {
@@ -182,7 +210,13 @@ function ChoiceBlock({ options }) {
   return (
     <div className="grid gap-2.5">
       {normalizedOptions.map((opt) => (
-        <ChoiceOption key={opt.label} label={opt.label} text={opt.text} />
+        <ChoiceOption
+          key={opt.label}
+          label={opt.label}
+          text={opt.text}
+          isSelected={selectedAnswers.includes(opt.label)}
+          onSelect={onSelectAnswer}
+        />
       ))}
     </div>
   );
@@ -303,7 +337,7 @@ function IncompleteWarning() {
 
 // ─── Main export ──────────────────────────────────────────────────────────────
 
-export function EnglishQuestionViewer({ question }) {
+export function EnglishQuestionViewer({ question, selectedAnswers = [], onSelectAnswer }) {
   if (!question) return null;
 
   const status = STATUS_BADGE[question.status] || STATUS_BADGE.incomplete;
@@ -357,15 +391,36 @@ export function EnglishQuestionViewer({ question }) {
         <BlankContextBlock text={question.blankContextMarkdown} />
       )}
 
+      <SelectionSummary selectedAnswers={selectedAnswers} />
+
       {/* Word bank */}
-      {isWordBank && <OptionBank options={question.options} label="Word Bank" />}
+      {isWordBank && (
+        <OptionBank
+          options={question.options}
+          label="Word Bank"
+          selectedAnswers={selectedAnswers}
+          onSelectAnswer={onSelectAnswer}
+        />
+      )}
 
       {isMatching && (
-        <OptionBank options={question.options} label="Paragraph Bank" compact />
+        <OptionBank
+          options={question.options}
+          label="Paragraph Bank"
+          compact
+          selectedAnswers={selectedAnswers}
+          onSelectAnswer={onSelectAnswer}
+        />
       )}
 
       {/* Choice options */}
-      {isChoice && !isIncomplete && <ChoiceBlock options={question.options} />}
+      {isChoice && !isIncomplete && (
+        <ChoiceBlock
+          options={question.options}
+          selectedAnswers={selectedAnswers}
+          onSelectAnswer={onSelectAnswer}
+        />
+      )}
 
       {/* Answer reveal */}
       {!isIncomplete && (

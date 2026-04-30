@@ -137,18 +137,12 @@ function QuestionParagraph({ content }) {
   );
 }
 
-function Option({ label, content, visuals = [] }) {
-  const [status, setStatus] = useState("idle"); // idle, selected, success
+function Option({ label, content, visuals = [], isSelected = false, onSelect }) {
   const textValue = content.map((item) => (typeof item === "string" ? item : Object.values(item).join(""))).join("");
   const isVisualLabelOnly = visuals.length > 0 && /^(?:见)?图[象像]\s*[A-Z]$/i.test(textValue.trim());
 
   const handleClick = () => {
-    if (status === "idle") {
-      setStatus("selected");
-      setTimeout(() => setStatus("success"), 600);
-    } else {
-      setStatus("idle");
-    }
+    onSelect?.(label);
   };
 
   return (
@@ -157,27 +151,19 @@ function Option({ label, content, visuals = [] }) {
       className="node-button group relative flex w-full items-center gap-4 rounded-xl px-5 py-4 text-left outline-none transition-all border"
       style={{
         minHeight: 72,
-        background: status === "idle" ? "#fff"
-          : status === "selected" ? "rgba(46,103,248,0.06)"
-          : "var(--color-success)",
-        border: status === "idle" ? "1.5px solid rgba(203,213,225,0.6)"
-          : status === "selected" ? "1.5px solid rgba(46,103,248,0.4)"
-          : "1.5px solid transparent",
-        boxShadow: status === "idle"
-          ? "0 3px 0 rgba(203,213,225,0.9), 0 4px 12px rgba(0,0,0,0.04)"
-          : status === "selected" ? "none"
-          : "var(--shadow-3d-success)",
-        transform: status === "selected" ? "translateY(2px)" : "translateY(0)",
+        background: isSelected ? "rgba(46,103,248,0.08)" : "#fff",
+        border: isSelected ? "1.5px solid rgba(46,103,248,0.45)" : "1.5px solid rgba(203,213,225,0.6)",
+        boxShadow: isSelected
+          ? "0 3px 0 rgba(46,103,248,0.28), 0 8px 18px rgba(46,103,248,0.08)"
+          : "0 3px 0 rgba(203,213,225,0.9), 0 4px 12px rgba(0,0,0,0.04)",
+        transform: isSelected ? "translateY(1px)" : "translateY(0)",
       }}
     >
       <div
         className="flex size-9 shrink-0 items-center justify-center rounded-full font-display text-sm font-bold transition-colors"
         style={{
-          background: status === "idle" ? "var(--color-background)"
-            : status === "selected" ? "var(--color-primary)"
-            : "rgba(255,255,255,0.25)",
-          color: status === "idle" ? "var(--color-muted)"
-            : "#fff",
+          background: isSelected ? "var(--color-primary)" : "var(--color-background)",
+          color: isSelected ? "#fff" : "var(--color-muted)",
         }}
       >
         {label}
@@ -185,9 +171,7 @@ function Option({ label, content, visuals = [] }) {
       <div
         className="grid flex-1 gap-3 font-body text-base font-semibold leading-snug transition-colors"
         style={{
-          color: status === "idle" ? "var(--color-text-main)"
-            : status === "selected" ? "var(--color-primary)"
-            : "#fff",
+          color: isSelected ? "var(--color-primary)" : "var(--color-text-main)",
         }}
       >
         {!isVisualLabelOnly ? (
@@ -207,12 +191,25 @@ function Option({ label, content, visuals = [] }) {
   );
 }
 
-function OptionsBlock({ options }) {
+function OptionsBlock({ options, selectedAnswers = [], onSelectAnswer }) {
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      {options.map((option) => (
-        <Option key={option.label} {...option} />
-      ))}
+    <div className="grid gap-4">
+      {selectedAnswers.length > 0 && (
+        <div className="flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-4 py-2 text-[13px] font-black text-primary">
+          <span className="material-symbols-outlined text-[18px]">check_circle</span>
+          已选择 {selectedAnswers.join("、")}
+        </div>
+      )}
+      <div className="grid gap-4 md:grid-cols-2">
+        {options.map((option) => (
+          <Option
+            key={option.label}
+            {...option}
+            isSelected={selectedAnswers.includes(option.label)}
+            onSelect={onSelectAnswer}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -361,13 +358,22 @@ function SolutionBlock({ answer, analysis, solution }) {
   );
 }
 
-export function QuestionBlocks({ blocks }) {
+export function QuestionBlocks({ blocks, selectedAnswers = [], onSelectAnswer }) {
   return (
     <div className="grid gap-5">
       {blocks.map((block, index) => {
         if (block.type === "paragraph") return <QuestionParagraph key={index} content={block.content} />;
         if (block.type === "math") return <MathBox key={index} content={block.content} />;
-        if (block.type === "options") return <OptionsBlock key={index} options={block.options} />;
+        if (block.type === "options") {
+          return (
+            <OptionsBlock
+              key={index}
+              options={block.options}
+              selectedAnswers={selectedAnswers}
+              onSelectAnswer={onSelectAnswer}
+            />
+          );
+        }
         if (block.type === "diagram") return <DiagramBlock key={index} name={block.name} />;
         if (block.type === "visual") return <VisualBlock key={index} visual={block.visual} />;
         if (block.type === "answer-space") return <AnswerSpace key={index} variant={block.variant} />;

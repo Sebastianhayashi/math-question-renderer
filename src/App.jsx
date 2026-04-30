@@ -119,6 +119,7 @@ const SUBJECT_CONFIG = {
   },
 };
 const SOLVING_RECORDS_KEY = "astro-math-solving-records-v1";
+const ANSWER_RECORDS_KEY = "astro-math-answer-records-v1";
 const NOTE_TAGS = SUBJECT_CONFIG.math.noteTags;
 const MARK_TAGS = [
   { id: "unknown", label: "不知道", icon: "help" },
@@ -175,6 +176,21 @@ function loadSolvingRecords() {
 function saveSolvingRecords(records) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(SOLVING_RECORDS_KEY, JSON.stringify(records));
+}
+
+function loadAnswerRecords() {
+  if (typeof window === "undefined") return {};
+
+  try {
+    return JSON.parse(window.localStorage.getItem(ANSWER_RECORDS_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function saveAnswerRecords(records) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(ANSWER_RECORDS_KEY, JSON.stringify(records));
 }
 
 function loadToolModules() {
@@ -1128,6 +1144,7 @@ function App() {
   const [keyword, setKeyword] = useState("");
   const [collapsedTopics, setCollapsedTopics] = useState(getInitialCollapsedTopics);
   const [records, setRecords] = useState(loadSolvingRecords);
+  const [answerRecords, setAnswerRecords] = useState(loadAnswerRecords);
   const [notesOpen, setNotesOpen] = useState(false);
   const [notesWindowMode, setNotesWindowMode] = useState("dock");
   const [notesWindowLayout, setNotesWindowLayout] = useState(() => ({
@@ -1180,6 +1197,7 @@ function App() {
   const activeQuestionIndex = visibleQuestions.findIndex((q) => q.id === activeQuestion?.id);
   const activeQuestionId = activeQuestion?.id || "";
   const activeRecord = records[activeQuestionId] || createEmptyRecord();
+  const activeAnswer = answerRecords[activeQuestionId]?.selected || [];
   const reviewRecords = useMemo(
     () =>
       Object.entries(records)
@@ -1374,6 +1392,34 @@ function App() {
     }));
     setNoteDraft("");
     setNotesOpen(true);
+  }
+
+  function selectAnswer(label) {
+    if (!activeQuestionId || !label) return;
+    const isMultiple = activeQuestion?.type === "multiple-choice";
+
+    setAnswerRecords((previous) => {
+      const selected = previous[activeQuestionId]?.selected || [];
+      const nextSelected = isMultiple
+        ? selected.includes(label)
+          ? selected.filter((item) => item !== label)
+          : [...selected, label]
+        : selected.includes(label)
+          ? []
+          : [label];
+      const next = {
+        ...previous,
+        [activeQuestionId]: {
+          selected: nextSelected,
+          updatedAt: new Date().toISOString(),
+          subject,
+          pageId: activePage?.id,
+          questionNo: activeQuestion?.no ?? activeQuestionIndex + 1,
+        },
+      };
+      saveAnswerRecords(next);
+      return next;
+    });
   }
 
   function removeNote(noteId) {
@@ -2134,9 +2180,17 @@ function App() {
                         className="rounded-2xl bg-background p-8 pt-12 shadow-float"
                       >
                         {subject === "english" ? (
-                          <EnglishQuestionViewer question={activeQuestion} />
+                          <EnglishQuestionViewer
+                            question={activeQuestion}
+                            selectedAnswers={activeAnswer}
+                            onSelectAnswer={selectAnswer}
+                          />
                         ) : (
-                          <QuestionBlocks blocks={activeQuestion?.blocks || []} />
+                          <QuestionBlocks
+                            blocks={activeQuestion?.blocks || []}
+                            selectedAnswers={activeAnswer}
+                            onSelectAnswer={selectAnswer}
+                          />
                         )}
                       </div>
                     </div>
@@ -2145,25 +2199,34 @@ function App() {
                     <div className="flex flex-col gap-4">
                       {/* Question dots */}
                       <div className="flex flex-wrap gap-2">
-                        {visibleQuestions.map((q, idx) => (
-                          <button
-                            key={q.id}
-                            onClick={() => setQuestionId(q.id)}
-                            className={cx(
-                              "size-9 rounded-full text-sm font-bold transition-all",
-                              q.id === activeQuestion?.id
-                                ? "bg-primary text-white shadow-md scale-110"
-                                : "bg-white text-muted hover:bg-slate-100"
-                            )}
-                            style={
-                              q.id === activeQuestion?.id
-                                ? { background: "var(--color-primary)", color: "#fff" }
-                                : {}
-                            }
-                          >
-                            {q.no ?? idx + 1}
-                          </button>
-                        ))}
+                        {visibleQuestions.map((q, idx) => {
+                          const hasAnswer = (answerRecords[q.id]?.selected || []).length > 0;
+                          return (
+                            <button
+                              key={q.id}
+                              onClick={() => setQuestionId(q.id)}
+                              title={hasAnswer ? `已选择 ${(answerRecords[q.id]?.selected || []).join("、")}` : undefined}
+                              className={cx(
+                                "relative size-9 rounded-full text-sm font-bold transition-all",
+                                q.id === activeQuestion?.id
+                                  ? "bg-primary text-white shadow-md scale-110"
+                                  : hasAnswer
+                                    ? "bg-primary/10 text-primary ring-1 ring-primary/30"
+                                    : "bg-white text-muted hover:bg-slate-100"
+                              )}
+                              style={
+                                q.id === activeQuestion?.id
+                                  ? { background: "var(--color-primary)", color: "#fff" }
+                                  : {}
+                              }
+                            >
+                              {q.no ?? idx + 1}
+                              {hasAnswer && q.id !== activeQuestion?.id && (
+                                <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full bg-primary" />
+                              )}
+                            </button>
+                          );
+                        })}
                       </div>
 
                       {/* Next Mission button */}
