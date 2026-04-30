@@ -133,6 +133,7 @@ const MATH_CHAIN_STAGES = [
 ];
 const MATH_CHAIN_TAGS = [
   { id: "known", label: "已知", icon: "rule", hint: "题目直接给出的条件", stage: "read" },
+  { id: "unknown", label: "未知", icon: "help", hint: "还没有理解的符号、条件或关系", stage: "read" },
   { id: "target", label: "目标", icon: "flag", hint: "要求证明或求出的内容", stage: "read" },
   { id: "assumption", label: "假设", icon: "psychology_alt", hint: "临时假设或分类讨论", stage: "reason" },
   { id: "translate", label: "转化", icon: "sync_alt", hint: "把题目翻译成数学语言", stage: "reason" },
@@ -142,6 +143,7 @@ const MATH_CHAIN_TAGS = [
 ];
 const MATH_CHAIN_RELATION = {
   known: "给出",
+  unknown: "待明",
   target: "要求",
   assumption: "假设",
   translate: "转化",
@@ -202,6 +204,49 @@ function getMathChainStage(note) {
 
 function getMathChainOrder(note, fallbackIndex) {
   return Number.isFinite(note?.order) ? note.order : fallbackIndex;
+}
+
+function clampNumber(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function getWorkbenchBounds() {
+  if (typeof window === "undefined") {
+    return { minX: 76, maxX: 980, minY: 76, maxY: 620 };
+  }
+
+  return {
+    minX: 76,
+    maxX: Math.max(76, window.innerWidth - 290),
+    minY: 76,
+    maxY: Math.max(76, window.innerHeight - 178),
+  };
+}
+
+function getPaletteRailBounds() {
+  if (typeof window === "undefined") {
+    return { minX: 88, maxX: 760, minY: 640, maxY: 640 };
+  }
+
+  return {
+    minX: 88,
+    maxX: Math.max(88, window.innerWidth - 700),
+    minY: Math.max(320, window.innerHeight - 104),
+    maxY: Math.max(320, window.innerHeight - 72),
+  };
+}
+
+function getMetadataRailBounds(isMinimized = false) {
+  if (typeof window === "undefined") {
+    return { minX: 96, maxX: 760, minY: 82, maxY: 136 };
+  }
+
+  return {
+    minX: 96,
+    maxX: Math.max(96, window.innerWidth - (isMinimized ? 104 : 520)),
+    minY: 76,
+    maxY: 142,
+  };
 }
 
 function loadSolvingRecords() {
@@ -794,8 +839,10 @@ function MathPencilPalette({
   noteDraft,
   onNoteDraftChange,
   onAddBlock,
+  onArrangeBlocks,
   layout,
   onStartDrag,
+  onStartModuleDrag,
 }) {
   const active = getMathChainTag(activeTag);
 
@@ -814,7 +861,7 @@ function MathPencilPalette({
         </span>
         <div className="hidden min-w-[72px] sm:block">
           <p className="text-[11px] font-black leading-none text-slate-800">构建工具</p>
-          <p className="mt-1 text-[9px] font-bold leading-none text-muted">点选模块放上去</p>
+          <p className="mt-1 text-[9px] font-bold leading-none text-muted">模块轨道</p>
         </div>
       </div>
 
@@ -823,15 +870,29 @@ function MathPencilPalette({
           <button
             key={tag.id}
             onClick={() => onActiveTagChange(tag.id)}
+            onPointerDown={(event) => onStartModuleDrag(event, tag.id)}
             title={tag.hint}
             className={cx(
-              "grid size-10 shrink-0 place-items-center rounded-2xl transition-all",
+              "relative flex h-12 w-12 shrink-0 cursor-grab flex-col items-center justify-center gap-0.5 rounded-2xl transition-all active:cursor-grabbing",
               activeTag === tag.id
                 ? "bg-primary text-white shadow-md"
                 : "bg-white text-slate-500 ring-1 ring-slate-200 hover:bg-blue-50 hover:text-primary"
             )}
           >
-            <span className="material-symbols-outlined text-[20px]">{tag.icon}</span>
+            <span className="material-symbols-outlined text-[19px]">{tag.icon}</span>
+            <span className="text-[9px] font-black leading-none">{tag.label}</span>
+            <span
+              className={cx(
+                "absolute -top-1 left-1/2 size-2 -translate-x-1/2 rounded-full ring-2 ring-white",
+                activeTag === tag.id ? "bg-white/90" : "bg-slate-200"
+              )}
+            />
+            <span
+              className={cx(
+                "absolute -bottom-1 left-1/2 h-1.5 w-5 -translate-x-1/2 rounded-full ring-2 ring-white",
+                activeTag === tag.id ? "bg-white/80" : "bg-slate-100"
+              )}
+            />
           </button>
         ))}
       </div>
@@ -861,6 +922,14 @@ function MathPencilPalette({
           <span className="material-symbols-outlined text-[18px]">add</span>
         </button>
       </form>
+      <button
+        onClick={onArrangeBlocks}
+        className="grid size-11 shrink-0 place-items-center rounded-2xl bg-white text-slate-500 ring-1 ring-slate-200 transition-colors hover:bg-blue-50 hover:text-primary"
+        title="整理积木"
+        aria-label="整理积木"
+      >
+        <span className="material-symbols-outlined text-[20px]">auto_fix_high</span>
+      </button>
     </div>
   );
 }
@@ -925,14 +994,21 @@ function QuizMetadataChip({
 function MathWorkbenchBlock({ note, index, onPointerDown, onRemove }) {
   const tag = getMathChainTag(note.type);
   const stage = MATH_CHAIN_STAGES.find((item) => item.id === getMathChainStage(note)) || MATH_CHAIN_STAGES[0];
-  const left = Number.isFinite(note.x) ? note.x : Math.max(88, Math.min(window.innerWidth - 300, window.innerWidth - 390));
-  const top = Number.isFinite(note.y) ? note.y : 118 + index * 72;
+  const bounds = getWorkbenchBounds();
+  const left = Number.isFinite(note.x)
+    ? clampNumber(note.x, bounds.minX, bounds.maxX)
+    : clampNumber(typeof window === "undefined" ? 720 : window.innerWidth - 390, bounds.minX, bounds.maxX);
+  const top = Number.isFinite(note.y)
+    ? clampNumber(note.y, bounds.minY, bounds.maxY)
+    : clampNumber(118 + index * 72, bounds.minY, bounds.maxY);
 
   return (
     <div
       className="fixed z-30 w-[260px] rounded-[22px] border border-white/90 bg-white/94 p-3 shadow-[0_16px_42px_rgba(15,23,42,0.16)] ring-1 ring-slate-200/80 backdrop-blur-xl transition-transform hover:-translate-y-0.5"
       style={{ left, top }}
     >
+      <span className="absolute -top-1.5 left-8 size-3 rounded-full bg-white ring-1 ring-slate-200" />
+      <span className="absolute -bottom-1.5 left-8 size-3 rounded-full bg-slate-100 ring-1 ring-slate-200" />
       <div
         onPointerDown={(event) => onPointerDown(event, note)}
         className="flex cursor-grab items-start gap-2 active:cursor-grabbing"
@@ -947,6 +1023,9 @@ function MathWorkbenchBlock({ note, index, onPointerDown, onRemove }) {
             </span>
             <span className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[9px] font-black text-slate-400">
               {stage.title}
+            </span>
+            <span className="rounded-md bg-slate-50 px-1.5 py-0.5 text-[9px] font-black text-slate-300">
+              {MATH_CHAIN_RELATION[note.type] || "连接"}
             </span>
           </div>
           <p className="line-clamp-4 break-words text-[13px] font-bold leading-snug text-slate-700">
@@ -964,6 +1043,41 @@ function MathWorkbenchBlock({ note, index, onPointerDown, onRemove }) {
         >
           <span className="material-symbols-outlined text-[16px]">close</span>
         </button>
+      </div>
+    </div>
+  );
+}
+
+function MathModuleDragPreview({ preview }) {
+  if (!preview) return null;
+
+  const tag = getMathChainTag(preview.type);
+  const stage = MATH_CHAIN_STAGES.find((item) => item.id === tag.stage) || MATH_CHAIN_STAGES[0];
+
+  return (
+    <div
+      className="pointer-events-none fixed z-[60] w-[230px] rounded-[22px] border border-primary/20 bg-white/90 p-3 shadow-[0_22px_56px_rgba(46,103,248,0.22)] ring-1 ring-white/90 backdrop-blur-xl"
+      style={{ left: preview.x, top: preview.y, transform: "translate(-50%, -50%) rotate(-1deg)" }}
+    >
+      <span className="absolute -top-1.5 left-8 size-3 rounded-full bg-white ring-1 ring-primary/20" />
+      <span className="absolute -bottom-1.5 left-8 size-3 rounded-full bg-blue-50 ring-1 ring-primary/15" />
+      <div className="flex items-start gap-2">
+        <span className="grid size-9 shrink-0 place-items-center rounded-2xl bg-primary text-white shadow-sm">
+          <span className="material-symbols-outlined text-[18px]">{tag.icon}</span>
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="mb-1 flex items-center gap-1.5">
+            <span className="rounded-md bg-primary/10 px-1.5 py-0.5 text-[9px] font-black text-primary">
+              {tag.label}
+            </span>
+            <span className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[9px] font-black text-slate-400">
+              {stage.title}
+            </span>
+          </div>
+          <p className="line-clamp-2 text-[12px] font-bold leading-snug text-slate-600">
+            {preview.text || tag.hint}
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -1331,11 +1445,11 @@ function SelectionMarkMenu({ menu, subject = "math", onMark, onAddSelectionNote,
       onMouseDown={(event) => event.preventDefault()}
     >
       {subject === "math" &&
-        MATH_CHAIN_TAGS.slice(0, 5).map((tag) => (
+        MATH_CHAIN_TAGS.map((tag) => (
           <button
             key={tag.id}
             onClick={() => onAddSelectionNote(tag.id)}
-            className="flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-[11px] font-black text-slate-600 transition-colors hover:bg-primary/10 hover:text-primary"
+            className="flex items-center gap-1.5 rounded-xl px-2 py-2 text-[11px] font-black text-slate-600 transition-colors hover:bg-primary/10 hover:text-primary"
             title={`加入解题链：${tag.label}`}
           >
             <span className="material-symbols-outlined text-[16px]">{tag.icon}</span>
@@ -1642,17 +1756,18 @@ function App() {
     height: typeof window === "undefined" ? 620 : Math.min(660, Math.max(460, window.innerHeight - 126)),
   }));
   const [mathPaletteLayout, setMathPaletteLayout] = useState(() => ({
-    x: typeof window === "undefined" ? 240 : Math.max(88, Math.round((window.innerWidth - 680) / 2)),
-    y: typeof window === "undefined" ? 640 : Math.max(420, window.innerHeight - 88),
+    x: typeof window === "undefined" ? 240 : clampNumber(Math.round((window.innerWidth - 680) / 2), getPaletteRailBounds().minX, getPaletteRailBounds().maxX),
+    y: typeof window === "undefined" ? 640 : getPaletteRailBounds().minY,
   }));
   const [metadataLayout, setMetadataLayout] = useState(() => ({
-    x: typeof window === "undefined" ? 360 : Math.max(112, Math.round(window.innerWidth / 2 - 245)),
-    y: 86,
+    x: typeof window === "undefined" ? 360 : clampNumber(Math.round(window.innerWidth / 2 - 245), getMetadataRailBounds(false).minX, getMetadataRailBounds(false).maxX),
+    y: getMetadataRailBounds(false).minY,
   }));
   const [metadataMinimized, setMetadataMinimized] = useState(false);
   const [activeNoteTag, setActiveNoteTag] = useState("known");
   const [noteDraft, setNoteDraft] = useState("");
   const [selectionMenu, setSelectionMenu] = useState(null);
+  const [moduleDragPreview, setModuleDragPreview] = useState(null);
   const [floatingCards, setFloatingCards] = useState([]);
   const [toolModules, setToolModules] = useState(loadToolModules);
   const normalizedKeyword = keyword.trim();
@@ -1755,8 +1870,9 @@ function App() {
       }
 
       if (session.type === "chain-note-move") {
-        const nextX = Math.min(window.innerWidth - 90, Math.max(76, session.startX + event.clientX - session.pointerX));
-        const nextY = Math.min(window.innerHeight - 60, Math.max(76, session.startY + event.clientY - session.pointerY));
+        const bounds = getWorkbenchBounds();
+        const nextX = clampNumber(session.startX + event.clientX - session.pointerX, bounds.minX, bounds.maxX);
+        const nextY = clampNumber(session.startY + event.clientY - session.pointerY, bounds.minY, bounds.maxY);
         setRecords((previous) => {
           const current = previous[session.questionId];
           if (!current) return previous;
@@ -1774,21 +1890,78 @@ function App() {
       }
 
       if (session.type === "palette-move") {
+        const bounds = getPaletteRailBounds();
         setMathPaletteLayout({
-          x: Math.min(window.innerWidth - 120, Math.max(76, session.startX + event.clientX - session.pointerX)),
-          y: Math.min(window.innerHeight - 68, Math.max(76, session.startY + event.clientY - session.pointerY)),
+          x: clampNumber(session.startX + event.clientX - session.pointerX, bounds.minX, bounds.maxX),
+          y: clampNumber(session.startY + event.clientY - session.pointerY, bounds.minY, bounds.maxY),
         });
       }
 
       if (session.type === "metadata-move") {
+        const bounds = getMetadataRailBounds(metadataMinimized);
         setMetadataLayout({
-          x: Math.min(window.innerWidth - 80, Math.max(76, session.startX + event.clientX - session.pointerX)),
-          y: Math.min(window.innerHeight - 60, Math.max(72, session.startY + event.clientY - session.pointerY)),
+          x: clampNumber(session.startX + event.clientX - session.pointerX, bounds.minX, bounds.maxX),
+          y: clampNumber(session.startY + event.clientY - session.pointerY, bounds.minY, bounds.maxY),
         });
+      }
+
+      if (session.type === "module-pickup") {
+        const deltaX = event.clientX - session.pointerX;
+        const deltaY = event.clientY - session.pointerY;
+        if (!session.isDragging && Math.hypot(deltaX, deltaY) > 8) {
+          session.isDragging = true;
+        }
+
+        if (session.isDragging) {
+          const bounds = getWorkbenchBounds();
+          setModuleDragPreview({
+            type: session.blockType,
+            text: session.text,
+            x: clampNumber(event.clientX, bounds.minX + 120, bounds.maxX + 120),
+            y: clampNumber(event.clientY, bounds.minY + 34, bounds.maxY + 34),
+          });
+        }
       }
     }
 
-    function handlePointerUp() {
+    function handlePointerUp(event) {
+      const session = dragSessionRef.current;
+      if (session?.type === "module-pickup" && session.isDragging && session.questionId) {
+        const tag = getMathChainTag(session.blockType);
+        const bounds = getWorkbenchBounds();
+        const nextX = clampNumber(event.clientX - 120, bounds.minX, bounds.maxX);
+        const nextY = clampNumber(event.clientY - 34, bounds.minY, bounds.maxY);
+        const text = session.text || tag.hint;
+
+        setRecords((previous) => {
+          const current = previous[session.questionId] || createEmptyRecord();
+          const nextRecord = {
+            ...current,
+            meta: session.meta,
+            notes: [
+              ...(current.notes || []),
+              {
+                id: createId("note"),
+                type: session.blockType,
+                stage: tag.stage,
+                order: current.notes?.length || 0,
+                x: nextX,
+                y: nextY,
+                text,
+                createdAt: new Date().toISOString(),
+              },
+            ],
+            updatedAt: new Date().toISOString(),
+          };
+          const next = { ...previous, [session.questionId]: nextRecord };
+          saveSolvingRecords(next);
+          return next;
+        });
+        setActiveNoteTag(session.blockType);
+        if (session.text) setNoteDraft("");
+      }
+
+      setModuleDragPreview(null);
       dragSessionRef.current = null;
     }
 
@@ -1801,7 +1974,7 @@ function App() {
       window.removeEventListener("pointerup", handlePointerUp);
       window.removeEventListener("pointercancel", handlePointerUp);
     };
-  }, []);
+  }, [metadataMinimized]);
 
   function startQuiz(page) {
     const firstQuestion =
@@ -1940,6 +2113,7 @@ function App() {
   function addSelectionNote(type) {
     if (!selectionMenu?.text) return;
     const tag = getMathChainTag(type);
+    const bounds = getWorkbenchBounds();
     updateActiveRecord((record) => ({
       ...record,
       notes: [
@@ -1949,8 +2123,8 @@ function App() {
           type,
           stage: tag.stage,
           order: record.notes?.length || 0,
-          x: Math.min(window.innerWidth - 300, Math.max(76, selectionMenu.x - 130)),
-          y: Math.min(window.innerHeight - 180, Math.max(76, selectionMenu.y + 46)),
+          x: clampNumber(selectionMenu.x - 130, bounds.minX, bounds.maxX),
+          y: clampNumber(selectionMenu.y + 46, bounds.minY, bounds.maxY),
           text: selectionMenu.text,
           createdAt: new Date().toISOString(),
         },
@@ -1966,6 +2140,7 @@ function App() {
     const tag = getMathChainTag(type);
     const text = noteDraft.trim() || tag.hint;
     const count = activeRecord.notes?.length || 0;
+    const bounds = getWorkbenchBounds();
 
     updateActiveRecord((record) => ({
       ...record,
@@ -1976,14 +2151,49 @@ function App() {
           type,
           stage: tag.stage,
           order: record.notes?.length || 0,
-          x: Math.min(window.innerWidth - 300, Math.max(92, window.innerWidth - 390)),
-          y: Math.min(window.innerHeight - 170, 118 + count * 18),
+          x: clampNumber(typeof window === "undefined" ? 720 : window.innerWidth - 390, bounds.minX, bounds.maxX),
+          y: clampNumber(118 + count * 18, bounds.minY, bounds.maxY),
           text,
           createdAt: new Date().toISOString(),
         },
       ],
     }));
     setNoteDraft("");
+  }
+
+  function arrangeWorkbenchBlocks() {
+    const bounds = getWorkbenchBounds();
+    const stageAnchors = {
+      read: { x: bounds.minX + 18, y: 104 },
+      reason: { x: Math.min(bounds.maxX, bounds.minX + 300), y: 156 },
+      answer: { x: Math.min(bounds.maxX, bounds.minX + 600), y: 208 },
+    };
+
+    updateActiveRecord((record) => {
+      const grouped = Object.fromEntries(MATH_CHAIN_STAGES.map((stage) => [stage.id, []]));
+      (record.notes || []).forEach((note, index) => {
+        const stage = getMathChainStage(note);
+        (grouped[stage] || grouped.read).push({ ...note, fallbackOrder: index });
+      });
+      Object.values(grouped).forEach((items) => {
+        items.sort((a, b) => getMathChainOrder(a, a.fallbackOrder) - getMathChainOrder(b, b.fallbackOrder));
+      });
+
+      const nextNotes = MATH_CHAIN_STAGES.flatMap((stage) =>
+        (grouped[stage.id] || []).map((note, index) => {
+          const anchor = stageAnchors[stage.id] || stageAnchors.read;
+          return {
+            ...note,
+            stage: stage.id,
+            order: index,
+            x: clampNumber(anchor.x, bounds.minX, bounds.maxX),
+            y: clampNumber(anchor.y + index * 92, bounds.minY, bounds.maxY),
+          };
+        })
+      );
+
+      return { ...record, notes: nextNotes };
+    });
   }
 
   function moveNote(noteId, targetStage, targetIndex) {
@@ -2264,8 +2474,11 @@ function App() {
 
   function startChainNoteDrag(event, note) {
     if (event.button !== 0) return;
-    const left = Number.isFinite(note.x) ? note.x : Math.max(88, Math.min(window.innerWidth - 300, window.innerWidth - 390));
-    const top = Number.isFinite(note.y) ? note.y : 118;
+    const bounds = getWorkbenchBounds();
+    const left = Number.isFinite(note.x)
+      ? clampNumber(note.x, bounds.minX, bounds.maxX)
+      : clampNumber(typeof window === "undefined" ? 720 : window.innerWidth - 390, bounds.minX, bounds.maxX);
+    const top = Number.isFinite(note.y) ? clampNumber(note.y, bounds.minY, bounds.maxY) : 118;
     dragSessionRef.current = {
       type: "chain-note-move",
       questionId: activeQuestionId,
@@ -2290,6 +2503,24 @@ function App() {
     event.currentTarget.setPointerCapture?.(event.pointerId);
   }
 
+  function startPaletteModuleDrag(event, blockType) {
+    if (event.button !== 0) return;
+    dragSessionRef.current = {
+      type: "module-pickup",
+      blockType,
+      questionId: activeQuestionId,
+      pointerX: event.clientX,
+      pointerY: event.clientY,
+      text: noteDraft.trim(),
+      meta: {
+        pageTitle: activePage?.partTitle,
+        sectionTitle: activePage?.sectionTitle,
+        questionNo: activeQuestion?.no ?? activeQuestionIndex + 1,
+      },
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  }
+
   function startMetadataDrag(event) {
     if (event.button !== 0) return;
     dragSessionRef.current = {
@@ -2300,6 +2531,18 @@ function App() {
       startY: metadataLayout.y,
     };
     event.currentTarget.setPointerCapture?.(event.pointerId);
+  }
+
+  function toggleMetadataMinimized() {
+    setMetadataMinimized((value) => {
+      const nextValue = !value;
+      const bounds = getMetadataRailBounds(nextValue);
+      setMetadataLayout((layout) => ({
+        x: clampNumber(layout.x, bounds.minX, bounds.maxX),
+        y: clampNumber(layout.y, bounds.minY, bounds.maxY),
+      }));
+      return nextValue;
+    });
   }
 
   function removeFloatingCard(cardId) {
@@ -2876,7 +3119,7 @@ function App() {
                 sectionTitle={activePage?.sectionTitle}
                 isMinimized={metadataMinimized}
                 layout={metadataLayout}
-                onToggleMinimized={() => setMetadataMinimized((value) => !value)}
+                onToggleMinimized={toggleMetadataMinimized}
                 onStartDrag={startMetadataDrag}
               />
               <div className="grid h-full grid-cols-[minmax(0,1fr)_auto]">
@@ -3002,8 +3245,10 @@ function App() {
                     noteDraft={noteDraft}
                     onNoteDraftChange={setNoteDraft}
                     onAddBlock={addWorkbenchBlock}
+                    onArrangeBlocks={arrangeWorkbenchBlocks}
                     layout={mathPaletteLayout}
                     onStartDrag={startPaletteDrag}
+                    onStartModuleDrag={startPaletteModuleDrag}
                   />
                   {(activeRecord.notes || []).map((note, index) => (
                     <MathWorkbenchBlock
@@ -3014,6 +3259,7 @@ function App() {
                       onRemove={removeNote}
                     />
                   ))}
+                  <MathModuleDragPreview preview={moduleDragPreview} />
                 </>
               )}
               <SelectionMarkMenu
