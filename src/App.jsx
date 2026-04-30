@@ -125,6 +125,7 @@ const SUBJECT_CONFIG = {
 };
 const SOLVING_RECORDS_KEY = "astro-math-solving-records-v1";
 const ANSWER_RECORDS_KEY = "astro-math-answer-records-v1";
+const LAST_SESSION_KEY = "astro-math-last-session-v1";
 const NOTE_TAGS = SUBJECT_CONFIG.math.noteTags;
 const MATH_CHAIN_STAGES = [
   { id: "read", title: "读题", subtitle: "把题目拆成条件和目标", icon: "travel_explore" },
@@ -170,6 +171,50 @@ const DEFAULT_TOOL_MODULES = {
 
 function getInitialPage() {
   return questionBank.pages[0]?.id;
+}
+
+function findPageForQuestion(bank, questionId) {
+  return bank.pages.find((page) => page.questions.some((question) => question.id === questionId));
+}
+
+function findQuestionLocation(bank, questionId) {
+  const page = findPageForQuestion(bank, questionId);
+  const question = page?.questions.find((item) => item.id === questionId);
+  return { page, question };
+}
+
+function getInitialStudyState() {
+  const fallbackSubject = "math";
+  const fallbackPage = questionBank.pages[0];
+  const fallbackQuestion = fallbackPage?.questions[0];
+
+  if (typeof window === "undefined") {
+    return {
+      subject: fallbackSubject,
+      pageId: fallbackPage?.id || "",
+      questionId: fallbackQuestion?.id || "",
+    };
+  }
+
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(LAST_SESSION_KEY) || "{}");
+    const subject = saved.subject === "english" ? "english" : "math";
+    const bank = subject === "english" ? cet6QuestionBank : questionBank;
+    const page = bank.pages.find((item) => item.id === saved.pageId) || findPageForQuestion(bank, saved.questionId) || bank.pages[0];
+    const question = page?.questions.find((item) => item.id === saved.questionId) || page?.questions[0];
+
+    return {
+      subject,
+      pageId: page?.id || "",
+      questionId: question?.id || "",
+    };
+  } catch {
+    return {
+      subject: fallbackSubject,
+      pageId: fallbackPage?.id || "",
+      questionId: fallbackQuestion?.id || "",
+    };
+  }
 }
 
 function getInitialCollapsedTopics(subject = "math") {
@@ -296,6 +341,11 @@ function loadToolModules() {
 function saveToolModules(modules) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(TOOL_MODULES_KEY, JSON.stringify({ ...modules, notes: true }));
+}
+
+function saveLastSession(session) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(LAST_SESSION_KEY, JSON.stringify(session));
 }
 
 function applySoftSelectionHighlight(range) {
@@ -1048,6 +1098,54 @@ function MathWorkbenchBlock({ note, index, onPointerDown, onRemove }) {
   );
 }
 
+function MathMarkBlock({ mark, index, onPointerDown, onRemove }) {
+  const tag = MARK_TAGS.find((item) => item.id === mark.type) || MARK_TAGS[0];
+  const bounds = getWorkbenchBounds();
+  const left = Number.isFinite(mark.x)
+    ? clampNumber(mark.x, bounds.minX, bounds.maxX)
+    : clampNumber(typeof window === "undefined" ? 520 : window.innerWidth - 350, bounds.minX, bounds.maxX);
+  const top = Number.isFinite(mark.y)
+    ? clampNumber(mark.y, bounds.minY, bounds.maxY)
+    : clampNumber(250 + index * 70, bounds.minY, bounds.maxY);
+
+  return (
+    <div
+      className="fixed z-30 w-[240px] rounded-[20px] border border-amber-100 bg-white/95 p-3 shadow-[0_16px_38px_rgba(15,23,42,0.13)] ring-1 ring-amber-100/80 backdrop-blur-xl"
+      style={{ left, top }}
+    >
+      <div
+        onPointerDown={(event) => onPointerDown(event, mark)}
+        className="flex cursor-grab items-start gap-2 active:cursor-grabbing"
+      >
+        <span className="grid size-9 shrink-0 place-items-center rounded-2xl bg-amber-50 text-amber-600">
+          <span className="material-symbols-outlined text-[18px]">{tag.icon}</span>
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="mb-1 flex items-center gap-1.5">
+            <span className="rounded-md bg-amber-50 px-1.5 py-0.5 text-[9px] font-black text-amber-600">
+              {tag.label}
+            </span>
+            <span className="rounded-md bg-slate-50 px-1.5 py-0.5 text-[9px] font-black text-slate-300">
+              疑点
+            </span>
+          </div>
+          <p className="line-clamp-4 break-words text-[13px] font-bold leading-snug text-slate-700">
+            <RichText content={[mark.text]} />
+          </p>
+        </div>
+        <button
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={() => onRemove(mark.id)}
+          className="mt-1 grid size-7 shrink-0 place-items-center rounded-lg text-slate-300 transition-colors hover:bg-slate-100 hover:text-slate-500"
+          aria-label="删除疑点"
+        >
+          <span className="material-symbols-outlined text-[16px]">close</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function MathModuleDragPreview({ preview }) {
   if (!preview) return null;
 
@@ -1533,9 +1631,13 @@ function HomePage({
   totalQuestions,
   playableTotalQuestions,
   reviewCount,
+  progress,
+  onDailyPractice,
+  onReviewPractice,
+  onRandomPractice,
 }) {
   const config = subjectConfig || SUBJECT_CONFIG.math;
-  const progress = 42;
+  const progressValue = Math.round(progress || 0);
   const courseCards = [
     {
       id: `${subject}-course`,
@@ -1562,21 +1664,21 @@ function HomePage({
       subtitle: "每日精选，巩固提升",
       icon: "calendar_month",
       tone: "blue",
-      action: onContinue,
+      action: onDailyPractice || onContinue,
     },
     {
       title: "错题复习",
       subtitle: reviewCount ? `${reviewCount} 道题需要回看` : "查漏补缺，复盘疑点",
       icon: "cancel",
       tone: "red",
-      action: onContinue,
+      action: onReviewPractice || onContinue,
     },
     {
       title: "随机挑战",
       subtitle: "随机组题，挑战自我",
       icon: "casino",
       tone: "purple",
-      action: onContinue,
+      action: onRandomPractice || onContinue,
     },
   ];
 
@@ -1613,9 +1715,22 @@ function HomePage({
           <input
             value={keyword}
             onChange={(event) => onKeywordChange(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                onSearch();
+              }
+            }}
             placeholder={config.searchPlaceholder}
             className="min-w-0 flex-1 bg-transparent text-[15px] font-bold text-slate-700 outline-none placeholder:text-slate-400"
           />
+          <button
+            type="submit"
+            className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-white shadow-sm transition-transform hover:-translate-y-0.5"
+            aria-label="搜索"
+          >
+            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </button>
         </form>
       </header>
 
@@ -1632,10 +1747,10 @@ function HomePage({
               </p>
               <div className="mt-3 flex items-center gap-3">
                 <span className="text-sm font-bold text-muted">学习进度</span>
-                <span className="text-sm font-black text-slate-500">{progress}%</span>
+                <span className="text-sm font-black text-slate-500">{progressValue}%</span>
               </div>
               <div className="mt-2 h-2.5 max-w-[360px] overflow-hidden rounded-full bg-slate-100">
-                <div className="h-full rounded-full bg-primary" style={{ width: `${progress}%` }} />
+                <div className="h-full rounded-full bg-primary" style={{ width: `${progressValue}%` }} />
               </div>
             </div>
             <div className="flex flex-wrap gap-3 xl:shrink-0">
@@ -1737,14 +1852,15 @@ function HomePage({
 }
 
 function App() {
-  const [subject, setSubject] = useState("math"); // "math" | "english"
+  const [initialStudyState] = useState(getInitialStudyState);
+  const [subject, setSubject] = useState(initialStudyState.subject); // "math" | "english"
   const [view, setView] = useState("home"); // "home", "map", or "quiz"
-  const [pageId, setPageId] = useState(getInitialPage);
-  const [questionId, setQuestionId] = useState(questionBank.pages[0]?.questions[0]?.id || "");
+  const [pageId, setPageId] = useState(initialStudyState.pageId || getInitialPage);
+  const [questionId, setQuestionId] = useState(initialStudyState.questionId || questionBank.pages[0]?.questions[0]?.id || "");
   const activeBank = subject === "english" ? cet6QuestionBank : questionBank;
   const subjectConfig = SUBJECT_CONFIG[subject] || SUBJECT_CONFIG.math;
   const [keyword, setKeyword] = useState("");
-  const [collapsedTopics, setCollapsedTopics] = useState(getInitialCollapsedTopics);
+  const [collapsedTopics, setCollapsedTopics] = useState(() => getInitialCollapsedTopics(initialStudyState.subject));
   const [records, setRecords] = useState(loadSolvingRecords);
   const [answerRecords, setAnswerRecords] = useState(loadAnswerRecords);
   const [notesOpen, setNotesOpen] = useState(false);
@@ -1816,6 +1932,14 @@ function App() {
   const activeAnswerRecord = answerRecords[activeQuestionId] || {};
   const activeAnswer = activeAnswerRecord.selected || [];
   const activeAnswerText = activeAnswerRecord.text || "";
+  const answeredCount = useMemo(() => {
+    const ids = new Set(activeBank.pages.flatMap((page) => page.questions.map((question) => question.id)));
+    return Object.entries(answerRecords).filter(([questionId, record]) => {
+      if (!ids.has(questionId)) return false;
+      return (record.selected || []).length > 0 || Boolean(record.text?.trim());
+    }).length;
+  }, [answerRecords, activeBank]);
+  const studyProgress = totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
   const reviewRecords = useMemo(
     () =>
       Object.entries(records)
@@ -1823,6 +1947,16 @@ function App() {
         .sort((a, b) => String(b[1].updatedAt || "").localeCompare(String(a[1].updatedAt || ""))),
     [records]
   );
+
+  useEffect(() => {
+    if (!activePage?.id || !activeQuestionId) return;
+    saveLastSession({
+      subject,
+      pageId: activePage.id,
+      questionId: activeQuestionId,
+      updatedAt: new Date().toISOString(),
+    });
+  }, [subject, activePage?.id, activeQuestionId]);
 
   useEffect(() => {
     setSelectionMenu(null);
@@ -1880,6 +2014,26 @@ function App() {
             ...current,
             notes: (current.notes || []).map((note) =>
               note.id === session.noteId ? { ...note, x: nextX, y: nextY } : note
+            ),
+            updatedAt: new Date().toISOString(),
+          };
+          const next = { ...previous, [session.questionId]: nextRecord };
+          saveSolvingRecords(next);
+          return next;
+        });
+      }
+
+      if (session.type === "mark-move") {
+        const bounds = getWorkbenchBounds();
+        const nextX = clampNumber(session.startX + event.clientX - session.pointerX, bounds.minX, bounds.maxX);
+        const nextY = clampNumber(session.startY + event.clientY - session.pointerY, bounds.minY, bounds.maxY);
+        setRecords((previous) => {
+          const current = previous[session.questionId];
+          if (!current) return previous;
+          const nextRecord = {
+            ...current,
+            marks: (current.marks || []).map((mark) =>
+              mark.id === session.markId ? { ...mark, x: nextX, y: nextY } : mark
             ),
             updatedAt: new Date().toISOString(),
           };
@@ -1976,18 +2130,69 @@ function App() {
     };
   }, [metadataMinimized]);
 
-  function startQuiz(page) {
-    const firstQuestion =
-      subject === "english"
-        ? page.questions.find((question) => isPlayableQuestion(question, subject)) || page.questions[0]
-        : page.questions[0];
+  function openQuestion(page, question) {
+    if (!page || !question) return;
     setPageId(page.id);
-    setQuestionId(firstQuestion?.id || "");
+    setQuestionId(question.id || "");
+    setKeyword("");
     setCollapsedTopics((previous) => ({
       ...previous,
       [getTopicType(page, subject)]: false,
     }));
     setView("quiz");
+  }
+
+  function startQuiz(page) {
+    const firstQuestion =
+      subject === "english"
+        ? page.questions.find((question) => isPlayableQuestion(question, subject)) || page.questions[0]
+        : page.questions[0];
+    openQuestion(page, firstQuestion);
+  }
+
+  function continueStudy() {
+    const { page, question } = findQuestionLocation(activeBank, questionId);
+    if (page && question) {
+      openQuestion(page, question);
+      return;
+    }
+    startQuiz(activeBank.pages[0]);
+  }
+
+  function startDailyPractice() {
+    const unanswered = activeBank.pages
+      .flatMap((page) => page.questions.map((question) => ({ page, question })))
+      .find(({ question }) => {
+        if (subject === "english" && !isPlayableQuestion(question, subject)) return false;
+        const record = answerRecords[question.id] || {};
+        return !(record.selected || []).length && !record.text?.trim();
+      });
+
+    if (unanswered) {
+      openQuestion(unanswered.page, unanswered.question);
+      return;
+    }
+    continueStudy();
+  }
+
+  function startReviewPractice() {
+    const reviewEntry = reviewRecords.find(([questionId]) => findQuestionLocation(activeBank, questionId).page);
+    if (reviewEntry) {
+      const { page, question } = findQuestionLocation(activeBank, reviewEntry[0]);
+      openQuestion(page, question);
+      return;
+    }
+    openMap();
+  }
+
+  function startRandomPractice() {
+    const playable = activeBank.pages.flatMap((page) =>
+      page.questions
+        .filter((question) => subject !== "english" || isPlayableQuestion(question, subject))
+        .map((question) => ({ page, question }))
+    );
+    const item = playable[Math.floor(Math.random() * playable.length)];
+    if (item) openQuestion(item.page, item.question);
   }
 
   function switchSubject(nextSubject) {
@@ -2253,6 +2458,7 @@ function App() {
           selected: nextSelected,
           text: currentText,
           updatedAt: new Date().toISOString(),
+          questionId: activeQuestionId,
           subject,
           pageId: activePage?.id,
           questionNo: activeQuestion?.no ?? activeQuestionIndex + 1,
@@ -2274,6 +2480,7 @@ function App() {
           selected: current.selected || [],
           text,
           updatedAt: new Date().toISOString(),
+          questionId: activeQuestionId,
           subject,
           pageId: activePage?.id,
           questionNo: activeQuestion?.no ?? activeQuestionIndex + 1,
@@ -2331,6 +2538,7 @@ function App() {
 
   function addSelectionMark(type) {
     if (!selectionMenu?.text) return;
+    const bounds = getWorkbenchBounds();
     updateActiveRecord((record) => ({
       ...record,
       marks: [
@@ -2339,6 +2547,8 @@ function App() {
           id: createId("mark"),
           type,
           text: selectionMenu.text,
+          x: subject === "math" ? clampNumber(selectionMenu.x - 118, bounds.minX, bounds.maxX) : undefined,
+          y: subject === "math" ? clampNumber(selectionMenu.y + 46, bounds.minY, bounds.maxY) : undefined,
           createdAt: new Date().toISOString(),
         },
       ],
@@ -2426,6 +2636,41 @@ function App() {
     const id = createId("card");
     const x = Math.min(window.innerWidth - 300, Math.max(76, event.clientX - 118));
     const y = Math.min(window.innerHeight - 180, Math.max(76, event.clientY - 34));
+
+    if (subject === "math") {
+      const bounds = getWorkbenchBounds();
+      const markX = clampNumber(x, bounds.minX, bounds.maxX);
+      const markY = clampNumber(y, bounds.minY, bounds.maxY);
+      updateActiveRecord((record) => ({
+        ...record,
+        marks: [
+          ...(record.marks || []),
+          {
+            id,
+            type,
+            text: selectionMenu.text,
+            x: markX,
+            y: markY,
+            createdAt: new Date().toISOString(),
+          },
+        ],
+      }));
+      applySoftSelectionHighlight(selectionMenu.range);
+      dragSessionRef.current = {
+        type: "mark-move",
+        questionId: activeQuestionId,
+        markId: id,
+        pointerX: event.clientX,
+        pointerY: event.clientY,
+        startX: markX,
+        startY: markY,
+      };
+      event.currentTarget.setPointerCapture?.(event.pointerId);
+      window.getSelection?.()?.removeAllRanges();
+      setSelectionMenu(null);
+      return;
+    }
+
     setFloatingCards((cards) => [
       ...cards,
       {
@@ -2483,6 +2728,25 @@ function App() {
       type: "chain-note-move",
       questionId: activeQuestionId,
       noteId: note.id,
+      pointerX: event.clientX,
+      pointerY: event.clientY,
+      startX: left,
+      startY: top,
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  }
+
+  function startMarkDrag(event, mark) {
+    if (event.button !== 0) return;
+    const bounds = getWorkbenchBounds();
+    const left = Number.isFinite(mark.x)
+      ? clampNumber(mark.x, bounds.minX, bounds.maxX)
+      : clampNumber(typeof window === "undefined" ? 520 : window.innerWidth - 350, bounds.minX, bounds.maxX);
+    const top = Number.isFinite(mark.y) ? clampNumber(mark.y, bounds.minY, bounds.maxY) : 250;
+    dragSessionRef.current = {
+      type: "mark-move",
+      questionId: activeQuestionId,
+      markId: mark.id,
       pointerX: event.clientX,
       pointerY: event.clientY,
       startX: left,
@@ -2671,7 +2935,7 @@ function App() {
                     <span className="text-[15px] font-bold leading-none truncate">Question Bank</span>
                   </button>
                   <button
-                    onClick={() => setView("home")}
+                    onClick={startReviewPractice}
                     className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-left text-slate-600 transition-all hover:bg-background hover:text-text-main"
                   >
                     <span className="material-symbols-outlined shrink-0 text-[22px]">cancel</span>
@@ -2844,11 +3108,11 @@ function App() {
       {/* Main Content */}
       <div className="relative flex-1 overflow-hidden min-w-0">
         {view === "home" ? (
-        <HomePage
+          <HomePage
             subject={subject}
             subjectConfig={subjectConfig}
             currentPage={activePage || activeBank.pages[0]}
-            onContinue={() => startQuiz(activePage || activeBank.pages[0])}
+            onContinue={continueStudy}
             onOpenMap={openMap}
             onSearch={submitHomeSearch}
             keyword={keyword}
@@ -2857,6 +3121,10 @@ function App() {
             totalQuestions={totalQuestions}
             playableTotalQuestions={playableTotalQuestions}
             reviewCount={reviewRecords.length}
+            progress={studyProgress}
+            onDailyPractice={startDailyPractice}
+            onReviewPractice={startReviewPractice}
+            onRandomPractice={startRandomPractice}
           />
         ) : view === "map" ? (
           <div className="flex h-full flex-col">
@@ -3147,6 +3415,8 @@ function App() {
                             blocks={activeQuestion?.blocks || []}
                             selectedAnswers={activeAnswer}
                             onSelectAnswer={selectAnswer}
+                            textAnswer={activeAnswerText}
+                            onTextAnswerChange={updateTextAnswer}
                           />
                         )}
                       </div>
@@ -3257,6 +3527,15 @@ function App() {
                       index={index}
                       onPointerDown={startChainNoteDrag}
                       onRemove={removeNote}
+                    />
+                  ))}
+                  {(activeRecord.marks || []).map((mark, index) => (
+                    <MathMarkBlock
+                      key={mark.id}
+                      mark={mark}
+                      index={index}
+                      onPointerDown={startMarkDrag}
+                      onRemove={removeMark}
                     />
                   ))}
                   <MathModuleDragPreview preview={moduleDragPreview} />

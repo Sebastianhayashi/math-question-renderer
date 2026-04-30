@@ -146,9 +146,8 @@ function Option({ label, content, visuals = [], isSelected = false, onSelect }) 
   };
 
   return (
-    <button
-      onClick={handleClick}
-      className="node-button group relative flex w-full items-center gap-4 rounded-xl px-5 py-4 text-left outline-none transition-all border"
+    <div
+      className="node-button group relative flex w-full items-center gap-4 rounded-xl border px-5 py-4 text-left outline-none transition-all"
       style={{
         minHeight: 72,
         background: isSelected ? "rgba(46,103,248,0.08)" : "#fff",
@@ -159,17 +158,20 @@ function Option({ label, content, visuals = [], isSelected = false, onSelect }) 
         transform: isSelected ? "translateY(1px)" : "translateY(0)",
       }}
     >
-      <div
-        className="flex size-9 shrink-0 items-center justify-center rounded-full font-display text-sm font-bold transition-colors"
+      <button
+        type="button"
+        onClick={handleClick}
+        className="flex size-10 shrink-0 items-center justify-center rounded-full font-display text-sm font-bold transition-colors"
         style={{
           background: isSelected ? "var(--color-primary)" : "var(--color-background)",
           color: isSelected ? "#fff" : "var(--color-muted)",
         }}
+        aria-label={`选择 ${label}`}
       >
         {label}
-      </div>
+      </button>
       <div
-        className="grid flex-1 gap-3 font-body text-base font-semibold leading-snug transition-colors"
+        className="grid flex-1 select-text gap-3 font-body text-base font-semibold leading-snug transition-colors"
         style={{
           color: isSelected ? "var(--color-primary)" : "var(--color-text-main)",
         }}
@@ -187,7 +189,18 @@ function Option({ label, content, visuals = [], isSelected = false, onSelect }) 
           </div>
         ) : null}
       </div>
-    </button>
+      <button
+        type="button"
+        onClick={handleClick}
+        className={cx(
+          "hidden shrink-0 rounded-xl px-3 py-2 text-[11px] font-black transition-colors sm:block",
+          isSelected ? "bg-primary text-white" : "bg-slate-50 text-slate-400 hover:bg-primary/10 hover:text-primary"
+        )}
+        aria-label={`切换选择 ${label}`}
+      >
+        {isSelected ? "已选" : "选择"}
+      </button>
+    </div>
   );
 }
 
@@ -251,20 +264,32 @@ function VisualBlock({ visual, compact = false }) {
   );
 }
 
-function AnswerSpace({ variant }) {
+function AnswerSpace({ variant, value = "", onChange }) {
   const rows = variant === "short-answer" ? 6 : 1;
+  const isShortAnswer = variant === "short-answer";
 
   return (
     <div className="rounded-xl border-2 border-dashed border-slate-200 bg-white p-6 shadow-float transition-colors focus-within:border-primary">
       <div className="mb-4 flex items-center gap-3 font-bold text-muted">
         <span className="material-symbols-outlined text-[20px]">edit_square</span>
-        <span className="text-xs uppercase tracking-widest">{variant === "short-answer" ? "Solution Draft" : "Fill the Void"}</span>
+        <span className="text-xs uppercase tracking-widest">{isShortAnswer ? "Solution Draft" : "Fill the Void"}</span>
       </div>
-      <div className="grid gap-3">
-        {Array.from({ length: rows }).map((_, index) => (
-          <div key={index} className="h-10 border-b-2 border-slate-100" />
-        ))}
-      </div>
+      {isShortAnswer ? (
+        <textarea
+          value={value}
+          onChange={(event) => onChange?.(event.target.value)}
+          rows={rows}
+          placeholder="写下关键步骤或最终结果..."
+          className="min-h-[190px] w-full resize-y rounded-xl border border-slate-100 bg-slate-50/70 px-4 py-3 text-[15px] font-bold leading-relaxed text-slate-700 outline-none transition-colors placeholder:text-slate-300 focus:border-primary focus:bg-white"
+        />
+      ) : (
+        <input
+          value={value}
+          onChange={(event) => onChange?.(event.target.value)}
+          placeholder="输入答案..."
+          className="h-13 w-full rounded-xl border border-slate-100 bg-slate-50/70 px-4 text-[17px] font-black text-slate-800 outline-none transition-colors placeholder:text-slate-300 focus:border-primary focus:bg-white"
+        />
+      )}
     </div>
   );
 }
@@ -358,7 +383,13 @@ function SolutionBlock({ answer, analysis, solution }) {
   );
 }
 
-export function QuestionBlocks({ blocks, selectedAnswers = [], onSelectAnswer }) {
+export function QuestionBlocks({
+  blocks,
+  selectedAnswers = [],
+  onSelectAnswer,
+  textAnswer = "",
+  onTextAnswerChange,
+}) {
   return (
     <div className="grid gap-5">
       {blocks.map((block, index) => {
@@ -376,7 +407,16 @@ export function QuestionBlocks({ blocks, selectedAnswers = [], onSelectAnswer })
         }
         if (block.type === "diagram") return <DiagramBlock key={index} name={block.name} />;
         if (block.type === "visual") return <VisualBlock key={index} visual={block.visual} />;
-        if (block.type === "answer-space") return <AnswerSpace key={index} variant={block.variant} />;
+        if (block.type === "answer-space") {
+          return (
+            <AnswerSpace
+              key={index}
+              variant={block.variant}
+              value={textAnswer}
+              onChange={onTextAnswerChange}
+            />
+          );
+        }
         if (block.type === "notice") return <NoticeBlock key={index} content={block.content} />;
         if (block.type === "warning") return <NoticeBlock key={index} content={block.content} tone="warning" />;
         if (block.type === "solution") {
