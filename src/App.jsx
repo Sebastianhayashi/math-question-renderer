@@ -5,6 +5,7 @@ import { MarkdownRichText, RichText } from "./components/RichText.jsx";
 import { questionBank } from "./data/questionBank.js";
 import { cet6QuestionBank } from "./data/cet6QuestionBank.js";
 import { cx } from "./lib/cx.js";
+import VisualReasoningCanvas from "./components/VisualReasoningCanvas.jsx";
 
 import topicFunctionIcon from "./assets/topic-function.png";
 import topicInequalityIcon from "./assets/topic-inequality.png";
@@ -2504,6 +2505,7 @@ function App() {
 
   const normalizedKeyword = keyword.trim();
   const questionShellRef = useRef(null);
+  const canvasApiRef = useRef(null); // Visual Reasoning Canvas API
   const dragSessionRef = useRef(null);
   const activeLinkModeRef = useRef(null);
   const linkSourceIdRef = useRef(null);
@@ -3031,8 +3033,25 @@ function App() {
 
       if (session?.type === "module-pickup" && session.isDragging && session.questionId) {
         const tag = getMathChainTag(session.blockType);
-        const bounds = getWorkbenchBounds();
         const text = session.text || tag.hint;
+
+        if (subject === "math" && canvasApiRef.current?.createFromTool) {
+          canvasApiRef.current.createFromTool(session.blockType, session.text || "", {
+            clientX: event.clientX,
+            clientY: event.clientY,
+          });
+          setActiveNoteTag(session.blockType);
+          if (session.text) setNoteDraft("");
+          setModuleDragPreview(null);
+          setLinkDragPreview(null);
+          setSnapTargetZoneId(null);
+          setMagneticZoneId(null);
+          setAlignGuides([]);
+          dragSessionRef.current = null;
+          return;
+        }
+
+        const bounds = getWorkbenchBounds();
 
         setRecords((previous) => {
           const current = previous[session.questionId] || createEmptyRecord();
@@ -3275,6 +3294,16 @@ function App() {
 
   function addSelectionNote(type) {
     if (!selectionMenu?.text) return;
+    if (subject === "math" && canvasApiRef.current?.createFromTool) {
+      canvasApiRef.current.createFromTool(type, selectionMenu.text, {
+        clientX: selectionMenu.x,
+        clientY: selectionMenu.y,
+      });
+      applySoftSelectionHighlight(selectionMenu.range);
+      window.getSelection?.()?.removeAllRanges();
+      setSelectionMenu(null);
+      return;
+    }
     const tag = getMathChainTag(type);
     const bounds = getWorkbenchBounds();
     updateActiveRecord((record) => ({
@@ -3323,6 +3352,20 @@ function App() {
     const selectedText = (typeof window !== "undefined" && window.getSelection) ? window.getSelection().toString().trim() : "";
     const rawText = selectedText || noteDraft.trim() || tag.hint;
     const text = rawText.length > 200 ? rawText.slice(0, 200) + "…" : rawText;
+
+    if (subject === "math" && canvasApiRef.current?.createFromTool) {
+      const range = typeof window !== "undefined" && window.getSelection?.()?.rangeCount
+        ? window.getSelection().getRangeAt(0)
+        : null;
+      const rect = range?.getBoundingClientRect?.();
+      canvasApiRef.current.createFromTool(type, selectedText || noteDraft.trim(), rect ? {
+        clientX: rect.left + rect.width / 2,
+        clientY: rect.bottom,
+      } : undefined);
+      setNoteDraft("");
+      if (selectedText) window.getSelection?.()?.removeAllRanges();
+      return;
+    }
 
     updateActiveRecord((record) => {
       const existingNotes = record.notes || [];
@@ -3377,6 +3420,10 @@ function App() {
   }
 
   function arrangeWorkbenchBlocks() {
+    if (subject === "math" && canvasApiRef.current?.arrange) {
+      canvasApiRef.current.arrange();
+      return;
+    }
     updateActiveRecord((record) => {
       const sortedNotes = [...(record.notes || [])].sort((a, b) => {
         const stageA = MATH_CHAIN_STAGES.findIndex((stage) => stage.id === getMathChainStage(a));
@@ -3462,6 +3509,10 @@ function App() {
   }
 
   function addWorkspaceZone() {
+    if (subject === "math" && canvasApiRef.current?.createGroup) {
+      canvasApiRef.current.createGroup();
+      return;
+    }
     updateActiveRecord((record) => {
       const layout = getDefaultZoneLayout(record.zones?.length || 0);
       return {
@@ -4668,43 +4719,30 @@ function App() {
                 onStartDrag={startMetadataDrag}
               />
               <div className="grid h-full grid-cols-[minmax(0,1fr)_auto]">
-                <div className="overflow-auto">
-                  <div className="mx-auto max-w-4xl px-6 pb-8 pt-8">
-                    {/* Question card */}
-                    <div className="relative mb-8">
-                      <div
-                        ref={questionShellRef}
-                        onPointerDown={handleQuestionPointerDown}
-                        onMouseUp={handleQuestionSelection}
-                        onKeyUp={handleQuestionSelection}
-                        className="rounded-2xl bg-background p-7 shadow-float"
-                      >
-                        {subject === "english" ? (
-                          <EnglishQuestionViewer
-                            question={activeQuestion}
-                            selectedAnswers={activeAnswer}
-                            onSelectAnswer={selectAnswer}
-                            textAnswer={activeAnswerText}
-                            onTextAnswerChange={updateTextAnswer}
-                          />
-                        ) : (
-                          <QuestionBlocks
-                            blocks={activeQuestion?.blocks || []}
-                            selectedAnswers={activeAnswer}
-                            onSelectAnswer={selectAnswer}
-                            textAnswer={activeAnswerText}
-                            onTextAnswerChange={updateTextAnswer}
-                          />
-                        )}
-                      </div>
-                    </div>
-
-
-
-                    {/* Footer: question dots + next button */}
-                    <div className="flex flex-col gap-4">
-                      {/* Question dots */}
-                      <div className="flex flex-wrap gap-2">
+                <div
+                  className="overflow-auto"
+                  ref={questionShellRef}
+                  onPointerDown={handleQuestionPointerDown}
+                  onMouseUp={handleQuestionSelection}
+                  onKeyUp={handleQuestionSelection}
+                >
+                  {subject === "math" ? (
+                    /* ── Visual Reasoning Canvas (math only) ── */
+                    <div className="relative" style={{ minHeight: "100%" }}>
+                      <VisualReasoningCanvas
+                        questionId={activeQuestionId}
+                        question={activeQuestion}
+                        subject={subject}
+                        selectedAnswers={activeAnswer}
+                        onSelectAnswer={selectAnswer}
+                        textAnswer={activeAnswerText}
+                        onTextAnswerChange={updateTextAnswer}
+                        oldNotes={activeRecord.notes || []}
+                        onCanvasReady={(api) => { canvasApiRef.current = api; }}
+                      />
+                      {/* Footer: dots + next button — sits below canvas */}
+                      <div className="sticky bottom-24 z-30 flex flex-col gap-4 px-6 pb-8 pt-4">
+                        <div className="flex flex-wrap gap-2">
                         {visibleQuestions.map((q, idx) => {
                           const record = answerRecords[q.id] || {};
                           const selected = record.selected || [];
@@ -4752,7 +4790,72 @@ function App() {
                         </button>
                       </div>
                     </div>
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="mx-auto max-w-4xl px-6 pb-8 pt-8">
+                      <div className="relative mb-8">
+                        <div
+                          className="rounded-2xl bg-background p-7 shadow-float"
+                        >
+                          <EnglishQuestionViewer
+                            question={activeQuestion}
+                            selectedAnswers={activeAnswer}
+                            onSelectAnswer={selectAnswer}
+                            textAnswer={activeAnswerText}
+                            onTextAnswerChange={updateTextAnswer}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-4">
+                        <div className="flex flex-wrap gap-2">
+                          {visibleQuestions.map((q, idx) => {
+                            const record = answerRecords[q.id] || {};
+                            const selected = record.selected || [];
+                            const hasAnswer = selected.length > 0 || Boolean(record.text?.trim());
+                            const answerTitle = selected.length > 0 ? `已选择 ${selected.join("、")}` : "已填写答案";
+                            return (
+                              <button
+                                key={q.id}
+                                onClick={() => setQuestionId(q.id)}
+                                title={hasAnswer ? answerTitle : undefined}
+                                className={cx(
+                                  "relative size-9 rounded-full text-sm font-bold transition-all",
+                                  q.id === activeQuestion?.id
+                                    ? "bg-primary text-white shadow-md scale-110"
+                                    : hasAnswer
+                                      ? "bg-primary/10 text-primary ring-1 ring-primary/30"
+                                      : "bg-white text-muted hover:bg-slate-100"
+                                )}
+                                style={
+                                  q.id === activeQuestion?.id
+                                    ? { background: "var(--color-primary)", color: "#fff" }
+                                    : {}
+                                }
+                              >
+                                {q.no ?? idx + 1}
+                                {hasAnswer && q.id !== activeQuestion?.id && (
+                                  <span className="absolute -right-0.5 -top-0.5 size-2 rounded-full bg-primary" />
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <div className="flex justify-end">
+                          <button
+                            onClick={goNextQuestion}
+                            className="node-button flex items-center gap-3 rounded-full px-8 py-3.5 font-display text-base font-bold uppercase tracking-wider text-white shadow-3d-node-primary"
+                            style={{ background: "var(--color-primary)" }}
+                          >
+                            <span>{isLastQuestion ? "完成练习" : "Next Mission"}</span>
+                            <span className="material-symbols-outlined text-[20px]">
+                              {isLastQuestion ? "check_circle" : "arrow_forward"}
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {subject !== "math" && (
@@ -4815,68 +4918,7 @@ function App() {
                     onStartDrag={startPaletteDrag}
                     onStartModuleDrag={startPaletteModuleDrag}
                   />
-
-
-                  <MathWorkspaceLinks
-                    notes={activeRecord.notes || []}
-                    links={activeRecord.links || []}
-                    preview={linkDragPreview}
-                    onUpdateLabel={updateLinkLabel}
-                  />
-                  <MathFocusBar zone={focusedZone} onExit={() => setFocusZoneId(null)} />
-                  {(activeRecord.zones || []).map((zone) => (
-                    <MathWorkspaceZone
-                      key={zone.id}
-                      zone={zone}
-                      isSnapTarget={snapTargetZoneId === zone.id}
-                      isMagnetic={magneticZoneId === zone.id && snapTargetZoneId !== zone.id}
-                      isFocused={focusZoneId === zone.id}
-                      isDimmed={Boolean(focusZoneId && focusZoneId !== zone.id)}
-                      notesCount={[
-                        ...(activeRecord.notes || []),
-                        ...(activeRecord.marks || []),
-                      ].filter((item) => item.zoneId === zone.id).length}
-                      onPointerDown={startZoneDrag}
-                      onResizePointerDown={startZoneResize}
-                      onRemove={removeWorkspaceZone}
-                      onFocus={setFocusZoneId}
-                      onExitFocus={() => setFocusZoneId(null)}
-                    />
-                  ))}
-                  {(activeRecord.notes || []).map((note, index) => (
-                    <MathWorkbenchBlock
-                      key={note.id}
-                      note={note}
-                      index={index}
-                      isLinkSource={linkSourceId === note.id}
-                      isLinkTarget={linkDragPreview?.targetId === note.id}
-                      isSelected={selectedNoteIds.includes(note.id)}
-                      isDimmed={Boolean(focusZoneId && note.zoneId !== focusZoneId)}
-                      activeLinkMode={activeLinkMode}
-                      onPointerDown={startChainNoteDrag}
-                      onRemove={removeNote}
-                      onUpdateText={updateWorkbenchNoteText}
-                      onLinkClick={handleModuleLinkClick}
-                      onStartLinkDrag={startModuleLinkDrag}
-                    />
-                  ))}
-                  <MathSelectionOverlay
-                    active={selectionMode}
-                    rect={selectionRect}
-                    selectedCount={selectedNoteIds.length}
-                    onPointerDown={startBoxSelect}
-                  />
-                  {(activeRecord.marks || []).map((mark, index) => (
-                    <MathMarkBlock
-                      key={mark.id}
-                      mark={mark}
-                      index={index}
-                      onPointerDown={startMarkDrag}
-                      onRemove={removeMark}
-                    />
-                  ))}
                   <MathModuleDragPreview preview={moduleDragPreview} />
-                  <MathAlignGuides guides={alignGuides} />
                 </>
               )}
               <SelectionMarkMenu

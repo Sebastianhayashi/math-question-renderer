@@ -1,0 +1,82 @@
+diff --git a/src/App.jsx b/src/App.jsx
+index 19b92b8..2006c21 100644
+--- a/src/App.jsx
++++ b/src/App.jsx
+@@ -5,6 +5,7 @@ import { MarkdownRichText, RichText } from "./components/RichText.jsx";
+ import { questionBank } from "./data/questionBank.js";
+ import { cet6QuestionBank } from "./data/cet6QuestionBank.js";
+ import { cx } from "./lib/cx.js";
++import VisualReasoningCanvas from "./components/VisualReasoningCanvas.jsx";
+ 
+ import topicFunctionIcon from "./assets/topic-function.png";
+ import topicInequalityIcon from "./assets/topic-inequality.png";
+@@ -2504,6 +2505,7 @@ function App() {
+ 
+   const normalizedKeyword = keyword.trim();
+   const questionShellRef = useRef(null);
++  const canvasApiRef = useRef(null); // Visual Reasoning Canvas API
+   const dragSessionRef = useRef(null);
+   const activeLinkModeRef = useRef(null);
+   const linkSourceIdRef = useRef(null);
+@@ -4668,43 +4670,24 @@ function App() {
+                 onStartDrag={startMetadataDrag}
+               />
+               <div className="grid h-full grid-cols-[minmax(0,1fr)_auto]">
+-                <div className="overflow-auto">
+-                  <div className="mx-auto max-w-4xl px-6 pb-8 pt-8">
+-                    {/* Question card */}
+-                    <div className="relative mb-8">
+-                      <div
+-                        ref={questionShellRef}
+-                        onPointerDown={handleQuestionPointerDown}
+-                        onMouseUp={handleQuestionSelection}
+-                        onKeyUp={handleQuestionSelection}
+-                        className="rounded-2xl bg-background p-7 shadow-float"
+-                      >
+-                        {subject === "english" ? (
+-                          <EnglishQuestionViewer
+-                            question={activeQuestion}
+-                            selectedAnswers={activeAnswer}
+-                            onSelectAnswer={selectAnswer}
+-                            textAnswer={activeAnswerText}
+-                            onTextAnswerChange={updateTextAnswer}
+-                          />
+-                        ) : (
+-                          <QuestionBlocks
+-                            blocks={activeQuestion?.blocks || []}
+-                            selectedAnswers={activeAnswer}
+-                            onSelectAnswer={selectAnswer}
+-                            textAnswer={activeAnswerText}
+-                            onTextAnswerChange={updateTextAnswer}
+-                          />
+-                        )}
+-                      </div>
+-                    </div>
+-
+-
+-
+-                    {/* Footer: question dots + next button */}
+-                    <div className="flex flex-col gap-4">
+-                      {/* Question dots */}
+-                      <div className="flex flex-wrap gap-2">
++                <div className="overflow-auto" ref={questionShellRef}>
++                  {subject === "math" ? (
++                    /* ── Visual Reasoning Canvas (math only) ── */
++                    <div className="relative" style={{ minHeight: "100%" }}>
++                      <VisualReasoningCanvas
++                        questionId={activeQuestionId}
++                        question={activeQuestion}
++                        subject={subject}
++                        selectedAnswers={activeAnswer}
++                        onSelectAnswer={selectAnswer}
++                        textAnswer={activeAnswerText}
++                        onTextAnswerChange={updateTextAnswer}
++                        oldNotes={activeRecord.notes || []}
++                        onCanvasReady={(api) => { canvasApiRef.current = api; }}
++                      />
++                      {/* Footer: dots + next button — sits below canvas */}
++                      <div className="px-6 pb-8 pt-4 flex flex-col gap-4">
++                        <div className="flex flex-wrap gap-2">
+                         {visibleQuestions.map((q, idx) => {
+                           const record = answerRecords[q.id] || {};
+                           const selected = record.selected || [];

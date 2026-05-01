@@ -1,0 +1,6 @@
+ M src/App.jsx
+?? .backup/visual-reasoning-canvas-20260501-1444/
+?? .backup/visual-reasoning-canvas-20260501-1451/
+?? src/components/VisualReasoningCanvas.jsx
+?? src/hooks/useVisualCanvas.js
+?? src/lib/canvasState.js
