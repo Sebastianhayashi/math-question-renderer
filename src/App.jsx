@@ -3303,37 +3303,59 @@ function App() {
     const tag = getMathChainTag(type);
     // Use selected text from the page if available, then noteDraft, then hint
     const selectedText = (typeof window !== "undefined" && window.getSelection) ? window.getSelection().toString().trim() : "";
-    const text = selectedText || noteDraft.trim() || tag.hint;
+    const rawText = selectedText || noteDraft.trim() || tag.hint;
+    // Truncate to 200 chars for module content
+    const text = rawText.length > 200 ? rawText.slice(0, 200) + "…" : rawText;
 
     updateActiveRecord((record) => {
-      const zones = record.zones?.length
-        ? record.zones
-        : [
-          {
-            id: createId("zone"),
-            title: "思考区",
-            ...getDefaultZoneLayout(0),
-            createdAt: new Date().toISOString(),
-          },
-        ];
-      const targetZone = zones[0];
-      const order = getNextZoneOrder({ ...record, zones }, targetZone.id);
-      const position = snapBlockToZone(targetZone, order, MODULE_SIZE.width, MODULE_SIZE.height);
+      const existingNotes = record.notes || [];
+
+      // If zones exist, use the existing zone-snapping logic
+      if (record.zones?.length) {
+        const targetZone = record.zones[0];
+        const order = getNextZoneOrder(record, targetZone.id);
+        const position = snapBlockToZone(targetZone, order, MODULE_SIZE.width, MODULE_SIZE.height);
+        return {
+          ...record,
+          notes: [
+            ...existingNotes,
+            {
+              id: createId("note"),
+              type,
+              stage: tag.stage,
+              order: existingNotes.length,
+              x: position.x,
+              y: position.y,
+              zoneId: targetZone.id,
+              zoneOrder: order,
+              text,
+              createdAt: new Date().toISOString(),
+            },
+          ],
+        };
+      }
+
+      // No zones: place freely below the question card area
+      // Stagger blocks so they don't overlap
+      const n = existingNotes.length;
+      const baseX = typeof window === "undefined" ? 260 : Math.min(260, window.innerWidth - MODULE_SIZE.width - 40);
+      const baseY = typeof window === "undefined" ? 420 : Math.max(360, Math.min(window.innerHeight * 0.52, window.innerHeight - 200));
+      const col = n % 3;
+      const row = Math.floor(n / 3);
+      const x = clampNumber(baseX + col * (MODULE_SIZE.width + 16), 12, (typeof window === "undefined" ? 980 : window.innerWidth - MODULE_SIZE.width - 20));
+      const y = clampNumber(baseY + row * (MODULE_SIZE.height + 14), 80, (typeof window === "undefined" ? 620 : window.innerHeight - MODULE_SIZE.height - 80));
 
       return {
         ...record,
-        zones,
         notes: [
-          ...(record.notes || []),
+          ...existingNotes,
           {
             id: createId("note"),
             type,
             stage: tag.stage,
-            order: record.notes?.length || 0,
-            x: position.x,
-            y: position.y,
-            zoneId: targetZone.id,
-            zoneOrder: order,
+            order: existingNotes.length,
+            x,
+            y,
             text,
             createdAt: new Date().toISOString(),
           },
