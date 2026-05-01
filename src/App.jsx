@@ -5,6 +5,7 @@ import { MarkdownRichText, RichText } from "./components/RichText.jsx";
 import { questionBank } from "./data/questionBank.js";
 import { cet6QuestionBank } from "./data/cet6QuestionBank.js";
 import { cx } from "./lib/cx.js";
+import ScratchDrawer from "./components/ScratchDrawer.jsx";
 import topicFunctionIcon from "./assets/topic-function.png";
 import topicInequalityIcon from "./assets/topic-inequality.png";
 import topicSetsIcon from "./assets/topic-sets.png";
@@ -4839,6 +4840,11 @@ function App() {
                 />
               ))}
             </div>
+            {/* ── Scratch Drawer ── */}
+            <ScratchDrawer
+              questionId={activeQuestionId}
+              subject={subject}
+            />
           </div>
         )}
       </div>
