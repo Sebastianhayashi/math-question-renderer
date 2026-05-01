@@ -5,7 +5,7 @@ import { MarkdownRichText, RichText } from "./components/RichText.jsx";
 import { questionBank } from "./data/questionBank.js";
 import { cet6QuestionBank } from "./data/cet6QuestionBank.js";
 import { cx } from "./lib/cx.js";
-import ScratchDrawer from "./components/ScratchDrawer.jsx";
+
 import topicFunctionIcon from "./assets/topic-function.png";
 import topicInequalityIcon from "./assets/topic-inequality.png";
 import topicSetsIcon from "./assets/topic-sets.png";
@@ -1094,7 +1094,15 @@ function MathPencilPalette({
         {MATH_CHAIN_TAGS.map((tag) => (
           <button
             key={tag.id}
-            onClick={() => onActiveTagChange(tag.id)}
+            onClick={() => {
+              // If text is selected, directly create a module with that text
+              const sel = window.getSelection?.()?.toString()?.trim();
+              if (sel) {
+                onAddBlock(tag.id);
+              } else {
+                onActiveTagChange(tag.id);
+              }
+            }}
             onPointerDown={(event) => onStartModuleDrag(event, tag.id)}
             title={tag.hint}
             className={cx(
@@ -2493,6 +2501,7 @@ function App() {
   const [toolModules, setToolModules] = useState(loadToolModules);
   const [activeLinkMode, setActiveLinkMode] = useState(null);
   const [linkSourceId, setLinkSourceId] = useState(null);
+
   const normalizedKeyword = keyword.trim();
   const questionShellRef = useRef(null);
   const dragSessionRef = useRef(null);
@@ -3292,7 +3301,9 @@ function App() {
 
   function addWorkbenchBlock(type = activeNoteTag) {
     const tag = getMathChainTag(type);
-    const text = noteDraft.trim() || tag.hint;
+    // Use selected text from the page if available, then noteDraft, then hint
+    const selectedText = (typeof window !== "undefined" && window.getSelection) ? window.getSelection().toString().trim() : "";
+    const text = selectedText || noteDraft.trim() || tag.hint;
 
     updateActiveRecord((record) => {
       const zones = record.zones?.length
@@ -3330,6 +3341,10 @@ function App() {
       };
     });
     setNoteDraft("");
+    // Clear selection if we used it
+    if (selectedText) {
+      window.getSelection?.()?.removeAllRanges();
+    }
   }
 
   function arrangeWorkbenchBlocks() {
@@ -4619,7 +4634,7 @@ function App() {
               <div className="grid h-full grid-cols-[minmax(0,1fr)_auto]">
                 <div className="overflow-auto">
                   <div className="mx-auto max-w-4xl px-6 pb-8 pt-8">
-                    {/* Question card with floating tag */}
+                    {/* Question card */}
                     <div className="relative mb-8">
                       <div
                         ref={questionShellRef}
@@ -4647,6 +4662,8 @@ function App() {
                         )}
                       </div>
                     </div>
+
+
 
                     {/* Footer: question dots + next button */}
                     <div className="flex flex-col gap-4">
@@ -4735,6 +4752,7 @@ function App() {
               </div>
               {subject === "math" && (
                 <>
+
                   <MathPencilPalette
                     activeTag={activeNoteTag}
                     onActiveTagChange={setActiveNoteTag}
@@ -4761,6 +4779,8 @@ function App() {
                     onStartDrag={startPaletteDrag}
                     onStartModuleDrag={startPaletteModuleDrag}
                   />
+
+
                   <MathWorkspaceLinks
                     notes={activeRecord.notes || []}
                     links={activeRecord.links || []}
@@ -4840,11 +4860,7 @@ function App() {
                 />
               ))}
             </div>
-            {/* ── Scratch Drawer ── */}
-            <ScratchDrawer
-              questionId={activeQuestionId}
-              subject={subject}
-            />
+
           </div>
         )}
       </div>

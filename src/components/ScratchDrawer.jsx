@@ -1,368 +1,405 @@
 /**
- * ScratchDrawer v1 — Bottom scratch drawer for math quiz page.
+ * ScratchDrawer v2.1 — Modular scratch workbench.
  *
- * Structure:
- *   ScratchDrawer (root, manages state + localStorage)
- *   ├─ DrawerHandle (collapsed bar)
- *   ├─ DrawerHeader (half/focus header bar)
- *   ├─ MaterialStrip (horizontal chip row)
- *   ├─ ScratchEditor (text draft area)
- *   ├─ KeySteps (key step list)
- *   └─ AnswerSlot (candidate answer input)
+ * Layout (half / focus):
+ *   ┌──────────────────────────────────────────┐
+ *   │ Header: title · count · save · 专注 · ↓  │
+ *   ├──────────────────────────────────────────┤
+ *   │ Materials (chip bar) — 加入选中           │
+ *   ├─────────────────────────┬────────────────┤
+ *   │ Workspace (70%)         │ Results (30%)  │
+ *   │ scratch / derivation /  │ 关键步骤        │
+ *   │ question / other        ├────────────────┤
+ *   │                         │ 候选答案        │
+ *   └─────────────────────────┴────────────────┘
  */
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState } from "react";
+import useModularScratchWorkbench from "../hooks/useModularScratchWorkbench.js";
+import BlockCard from "./BlockCard.jsx";
+import {
+  BLOCK_TYPES,
+  BLOCK_ZONES,
+} from "../lib/solvingBlocks.js";
 
-// ─── Constants ───────────────────────────────────────────────────────────────
+// ─── Heights ──────────────────────────────────────────────────────────────────
 
-const SCRATCH_KEY_PREFIX = "scratch-drawer-v1:";
-
-const MATERIAL_TYPES = [
-  { id: "condition", label: "条件", color: "rgba(46,103,248,0.10)", border: "rgba(46,103,248,0.28)", text: "#1d4ed8" },
-  { id: "goal",      label: "目标",  color: "rgba(20,216,109,0.10)", border: "rgba(20,216,109,0.30)", text: "#047857" },
-  { id: "variable",  label: "变量",  color: "rgba(245,158,11,0.10)", border: "rgba(245,158,11,0.30)", text: "#92400e" },
-  { id: "other",     label: "其他",  color: "rgba(148,163,184,0.12)", border: "rgba(148,163,184,0.30)", text: "#475569" },
-];
-
-const HEIGHTS = {
-  collapsed: 52,
-  half: Math.round(window?.innerHeight * 0.33 || 320),
-  focus: Math.round(window?.innerHeight * 0.60 || 520),
-};
-
-// ─── Utilities ───────────────────────────────────────────────────────────────
-
-function createScratchId() {
-  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
-  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-}
-
-function createEmptyScratch(questionId) {
-  return {
-    questionId: questionId || "",
-    materials: [],
-    scratchText: "",
-    keySteps: [],
-    answerDraft: "",
-    updatedAt: Date.now(),
-  };
-}
-
-function loadScratch(questionId) {
-  if (!questionId || typeof window === "undefined") return createEmptyScratch(questionId);
-  try {
-    const raw = window.localStorage.getItem(SCRATCH_KEY_PREFIX + questionId);
-    if (!raw) return createEmptyScratch(questionId);
-    const parsed = JSON.parse(raw);
-    return {
-      ...createEmptyScratch(questionId),
-      ...parsed,
-    };
-  } catch {
-    return createEmptyScratch(questionId);
+function getDrawerHeight(state) {
+  if (typeof window === "undefined") {
+    return state === "collapsed" ? 52 : state === "focus" ? 480 : 300;
   }
+  if (state === "collapsed") return 52;
+  if (state === "focus") return Math.round(window.innerHeight * 0.58);
+  // half — compact: show workbench without covering the question
+  return Math.min(340, Math.round(window.innerHeight * 0.35));
 }
 
-function saveScratch(data) {
-  if (!data?.questionId || typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(
-      SCRATCH_KEY_PREFIX + data.questionId,
-      JSON.stringify({ ...data, updatedAt: Date.now() })
-    );
-  } catch {
-    // storage full — ignore
-  }
-}
+// ─── Zone drop wrapper ────────────────────────────────────────────────────────
 
-function getMaterialType(id) {
-  return MATERIAL_TYPES.find((t) => t.id === id) || MATERIAL_TYPES[3];
-}
-
-// ─── Debounce hook ───────────────────────────────────────────────────────────
-
-function useDebounce(fn, delay) {
-  const timer = useRef(null);
-  return useCallback(
-    (...args) => {
-      clearTimeout(timer.current);
-      timer.current = setTimeout(() => fn(...args), delay);
-    },
-    [fn, delay]
-  );
-}
-
-// ─── Sub-components ──────────────────────────────────────────────────────────
-
-/** Material chip */
-function MaterialChip({ material, onRemove, onTypeChange }) {
-  const [showTypeMenu, setShowTypeMenu] = useState(false);
-  const mtype = getMaterialType(material.type);
+function ZoneDrop({ zone, onDropBlock, className = "", style = {}, children }) {
+  const [over, setOver] = useState(false);
 
   return (
-    <span
-      className="relative inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-bold leading-none"
-      style={{ background: mtype.color, borderColor: mtype.border, color: mtype.text }}
+    <div
+      className={className}
+      style={{
+        ...style,
+        outline: over ? "1.5px dashed rgba(46,103,248,0.5)" : undefined,
+        outlineOffset: over ? "-2px" : undefined,
+        borderRadius: over ? 12 : undefined,
+        transition: "outline 0.12s ease",
+      }}
+      onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = "move"; setOver(true); }}
+      onDragLeave={() => setOver(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setOver(false);
+        const id = e.dataTransfer.getData("text/plain");
+        if (id) onDropBlock(id, zone, Infinity);
+      }}
     >
-      {/* Type label button */}
-      <button
-        onClick={() => setShowTypeMenu((v) => !v)}
-        className="font-black opacity-80 hover:opacity-100 transition-opacity"
-        title="切换类型"
-        aria-label="切换类型"
-      >
-        {mtype.label}
-      </button>
-
-      {/* Type dropdown */}
-      {showTypeMenu && (
-        <span
-          className="absolute bottom-full left-0 mb-1 z-50 flex flex-col gap-0.5 rounded-xl border border-slate-200 bg-white p-1 shadow-lg"
-          style={{ minWidth: 72 }}
-        >
-          {MATERIAL_TYPES.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => {
-                onTypeChange(material.id, t.id);
-                setShowTypeMenu(false);
-              }}
-              className="rounded-lg px-2 py-1 text-left text-[11px] font-bold transition-colors hover:bg-slate-50"
-              style={{ color: t.text }}
-            >
-              {t.label}
-            </button>
-          ))}
-        </span>
-      )}
-
-      {/* Content */}
-      <span className="max-w-[160px] truncate opacity-90" title={material.content}>
-        {material.content}
-      </span>
-
-      {/* Delete */}
-      <button
-        onClick={() => onRemove(material.id)}
-        className="ml-0.5 grid size-3.5 shrink-0 place-items-center rounded-full opacity-50 hover:opacity-100 hover:bg-black/10 transition-opacity"
-        aria-label="删除素材"
-      >
-        <span className="material-symbols-outlined text-[11px]">close</span>
-      </button>
-    </span>
+      {children}
+    </div>
   );
 }
 
-/** Material strip — horizontal scrollable chip row */
-function MaterialStrip({ materials, onAddFromSelection, onRemove, onTypeChange }) {
+// ─── Materials chip bar ───────────────────────────────────────────────────────
+
+function MaterialsZone({ blocks, onAdd, onUpdate, onDelete, onMove, onDropBlock }) {
+  const [hint, setHint] = useState("");
+
+  function handleAddFromSelection() {
+    const sel = window.getSelection?.()?.toString()?.trim();
+    if (!sel) {
+      setHint("请先选中题目文字");
+      setTimeout(() => setHint(""), 2200);
+      return;
+    }
+    onAdd({ type: BLOCK_TYPES.OTHER, zone: BLOCK_ZONES.MATERIALS, content: sel.slice(0, 120), source: "problem" });
+    window.getSelection?.()?.removeAllRanges();
+  }
+
+  function handleDropOnCard(e, targetBlockId) {
+    e.preventDefault();
+    const draggedId = e.dataTransfer.getData("text/plain");
+    if (!draggedId || draggedId === targetBlockId) return;
+    const idx = blocks.findIndex((b) => b.id === targetBlockId);
+    onDropBlock(draggedId, BLOCK_ZONES.MATERIALS, idx >= 0 ? idx : Infinity);
+  }
+
   return (
-    <div className="flex items-center gap-2 border-b border-slate-100 px-4 py-2">
-      {/* Add from selection button */}
+    <ZoneDrop
+      zone={BLOCK_ZONES.MATERIALS}
+      onDropBlock={onDropBlock}
+      className="flex shrink-0 items-center gap-2 border-b border-slate-100 px-3 py-2"
+    >
+      {/* Add button */}
       <button
-        onClick={onAddFromSelection}
-        className="inline-flex shrink-0 items-center gap-1 rounded-full border border-dashed border-slate-300 bg-white px-2.5 py-1 text-[11px] font-bold text-slate-400 transition-colors hover:border-primary hover:text-primary"
-        title="把选中的文字加入素材条"
+        onClick={handleAddFromSelection}
+        className="inline-flex shrink-0 items-center gap-1 rounded-full border border-dashed border-slate-300 bg-white px-2.5 py-1 text-[11px] font-bold text-slate-400 whitespace-nowrap transition-colors hover:border-primary hover:text-primary"
+        title="选中题目文字后点击，把它加入素材区"
       >
-        <span className="material-symbols-outlined text-[13px]">add</span>
+        <span className="material-symbols-outlined text-[12px]">add</span>
         加入选中
       </button>
 
       {/* Chips */}
-      <div className="flex flex-1 items-center gap-1.5 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-        {materials.length === 0 && (
-          <span className="text-[11px] text-slate-300 select-none">选中题目文字后点「加入选中」</span>
+      <div className="flex flex-1 items-center gap-1.5 overflow-x-auto min-w-0" style={{ scrollbarWidth: "none" }}>
+        {hint && (
+          <span className="shrink-0 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-600">
+            {hint}
+          </span>
         )}
-        {materials.map((m) => (
-          <MaterialChip
-            key={m.id}
-            material={m}
-            onRemove={onRemove}
-            onTypeChange={onTypeChange}
+        {!hint && blocks.length === 0 && (
+          <span className="text-[11px] text-slate-300 select-none whitespace-nowrap">
+            选中题目文字后点「加入选中」
+          </span>
+        )}
+        {blocks.map((block) => (
+          <BlockCard
+            key={block.id}
+            block={block}
+            compact
+            onUpdate={onUpdate}
+            onDelete={onDelete}
+            onMove={onMove}
+            onDragStart={() => {}}
+            onDragOver={() => {}}
+            onDrop={(e) => handleDropOnCard(e, block.id)}
           />
         ))}
       </div>
-    </div>
+    </ZoneDrop>
   );
 }
 
-/** Key steps list */
-function KeySteps({ steps, onAdd, onRemove }) {
-  const [inputVisible, setInputVisible] = useState(false);
-  const [draft, setDraft] = useState("");
-  const inputRef = useRef(null);
+// ─── Workspace zone (left 70%) ────────────────────────────────────────────────
 
-  function handleAdd() {
-    // Try to use selected text first
-    const sel = typeof window !== "undefined" ? window.getSelection?.()?.toString().trim() : "";
-    if (sel) {
-      onAdd(sel);
-      window.getSelection?.()?.removeAllRanges();
-    } else {
-      setInputVisible(true);
-      setTimeout(() => inputRef.current?.focus(), 60);
-    }
-  }
-
-  function commitDraft() {
-    const t = draft.trim();
-    if (t) onAdd(t);
-    setDraft("");
-    setInputVisible(false);
+function WorkspaceZone({ blocks, onAddBlock, onUpdate, onDelete, onMove, onDropBlock }) {
+  function handleDropOnCard(e, targetBlockId) {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("text/plain");
+    if (!id || id === targetBlockId) return;
+    const idx = blocks.findIndex((b) => b.id === targetBlockId);
+    onDropBlock(id, BLOCK_ZONES.WORKSPACE, idx >= 0 ? idx : Infinity);
   }
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <div className="flex items-center justify-between">
-        <span className="text-[11px] font-black uppercase tracking-wider text-slate-400">
-          关键步骤 {steps.length > 0 ? `(${steps.length})` : ""}
-        </span>
+    <ZoneDrop
+      zone={BLOCK_ZONES.WORKSPACE}
+      onDropBlock={onDropBlock}
+      className="flex flex-1 flex-col overflow-hidden border-r border-slate-100"
+    >
+      {/* Zone label + add */}
+      <div className="flex shrink-0 items-center justify-between px-3 pt-2 pb-1">
+        <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">工作区</span>
         <button
-          onClick={handleAdd}
-          className="inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-bold text-primary transition-colors hover:bg-primary/10"
+          onClick={() => onAddBlock({ type: BLOCK_TYPES.SCRATCH, zone: BLOCK_ZONES.WORKSPACE, content: "", source: "user" })}
+          className="flex items-center gap-0.5 rounded-lg px-1.5 py-0.5 text-[10px] font-bold text-primary transition-colors hover:bg-primary/10"
         >
-          <span className="material-symbols-outlined text-[13px]">add</span>
-          添加步骤
+          <span className="material-symbols-outlined text-[12px]">add</span>
+          新增草稿
         </button>
       </div>
 
-      {inputVisible && (
-        <div className="flex gap-2">
-          <input
-            ref={inputRef}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") { e.preventDefault(); commitDraft(); }
-              if (e.key === "Escape") { setDraft(""); setInputVisible(false); }
-            }}
-            placeholder="输入关键步骤…"
-            className="flex-1 rounded-xl border border-slate-200 bg-white/80 px-3 py-1.5 text-[12px] outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
-          />
+      <div className="flex flex-1 flex-col gap-1.5 overflow-y-auto px-3 pb-2">
+        {blocks.length === 0 ? (
+          <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50/70 px-3 py-4 text-center text-[11px] text-slate-300">
+            写推导、计算、疑问，或把素材拖进来继续加工。
+          </p>
+        ) : (
+          blocks.map((block) => (
+            <BlockCard
+              key={block.id}
+              block={block}
+              onUpdate={onUpdate}
+              onDelete={onDelete}
+              onMove={onMove}
+              onDragStart={() => {}}
+              onDragOver={() => {}}
+              onDrop={(e) => handleDropOnCard(e, block.id)}
+            />
+          ))
+        )}
+      </div>
+    </ZoneDrop>
+  );
+}
+
+// ─── Results + Answer zone (right 30%) ───────────────────────────────────────
+
+function ResultsAnswerZone({ resultBlocks, answerBlocks, onAddBlock, onUpdate, onDelete, onMove, onDropBlock }) {
+  function dropOnCard(e, targetId, zone, list) {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("text/plain");
+    if (!id || id === targetId) return;
+    const idx = list.findIndex((b) => b.id === targetId);
+    onDropBlock(id, zone, idx >= 0 ? idx : Infinity);
+  }
+
+  return (
+    <div className="flex w-[190px] shrink-0 flex-col overflow-hidden">
+      {/* Results */}
+      <ZoneDrop
+        zone={BLOCK_ZONES.RESULTS}
+        onDropBlock={onDropBlock}
+        className="flex flex-1 flex-col overflow-hidden border-b border-slate-100"
+      >
+        <div className="flex shrink-0 items-center justify-between px-2.5 pt-2 pb-1">
+          <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">关键步骤</span>
           <button
-            onClick={commitDraft}
-            className="rounded-xl bg-primary px-3 py-1.5 text-[11px] font-black text-white"
+            onClick={() => onAddBlock({ type: BLOCK_TYPES.KEY_STEP, zone: BLOCK_ZONES.RESULTS, content: "", source: "user" })}
+            className="flex items-center gap-0.5 rounded-lg px-1 py-0.5 text-[10px] font-bold text-primary transition-colors hover:bg-primary/10"
           >
+            <span className="material-symbols-outlined text-[12px]">add</span>
             添加
           </button>
-          <button
-            onClick={() => { setDraft(""); setInputVisible(false); }}
-            className="rounded-xl px-2 py-1.5 text-[11px] text-slate-400 hover:bg-slate-50"
-          >
-            取消
-          </button>
         </div>
-      )}
+        <div className="flex flex-1 flex-col gap-1 overflow-y-auto px-2.5 pb-1">
+          {resultBlocks.length === 0 ? (
+            <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-2 py-3 text-center text-[10px] text-slate-300">
+              拖入或点添加
+            </p>
+          ) : (
+            resultBlocks.map((b) => (
+              <BlockCard
+                key={b.id}
+                block={b}
+                compact
+                onUpdate={onUpdate}
+                onDelete={onDelete}
+                onMove={onMove}
+                onDragStart={() => {}}
+                onDragOver={() => {}}
+                onDrop={(e) => dropOnCard(e, b.id, BLOCK_ZONES.RESULTS, resultBlocks)}
+              />
+            ))
+          )}
+        </div>
+      </ZoneDrop>
 
-      {steps.map((step, i) => (
-        <div
-          key={step.id}
-          className="flex items-start gap-2 rounded-xl border border-slate-100 bg-white/80 px-3 py-2"
+      {/* Answer */}
+      <ZoneDrop
+        zone={BLOCK_ZONES.ANSWER}
+        onDropBlock={onDropBlock}
+        className="flex shrink-0 flex-col"
+        style={{ maxHeight: "40%" }}
+      >
+        <div className="flex shrink-0 items-center justify-between px-2.5 pt-2 pb-1">
+          <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">候选答案</span>
+          {answerBlocks.length === 0 && (
+            <button
+              onClick={() => onAddBlock({ type: BLOCK_TYPES.ANSWER, zone: BLOCK_ZONES.ANSWER, content: "", source: "user" })}
+              className="flex items-center gap-0.5 rounded-lg px-1 py-0.5 text-[10px] font-bold text-primary transition-colors hover:bg-primary/10"
+            >
+              <span className="material-symbols-outlined text-[12px]">add</span>
+              添加
+            </button>
+          )}
+        </div>
+        <div className="flex flex-col gap-1 overflow-y-auto px-2.5 pb-2">
+          {answerBlocks.length === 0 ? (
+            <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-2 py-2 text-center text-[10px] text-slate-300">
+              拖入或点添加
+            </p>
+          ) : (
+            answerBlocks.map((b) => (
+              <BlockCard
+                key={b.id}
+                block={b}
+                compact
+                onUpdate={onUpdate}
+                onDelete={onDelete}
+                onMove={onMove}
+                onDragStart={() => {}}
+                onDragOver={() => {}}
+                onDrop={(e) => dropOnCard(e, b.id, BLOCK_ZONES.ANSWER, answerBlocks)}
+              />
+            ))
+          )}
+        </div>
+      </ZoneDrop>
+    </div>
+  );
+}
+
+// ─── Drawer handle (collapsed) ────────────────────────────────────────────────
+
+function DrawerHandle({ totalBlocks, materialCount, resultCount, answerBlocks, onClick }) {
+  const answerBlock = answerBlocks[0];
+  return (
+    <button
+      onClick={onClick}
+      className="flex h-full w-full items-center gap-3 px-4 text-left transition-colors hover:bg-slate-50/80"
+      aria-label="展开模块化工作台"
+    >
+      <span className="flex items-center gap-1.5 shrink-0">
+        <span
+          className="grid size-6 place-items-center rounded-lg text-white"
+          style={{ background: "var(--color-primary)" }}
         >
-          <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-primary/10 text-[10px] font-black text-primary">
-            {i + 1}
-          </span>
-          <span className="flex-1 text-[12px] leading-relaxed text-slate-700">{step.content}</span>
-          <button
-            onClick={() => onRemove(step.id)}
-            className="grid size-5 shrink-0 place-items-center rounded-lg text-slate-300 transition-colors hover:bg-slate-100 hover:text-slate-500"
-            aria-label="删除步骤"
-          >
-            <span className="material-symbols-outlined text-[13px]">close</span>
-          </button>
-        </div>
-      ))}
-    </div>
+          <span className="material-symbols-outlined text-[14px]">edit_note</span>
+        </span>
+        <span className="text-[12px] font-black text-slate-600">工作台</span>
+      </span>
+
+      <span className="h-4 w-px bg-slate-200 shrink-0" />
+
+      <span className="flex flex-1 items-center gap-2 min-w-0 overflow-hidden">
+        {totalBlocks > 0 ? (
+          <>
+            {materialCount > 0 && (
+              <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-black text-primary">
+                素材 {materialCount}
+              </span>
+            )}
+            {resultCount > 0 && (
+              <span className="shrink-0 rounded-full bg-purple-50 px-2 py-0.5 text-[10px] font-black text-purple-700">
+                步骤 {resultCount}
+              </span>
+            )}
+            {answerBlock?.content && (
+              <span className="shrink-0 max-w-[140px] truncate rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-black text-red-700">
+                答案：{answerBlock.content}
+              </span>
+            )}
+          </>
+        ) : (
+          <span className="text-[11px] text-slate-300">点击展开工作台，整理解题思路…</span>
+        )}
+      </span>
+
+      <span className="material-symbols-outlined shrink-0 text-[18px] text-slate-400">
+        keyboard_arrow_up
+      </span>
+    </button>
   );
 }
 
-/** Answer slot */
-function AnswerSlot({ value, onChange }) {
-  return (
-    <div className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-white/80 px-4 py-2.5">
-      <span className="shrink-0 text-[11px] font-black text-slate-400 uppercase tracking-wider">候选答案</span>
-      <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="例如：A / D / x > 1/3 / 定义域为…"
-        className="flex-1 bg-transparent text-[13px] font-bold text-slate-700 outline-none placeholder:text-slate-300"
-      />
-    </div>
-  );
-}
+// ─── Drawer header (half / focus) ─────────────────────────────────────────────
 
-// ─── DrawerHeader ─────────────────────────────────────────────────────────────
-
-function DrawerHeader({ state, materials, keySteps, onCollapse, onToggleFocus, onClear }) {
+function DrawerHeader({ drawerState, totalBlocks, saveStatus, onCollapse, onToggleFocus, onClear }) {
   const [confirmClear, setConfirmClear] = useState(false);
-
-  function handleClear() {
-    if (!confirmClear) { setConfirmClear(true); return; }
-    onClear();
-    setConfirmClear(false);
-  }
+  const saveLabel =
+    saveStatus === "saving" ? "保存中" :
+    saveStatus === "saved"  ? "已保存" :
+    saveStatus === "error"  ? "保存失败" : "";
 
   return (
-    <div className="flex h-11 shrink-0 items-center justify-between gap-3 border-b border-slate-100 px-4">
-      {/* Left info */}
-      <div className="flex items-center gap-3 min-w-0">
-        <div className="flex items-center gap-1.5">
-          <span
-            className="grid size-6 place-items-center rounded-lg text-white"
-            style={{ background: "var(--color-primary)" }}
-          >
-            <span className="material-symbols-outlined text-[14px]">edit_note</span>
-          </span>
-          <span className="text-[13px] font-black text-slate-700">草稿</span>
-        </div>
-        {materials.length > 0 && (
+    <div className="flex h-10 shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3">
+      {/* Left */}
+      <div className="flex items-center gap-2 min-w-0">
+        <span
+          className="grid size-6 place-items-center rounded-lg text-white"
+          style={{ background: "var(--color-primary)" }}
+        >
+          <span className="material-symbols-outlined text-[14px]">edit_note</span>
+        </span>
+        <span className="text-[13px] font-black text-slate-700">工作台</span>
+        {totalBlocks > 0 && (
           <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-black text-primary">
-            素材 {materials.length}
+            {totalBlocks}
           </span>
         )}
-        {keySteps.length > 0 && (
-          <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-black text-emerald-700">
-            步骤 {keySteps.length}
-          </span>
+        {saveLabel && (
+          <span className="text-[10px] text-slate-400">{saveLabel}</span>
         )}
       </div>
 
-      {/* Right controls */}
-      <div className="flex items-center gap-1">
-        {/* Focus toggle */}
+      {/* Right */}
+      <div className="flex items-center gap-0.5">
         <button
           onClick={onToggleFocus}
-          className="flex items-center gap-1 rounded-xl px-2.5 py-1 text-[11px] font-bold text-slate-500 transition-colors hover:bg-slate-50 hover:text-primary"
-          title={state === "focus" ? "退出专注" : "专注模式"}
+          className="flex items-center gap-0.5 rounded-xl px-2 py-1 text-[11px] font-bold text-slate-500 transition-colors hover:bg-slate-50 hover:text-primary"
         >
           <span className="material-symbols-outlined text-[15px]">
-            {state === "focus" ? "unfold_less" : "unfold_more"}
+            {drawerState === "focus" ? "unfold_less" : "unfold_more"}
           </span>
-          {state === "focus" ? "退出专注" : "专注"}
+          {drawerState === "focus" ? "退出专注" : "专注"}
         </button>
 
-        {/* Clear */}
         <button
-          onClick={handleClear}
-          className={`flex items-center gap-1 rounded-xl px-2.5 py-1 text-[11px] font-bold transition-colors ${
-            confirmClear
-              ? "bg-red-50 text-red-500 hover:bg-red-100"
-              : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
-          }`}
-          title="清空本题草稿"
+          onClick={() => {
+            if (!confirmClear) { setConfirmClear(true); return; }
+            onClear(); setConfirmClear(false);
+          }}
           onBlur={() => setConfirmClear(false)}
+          className={`flex items-center gap-0.5 rounded-xl px-2 py-1 text-[11px] font-bold transition-colors ${
+            confirmClear ? "bg-red-50 text-red-500" : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+          }`}
+          title="清空本题工作台"
         >
-          <span className="material-symbols-outlined text-[15px]">
+          <span className="material-symbols-outlined text-[14px]">
             {confirmClear ? "warning" : "delete_sweep"}
           </span>
-          {confirmClear ? "确认清空" : "清空"}
+          {confirmClear ? "确认" : "清空"}
         </button>
 
-        {/* Collapse */}
         <button
           onClick={onCollapse}
-          className="grid size-7 place-items-center rounded-xl text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600"
+          className="grid size-7 place-items-center rounded-xl text-slate-400 transition-colors hover:bg-slate-50"
+          aria-label="收起工作台"
           title="收起"
-          aria-label="收起草稿区"
         >
           <span className="material-symbols-outlined text-[18px]">keyboard_arrow_down</span>
         </button>
@@ -371,232 +408,115 @@ function DrawerHeader({ state, materials, keySteps, onCollapse, onToggleFocus, o
   );
 }
 
-// ─── DrawerHandle (collapsed bar) ─────────────────────────────────────────────
-
-function DrawerHandle({ materials, keySteps, answerDraft, onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      className="flex h-full w-full items-center gap-3 px-4 text-left transition-colors hover:bg-slate-50/80"
-      aria-label="展开草稿区"
-    >
-      {/* Icon + label */}
-      <span className="flex items-center gap-1.5 shrink-0">
-        <span
-          className="grid size-6 place-items-center rounded-lg text-white"
-          style={{ background: "var(--color-primary)" }}
-        >
-          <span className="material-symbols-outlined text-[14px]">edit_note</span>
-        </span>
-        <span className="text-[12px] font-black text-slate-600">草稿</span>
-      </span>
-
-      {/* Divider */}
-      <span className="h-4 w-px bg-slate-200 shrink-0" />
-
-      {/* Summary chips */}
-      <span className="flex flex-1 items-center gap-2 min-w-0 overflow-hidden">
-        {materials.length > 0 && (
-          <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-black text-primary">
-            素材 {materials.length}
-          </span>
-        )}
-        {keySteps.length > 0 && (
-          <span className="shrink-0 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-black text-emerald-700">
-            步骤 {keySteps.length}
-          </span>
-        )}
-        {answerDraft && (
-          <span className="shrink-0 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-black text-amber-700 max-w-[120px] truncate">
-            答案：{answerDraft}
-          </span>
-        )}
-        {!materials.length && !keySteps.length && !answerDraft && (
-          <span className="text-[11px] text-slate-300">点击展开草稿…</span>
-        )}
-      </span>
-
-      {/* Expand icon */}
-      <span className="material-symbols-outlined shrink-0 text-[18px] text-slate-400">
-        keyboard_arrow_up
-      </span>
-    </button>
-  );
-}
-
 // ─── Main ScratchDrawer ───────────────────────────────────────────────────────
 
-export default function ScratchDrawer({ questionId, subject }) {
-  // Only show for math for now (can extend later)
-  const isActive = subject === "math";
+export default function ScratchDrawer({ questionId, subject, onLayoutChange }) {
+  // Only render for math subject
+  if (subject !== "math") return null;
 
-  const [drawerState, setDrawerState] = useState("collapsed"); // "collapsed" | "half" | "focus"
-  const [scratch, setScratch] = useState(() => loadScratch(questionId));
-  const [savedAt, setSavedAt] = useState(null);
+  const {
+    blocks,
+    drawerState,
+    saveStatus,
+    setDrawerState,
+    addBlock,
+    updateBlock,
+    deleteBlock,
+    moveBlockToZone,
+    reorderBlockInZone,
+    clearWorkbench,
+    getBlocksByZone,
+  } = useModularScratchWorkbench(questionId);
 
-  // Reload scratch data when questionId changes
-  useEffect(() => {
-    setScratch(loadScratch(questionId));
-  }, [questionId]);
+  const materialBlocks  = getBlocksByZone(BLOCK_ZONES.MATERIALS);
+  const workspaceBlocks = getBlocksByZone(BLOCK_ZONES.WORKSPACE);
+  const resultBlocks    = getBlocksByZone(BLOCK_ZONES.RESULTS);
+  const answerBlocks    = getBlocksByZone(BLOCK_ZONES.ANSWER);
+  const totalBlocks     = blocks.length;
+  const drawerHeight    = getDrawerHeight(drawerState);
 
-  // Debounced save
-  const debouncedSave = useDebounce((data) => {
-    saveScratch(data);
-    setSavedAt(Date.now());
-  }, 400);
-
-  function updateScratch(updater) {
-    setScratch((prev) => {
-      const next = typeof updater === "function" ? updater(prev) : { ...prev, ...updater };
-      const withId = { ...next, questionId };
-      debouncedSave(withId);
-      return withId;
-    });
+  function changeState(newState) {
+    setDrawerState(newState);
+    onLayoutChange?.({ state: newState, height: getDrawerHeight(newState) });
   }
 
-  // ── Drawer state transitions ────────────────────────────────────
-  function expandToHalf() { setDrawerState("half"); }
-  function collapseDrawer() {
-    setDrawerState((s) => (s === "focus" ? "half" : "collapsed"));
-  }
-  function toggleFocus() {
-    setDrawerState((s) => (s === "focus" ? "half" : "focus"));
+  function handleMove(blockId, targetZone, targetType) {
+    moveBlockToZone(blockId, targetZone, Infinity);
+    if (targetType) updateBlock(blockId, { type: targetType });
   }
 
-  // ── Materials ───────────────────────────────────────────────────
-  function addMaterialFromSelection() {
-    const sel = typeof window !== "undefined" ? window.getSelection?.()?.toString().trim() : "";
-    if (!sel) {
-      // visual hint — briefly flash the button (handled by CSS)
-      return;
+  function handleDrop(blockId, targetZone, targetIndex) {
+    const block = blocks.find((b) => b.id === blockId);
+    if (!block) return;
+    if (block.zone === targetZone) {
+      reorderBlockInZone(blockId, targetIndex);
+    } else {
+      moveBlockToZone(blockId, targetZone, targetIndex);
     }
-    const newMaterial = {
-      id: createScratchId(),
-      questionId,
-      type: "other",
-      content: sel.slice(0, 80),
-      createdAt: Date.now(),
-    };
-    updateScratch((prev) => ({ ...prev, materials: [...prev.materials, newMaterial] }));
-    window.getSelection?.()?.removeAllRanges();
-    if (drawerState === "collapsed") setDrawerState("half");
   }
-
-  function removeMaterial(id) {
-    updateScratch((prev) => ({ ...prev, materials: prev.materials.filter((m) => m.id !== id) }));
-  }
-
-  function changeMaterialType(id, newType) {
-    updateScratch((prev) => ({
-      ...prev,
-      materials: prev.materials.map((m) => (m.id === id ? { ...m, type: newType } : m)),
-    }));
-  }
-
-  // ── Scratch text ────────────────────────────────────────────────
-  function updateScratchText(text) {
-    updateScratch((prev) => ({ ...prev, scratchText: text }));
-  }
-
-  // ── Key steps ───────────────────────────────────────────────────
-  function addKeyStep(content) {
-    if (!content.trim()) return;
-    const step = { id: createScratchId(), questionId, content: content.trim(), createdAt: Date.now() };
-    updateScratch((prev) => ({ ...prev, keySteps: [...prev.keySteps, step] }));
-  }
-
-  function removeKeyStep(id) {
-    updateScratch((prev) => ({ ...prev, keySteps: prev.keySteps.filter((s) => s.id !== id) }));
-  }
-
-  // ── Answer draft ────────────────────────────────────────────────
-  function updateAnswer(text) {
-    updateScratch((prev) => ({ ...prev, answerDraft: text }));
-  }
-
-  // ── Clear ───────────────────────────────────────────────────────
-  function clearScratch() {
-    const empty = createEmptyScratch(questionId);
-    setScratch(empty);
-    saveScratch(empty);
-  }
-
-  // ── Heights ─────────────────────────────────────────────────────
-  const drawerHeight =
-    drawerState === "collapsed"
-      ? HEIGHTS.collapsed
-      : drawerState === "focus"
-        ? Math.round((typeof window !== "undefined" ? window.innerHeight : 800) * 0.60)
-        : Math.round((typeof window !== "undefined" ? window.innerHeight : 800) * 0.33);
-
-  if (!isActive) return null;
 
   return (
     <div
-      className="relative shrink-0 overflow-hidden border-t border-slate-100 bg-white/92 shadow-[0_-8px_32px_rgba(15,23,42,0.07)] backdrop-blur-xl"
+      className="relative shrink-0 overflow-hidden border-t border-slate-100 bg-white/95 shadow-[0_-4px_20px_rgba(15,23,42,0.06)] backdrop-blur-xl"
       style={{
         height: drawerHeight,
-        transition: "height 0.28s cubic-bezier(0.4,0,0.2,1)",
+        transition: "height 0.26s cubic-bezier(0.4,0,0.2,1)",
       }}
-      aria-label="草稿区"
+      aria-label="模块化草稿工作台"
     >
-      {/* ── COLLAPSED ─────────────────────────────────────────── */}
+      {/* ── COLLAPSED ─────────────────────────────────────── */}
       {drawerState === "collapsed" && (
         <DrawerHandle
-          materials={scratch.materials}
-          keySteps={scratch.keySteps}
-          answerDraft={scratch.answerDraft}
-          onClick={expandToHalf}
+          totalBlocks={totalBlocks}
+          materialCount={materialBlocks.length}
+          resultCount={resultBlocks.length}
+          answerBlocks={answerBlocks}
+          onClick={() => changeState("half")}
         />
       )}
 
-      {/* ── HALF / FOCUS ──────────────────────────────────────── */}
+      {/* ── HALF / FOCUS ──────────────────────────────────── */}
       {drawerState !== "collapsed" && (
         <div className="flex h-full flex-col">
           {/* Header */}
           <DrawerHeader
-            state={drawerState}
-            materials={scratch.materials}
-            keySteps={scratch.keySteps}
-            onCollapse={collapseDrawer}
-            onToggleFocus={toggleFocus}
-            onClear={clearScratch}
+            drawerState={drawerState}
+            totalBlocks={totalBlocks}
+            saveStatus={saveStatus}
+            onCollapse={() => changeState(drawerState === "focus" ? "half" : "collapsed")}
+            onToggleFocus={() => changeState(drawerState === "focus" ? "half" : "focus")}
+            onClear={clearWorkbench}
           />
 
-          {/* Material strip */}
-          <MaterialStrip
-            materials={scratch.materials}
-            onAddFromSelection={addMaterialFromSelection}
-            onRemove={removeMaterial}
-            onTypeChange={changeMaterialType}
+          {/* Materials bar */}
+          <MaterialsZone
+            blocks={materialBlocks}
+            onAdd={addBlock}
+            onUpdate={updateBlock}
+            onDelete={deleteBlock}
+            onMove={handleMove}
+            onDropBlock={handleDrop}
           />
 
-          {/* Body: editor + steps + answer */}
+          {/* Body: Workspace (70%) + Results+Answer (30%) */}
           <div className="flex flex-1 overflow-hidden">
-            {/* Left: scratch editor */}
-            <div className="flex flex-1 flex-col overflow-hidden border-r border-slate-100">
-              <textarea
-                value={scratch.scratchText}
-                onChange={(e) => updateScratchText(e.target.value)}
-                placeholder={"写下你的推导、计算、疑问……\n\n例如：\n设 f(x) 的定义域为 (-3,4)\n∴ -3 < x+2 < 4\n∴ -5 < x < 2"}
-                className="flex-1 resize-none bg-transparent px-4 py-3 text-[13px] leading-relaxed text-slate-700 placeholder:text-slate-300 outline-none"
-                spellCheck={false}
-                style={{ fontFamily: "inherit" }}
-              />
-            </div>
-
-            {/* Right: steps + answer */}
-            <div className="flex w-[280px] shrink-0 flex-col gap-3 overflow-y-auto px-4 py-3">
-              <KeySteps
-                steps={scratch.keySteps}
-                onAdd={addKeyStep}
-                onRemove={removeKeyStep}
-              />
-              <AnswerSlot
-                value={scratch.answerDraft}
-                onChange={updateAnswer}
-              />
-            </div>
+            <WorkspaceZone
+              blocks={workspaceBlocks}
+              onAddBlock={addBlock}
+              onUpdate={updateBlock}
+              onDelete={deleteBlock}
+              onMove={handleMove}
+              onDropBlock={handleDrop}
+            />
+            <ResultsAnswerZone
+              resultBlocks={resultBlocks}
+              answerBlocks={answerBlocks}
+              onAddBlock={addBlock}
+              onUpdate={updateBlock}
+              onDelete={deleteBlock}
+              onMove={handleMove}
+              onDropBlock={handleDrop}
+            />
           </div>
         </div>
       )}
