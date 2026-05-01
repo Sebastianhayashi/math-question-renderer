@@ -205,3 +205,10 @@ summary::-webkit-details-marker {
     stroke-dashoffset: 0;
   }
 }
+
+/* ── Magnetic zone pull animation ── */
+@keyframes magnetic-pulse {
+  0%   { opacity: 0.6; transform: scale(1); }
+  50%  { opacity: 1;   transform: scale(1.025); }
+  100% { opacity: 0.6; transform: scale(1); }
+}

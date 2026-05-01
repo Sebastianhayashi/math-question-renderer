@@ -163,6 +163,7 @@ const MATH_CHAIN_THEME = {
   answer: { bg: "rgba(239,68,68,0.12)", border: "rgba(239,68,68,0.24)", text: "#B91C1C" },
 };
 const WORKSPACE_ZONE_MIN = { width: 300, height: 190 };
+const MAGNETIC_RADIUS = 80; // px — zone magnetic pull range
 const LINK_MODES = [
   { id: "directed", label: "单向", icon: "arrow_forward" },
   { id: "bidirectional", label: "双向", icon: "sync_alt" },
@@ -414,6 +415,31 @@ function getRectFromPoints(startX, startY, endX, endY) {
 
 function rectsOverlap(a, b) {
   return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
+}
+
+// Returns the shortest distance from point (px, py) to the boundary of a zone rect.
+// Negative value means the point is inside the zone.
+function getDistanceToZone(px, py, zone) {
+  const clampedX = Math.max(zone.x, Math.min(px, zone.x + zone.width));
+  const clampedY = Math.max(zone.y, Math.min(py, zone.y + zone.height));
+  const inside = px >= zone.x && px <= zone.x + zone.width && py >= zone.y && py <= zone.y + zone.height;
+  const dx = px - clampedX;
+  const dy = py - clampedY;
+  return inside ? -1 : Math.hypot(dx, dy);
+}
+
+// Finds the nearest zone within MAGNETIC_RADIUS even before the pointer enters.
+function findMagneticZone(zones = [], px, py, radius = MAGNETIC_RADIUS) {
+  let best = null;
+  let bestDist = radius;
+  for (const zone of zones) {
+    const dist = getDistanceToZone(px, py, zone);
+    if (dist <= bestDist) {
+      bestDist = dist;
+      best = zone;
+    }
+  }
+  return best;
 }
 
 function loadSolvingRecords() {
@@ -1013,6 +1039,7 @@ function MathPencilPalette({
   onAddBlock,
   onArrangeBlocks,
   onAddZone,
+  onGroupSelected,
   selectionMode,
   selectedCount,
   onToggleSelectionMode,
@@ -1128,6 +1155,18 @@ function MathPencilPalette({
       >
         <span className="material-symbols-outlined text-[20px]">capture</span>
       </button>
+      {/* Group selected button — appears when modules are selected */}
+      {selectedCount > 0 && (
+        <button
+          onClick={onGroupSelected}
+          className="flex h-10 shrink-0 items-center gap-1.5 rounded-2xl bg-primary px-3 text-[11px] font-black text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+          title={`把选中的 ${selectedCount} 个模块打包成一个分组`}
+          aria-label="打包成分组"
+        >
+          <span className="material-symbols-outlined text-[17px]">group_work</span>
+          打包 {selectedCount}
+        </button>
+      )}
       <button
         onClick={onAddZone}
         className="grid size-10 shrink-0 place-items-center rounded-2xl bg-white/90 text-slate-500 ring-1 ring-slate-200 transition-colors hover:bg-blue-50 hover:text-primary"
@@ -1440,17 +1479,25 @@ function MathModuleDragPreview({ preview }) {
   );
 }
 
-function MathWorkspaceZone({ zone, notesCount, isSnapTarget, isFocused, isDimmed, onPointerDown, onResizePointerDown, onRemove, onFocus, onExitFocus }) {
+function MathWorkspaceZone({ zone, notesCount, isSnapTarget, isMagnetic, isFocused, isDimmed, onPointerDown, onResizePointerDown, onRemove, onFocus, onExitFocus }) {
   return (
     <section
       className={cx(
         "fixed z-20 overflow-hidden rounded-[24px] border bg-white/55 shadow-[0_18px_48px_rgba(15,23,42,0.10)] ring-1 backdrop-blur-xl transition-all",
         isFocused && "z-[35] border-primary/55 bg-white/76 ring-4 ring-primary/15",
         isDimmed && "opacity-35",
-        isSnapTarget ? "border-primary/45 ring-4 ring-primary/15" : "border-primary/20 ring-white/80"
+        isSnapTarget ? "border-primary/45 ring-4 ring-primary/15" : isMagnetic ? "border-primary/30 ring-2 ring-primary/10" : "border-primary/20 ring-white/80"
       )}
       style={{ left: zone.x, top: zone.y, width: zone.width, height: zone.height }}
     >
+      {/* Magnetic pull outer glow ring */}
+      {isMagnetic && !isSnapTarget && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -inset-[10px] rounded-[32px] border-2 border-primary/20"
+          style={{ animation: "magnetic-pulse 1.2s ease-in-out infinite" }}
+        />
+      )}
       <header
         onPointerDown={(event) => onPointerDown(event, zone)}
         className="flex h-12 cursor-grab items-center justify-between gap-2 border-b border-white/80 bg-white/72 px-4 active:cursor-grabbing"
@@ -1486,7 +1533,7 @@ function MathWorkspaceZone({ zone, notesCount, isSnapTarget, isFocused, isDimmed
       <div
         className={cx(
           "absolute inset-x-4 bottom-4 top-[64px] rounded-2xl border border-dashed transition-all",
-          isSnapTarget ? "border-primary/45 bg-primary/10" : "border-primary/15 bg-primary/5"
+          isSnapTarget ? "border-primary/45 bg-primary/10" : isMagnetic ? "border-primary/25 bg-primary/5" : "border-primary/15 bg-primary/5"
         )}
         aria-hidden="true"
       />
@@ -2382,6 +2429,7 @@ function App() {
   const [moduleDragPreview, setModuleDragPreview] = useState(null);
   const [linkDragPreview, setLinkDragPreview] = useState(null);
   const [snapTargetZoneId, setSnapTargetZoneId] = useState(null);
+  const [magneticZoneId, setMagneticZoneId] = useState(null); // zone glowing in magnetic pull range
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectionRect, setSelectionRect] = useState(null);
   const [selectedNoteIds, setSelectedNoteIds] = useState([]);
@@ -2544,7 +2592,11 @@ function App() {
         const deltaX = event.clientX - session.pointerX;
         const deltaY = event.clientY - session.pointerY;
         const current = recordsRef.current[session.questionId];
-        setSnapTargetZoneId(findZoneAtPoint(current?.zones || [], event.clientX, event.clientY)?.id || null);
+        const zones = current?.zones || [];
+        const overZone = findZoneAtPoint(zones, event.clientX, event.clientY);
+        const magZone = overZone || findMagneticZone(zones, event.clientX, event.clientY);
+        setSnapTargetZoneId(overZone?.id || null);
+        setMagneticZoneId(magZone?.id || null);
         setRecords((previous) => {
           const current = previous[session.questionId];
           if (!current) return previous;
@@ -2667,7 +2719,11 @@ function App() {
         if (session.isDragging) {
           const bounds = getWorkbenchBounds();
           const current = recordsRef.current[session.questionId];
-          setSnapTargetZoneId(findZoneAtPoint(current?.zones || [], event.clientX, event.clientY)?.id || null);
+          const zones = current?.zones || [];
+          const overZone = findZoneAtPoint(zones, event.clientX, event.clientY);
+          const magZone = overZone || findMagneticZone(zones, event.clientX, event.clientY);
+          setSnapTargetZoneId(overZone?.id || null);
+          setMagneticZoneId(magZone?.id || null);
           setModuleDragPreview({
             type: session.blockType,
             text: session.text,
@@ -2841,6 +2897,7 @@ function App() {
       setModuleDragPreview(null);
       setLinkDragPreview(null);
       setSnapTargetZoneId(null);
+      setMagneticZoneId(null);
       dragSessionRef.current = null;
     }
 
@@ -3216,6 +3273,48 @@ function App() {
       ),
     }));
     if (focusZoneId === zoneId) setFocusZoneId(null);
+  }
+
+  function groupSelectedIntoZone() {
+    if (!selectedNoteIds.length) return;
+    updateActiveRecord((record) => {
+      const selectedNotes = (record.notes || []).filter((note) => selectedNoteIds.includes(note.id));
+      if (!selectedNotes.length) return record;
+
+      // Compute bounding box of selected notes with some padding
+      const PAD = 20;
+      const HEADER = 52;
+      const minX = Math.min(...selectedNotes.map((n) => (Number.isFinite(n.x) ? n.x : 0)));
+      const minY = Math.min(...selectedNotes.map((n) => (Number.isFinite(n.y) ? n.y : 0)));
+      const maxX = Math.max(...selectedNotes.map((n) => (Number.isFinite(n.x) ? n.x : 0))) + MODULE_SIZE.width;
+      const maxY = Math.max(...selectedNotes.map((n) => (Number.isFinite(n.y) ? n.y : 0))) + MODULE_SIZE.height;
+      const zoneX = clampNumber(minX - PAD, 8, window.innerWidth - 320);
+      const zoneY = clampNumber(minY - HEADER - PAD, 8, window.innerHeight - 240);
+      const zoneW = Math.max(WORKSPACE_ZONE_MIN.width, maxX - minX + PAD * 2);
+      const zoneH = Math.max(WORKSPACE_ZONE_MIN.height, maxY - minY + HEADER + PAD * 2);
+
+      const newZone = {
+        id: createId("zone"),
+        title: `分组 ${(record.zones?.length || 0) + 1}`,
+        x: zoneX,
+        y: zoneY,
+        width: zoneW,
+        height: zoneH,
+        createdAt: new Date().toISOString(),
+      };
+
+      return {
+        ...record,
+        zones: [...(record.zones || []), newZone],
+        notes: (record.notes || []).map((note) => {
+          if (!selectedNoteIds.includes(note.id)) return note;
+          const order = selectedNotes.findIndex((n) => n.id === note.id);
+          return { ...note, zoneId: newZone.id, zoneOrder: order };
+        }),
+      };
+    });
+    setSelectedNoteIds([]);
+    setSelectionMode(false);
   }
 
   function startZoneDrag(event, zone) {
@@ -4477,6 +4576,7 @@ function App() {
                     onAddBlock={addWorkbenchBlock}
                     onArrangeBlocks={arrangeWorkbenchBlocks}
                     onAddZone={addWorkspaceZone}
+                    onGroupSelected={groupSelectedIntoZone}
                     selectionMode={selectionMode}
                     selectedCount={selectedNoteIds.length}
                     onToggleSelectionMode={toggleSelectionMode}
@@ -4506,6 +4606,7 @@ function App() {
                       key={zone.id}
                       zone={zone}
                       isSnapTarget={snapTargetZoneId === zone.id}
+                      isMagnetic={magneticZoneId === zone.id && snapTargetZoneId !== zone.id}
                       isFocused={focusZoneId === zone.id}
                       isDimmed={Boolean(focusZoneId && focusZoneId !== zone.id)}
                       notesCount={[
