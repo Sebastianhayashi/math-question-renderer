@@ -164,6 +164,10 @@ const MATH_CHAIN_THEME = {
 };
 const WORKSPACE_ZONE_MIN = { width: 300, height: 190 };
 const MAGNETIC_RADIUS = 80; // px — zone magnetic pull range
+const ALIGN_SNAP_THRESHOLD = 10; // px — node edge/center alignment snap threshold
+const LINK_TENSION_NEAR = 180; // px — below this distance link is at full weight
+const LINK_TENSION_FAR = 680; // px — above this distance link is at minimum weight
+const AUTO_ARRANGE_RADIUS = 260; // px — snap to canonical pos when released near a linked partner
 const LINK_MODES = [
   { id: "directed", label: "单向", icon: "arrow_forward" },
   { id: "bidirectional", label: "双向", icon: "sync_alt" },
@@ -1452,6 +1456,44 @@ function MathMarkBlock({ mark, index, onPointerDown, onRemove }) {
   );
 }
 
+// Subtle alignment guide lines shown only during drag when snap is active.
+function MathAlignGuides({ guides }) {
+  if (!guides || guides.length === 0) return null;
+  return (
+    <svg
+      className="pointer-events-none fixed inset-0 z-[28] overflow-visible"
+      style={{ width: "100vw", height: "100vh" }}
+      aria-hidden="true"
+    >
+      {guides.map((guide, i) =>
+        guide.type === "h" ? (
+          <line
+            key={i}
+            x1="0"
+            y1={guide.coord}
+            x2="10000"
+            y2={guide.coord}
+            stroke="rgba(46,103,248,0.38)"
+            strokeWidth="1"
+            strokeDasharray="3 9"
+          />
+        ) : (
+          <line
+            key={i}
+            x1={guide.coord}
+            y1="0"
+            x2={guide.coord}
+            y2="10000"
+            stroke="rgba(46,103,248,0.38)"
+            strokeWidth="1"
+            strokeDasharray="3 9"
+          />
+        )
+      )}
+    </svg>
+  );
+}
+
 function MathModuleDragPreview({ preview }) {
   if (!preview) return null;
 
@@ -1627,19 +1669,30 @@ function MathWorkspaceLinks({ notes = [], links = [], preview, onUpdateLabel }) 
         const to = noteById.get(link.toId);
         if (!from || !to) return null;
         const theme = getMathChainTheme(from.type);
-        const path = getLinkPath(getBlockCenter(from), getBlockCenter(to));
-        const labelPosition = getLinkLabelPosition(getBlockCenter(from), getBlockCenter(to));
+        const fromCenter = getBlockCenter(from);
+        const toCenter = getBlockCenter(to);
+        const path = getLinkPath(fromCenter, toCenter);
+        const labelPosition = getLinkLabelPosition(fromCenter, toCenter);
         const isDirectional = link.mode !== "plain";
 
+        // ── Tension: fade + thin + dash based on distance ──────────────────
+        const dist = Math.hypot(toCenter.x - fromCenter.x, toCenter.y - fromCenter.y);
+        const tensionT = Math.max(0, Math.min(1, (dist - LINK_TENSION_NEAR) / (LINK_TENSION_FAR - LINK_TENSION_NEAR)));
+        const linkOpacity = 1 - tensionT * 0.78; // 1.0 → 0.22
+        const linkWidth = 2 + (1 - tensionT) * 1.5; // 3.5 → 2.0
+        const isTense = tensionT > 0.55; // becomes notably stretched
+
         return (
-          <g key={link.id} className="workspace-link">
+          <g key={link.id} className="workspace-link" style={{ opacity: linkOpacity }}>
             <path
               d={path}
               fill="none"
-              stroke={hexToRgba(theme.text, 0.16)}
+              stroke={hexToRgba(theme.text, 0.16 + (1 - tensionT) * 0.10)}
               strokeLinecap="round"
-              strokeWidth="2"
-              strokeDasharray={link.mode === "plain" ? "5 9" : undefined}
+              strokeWidth={linkWidth * 0.6}
+              strokeDasharray={
+                isTense ? "4 12" : link.mode === "plain" ? "5 9" : undefined
+              }
             />
             {isDirectional && (
               <>
@@ -1649,15 +1702,15 @@ function MathWorkspaceLinks({ notes = [], links = [], preview, onUpdateLabel }) 
                   fill="none"
                   stroke={`url(#workspace-link-flow-${link.id})`}
                   strokeLinecap="round"
-                  strokeWidth="2"
+                  strokeWidth={linkWidth}
                 />
-                <circle r="3.5" fill={hexToRgba(theme.text, 0.76)} className="workspace-link-pulse">
+                <circle r={3.5 * (1 - tensionT * 0.45)} fill={hexToRgba(theme.text, 0.76 * linkOpacity)} className="workspace-link-pulse">
                   <animateMotion dur="2.8s" repeatCount="indefinite" path={path} rotate="auto" />
                 </circle>
               </>
             )}
             {link.mode === "bidirectional" && (
-              <circle r="3" fill={hexToRgba(theme.text, 0.54)} className="workspace-link-pulse workspace-link-pulse--reverse">
+              <circle r={3 * (1 - tensionT * 0.45)} fill={hexToRgba(theme.text, 0.54 * linkOpacity)} className="workspace-link-pulse workspace-link-pulse--reverse">
                 <animateMotion dur="2.8s" repeatCount="indefinite" path={path} rotate="auto" keyPoints="1;0" keyTimes="0;1" calcMode="linear" />
               </circle>
             )}
@@ -2430,6 +2483,7 @@ function App() {
   const [linkDragPreview, setLinkDragPreview] = useState(null);
   const [snapTargetZoneId, setSnapTargetZoneId] = useState(null);
   const [magneticZoneId, setMagneticZoneId] = useState(null); // zone glowing in magnetic pull range
+  const [alignGuides, setAlignGuides] = useState([]); // [{type:'h'|'v', coord}] soft alignment guides
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectionRect, setSelectionRect] = useState(null);
   const [selectedNoteIds, setSelectedNoteIds] = useState([]);
@@ -2597,19 +2651,84 @@ function App() {
         const magZone = overZone || findMagneticZone(zones, event.clientX, event.clientY);
         setSnapTargetZoneId(overZone?.id || null);
         setMagneticZoneId(magZone?.id || null);
+
+        // ── Alignment snap computation ─────────────────────────────────────
+        const movingIds = new Set(session.selectedIds || [session.noteId]);
+        const primaryStart = session.noteStarts?.[session.noteId] || { x: session.startX, y: session.startY };
+        const rawX = clampNumber(primaryStart.x + deltaX, bounds.minX, bounds.maxX);
+        const rawY = clampNumber(primaryStart.y + deltaY, bounds.minY, bounds.maxY);
+        const otherNotes = (current?.notes || []).filter(
+          (n) => !movingIds.has(n.id) && Number.isFinite(n.x) && Number.isFinite(n.y)
+        );
+        const guides = [];
+        let snapDX = 0;
+        let snapDY = 0;
+        const W = MODULE_SIZE.width;
+        const H = MODULE_SIZE.height;
+        for (const other of otherNotes) {
+          // Left edge ↔ left edge
+          if (snapDX === 0 && Math.abs(rawX - other.x) < ALIGN_SNAP_THRESHOLD) {
+            snapDX = other.x - rawX;
+            guides.push({ type: "v", coord: other.x });
+          }
+          // Left edge ↔ right edge (snap to right side of other)
+          if (snapDX === 0 && Math.abs(rawX - (other.x + W)) < ALIGN_SNAP_THRESHOLD) {
+            snapDX = other.x + W - rawX;
+            guides.push({ type: "v", coord: other.x + W });
+          }
+          // Right edge ↔ left edge (snap to left side of other)
+          if (snapDX === 0 && Math.abs(rawX + W - other.x) < ALIGN_SNAP_THRESHOLD) {
+            snapDX = other.x - W - rawX;
+            guides.push({ type: "v", coord: other.x });
+          }
+          // Center-X ↔ center-X
+          const myCx = rawX + W / 2;
+          const otherCx = other.x + W / 2;
+          if (snapDX === 0 && Math.abs(myCx - otherCx) < ALIGN_SNAP_THRESHOLD) {
+            snapDX = otherCx - W / 2 - rawX;
+            guides.push({ type: "v", coord: otherCx });
+          }
+          // Top edge ↔ top edge
+          if (snapDY === 0 && Math.abs(rawY - other.y) < ALIGN_SNAP_THRESHOLD) {
+            snapDY = other.y - rawY;
+            guides.push({ type: "h", coord: other.y });
+          }
+          // Bottom edge ↔ top edge
+          if (snapDY === 0 && Math.abs(rawY + H - other.y) < ALIGN_SNAP_THRESHOLD) {
+            snapDY = other.y - H - rawY;
+            guides.push({ type: "h", coord: other.y });
+          }
+          // Top edge ↔ bottom edge
+          if (snapDY === 0 && Math.abs(rawY - (other.y + H)) < ALIGN_SNAP_THRESHOLD) {
+            snapDY = other.y + H - rawY;
+            guides.push({ type: "h", coord: other.y + H });
+          }
+          // Center-Y ↔ center-Y
+          const myCy = rawY + H / 2;
+          const otherCy = other.y + H / 2;
+          if (snapDY === 0 && Math.abs(myCy - otherCy) < ALIGN_SNAP_THRESHOLD) {
+            snapDY = otherCy - H / 2 - rawY;
+            guides.push({ type: "h", coord: otherCy });
+          }
+        }
+        setAlignGuides(guides);
+
         setRecords((previous) => {
           const current = previous[session.questionId];
           if (!current) return previous;
-          const movingIds = new Set(session.selectedIds || [session.noteId]);
           const nextRecord = {
             ...current,
             notes: (current.notes || []).map((note) => {
               if (!movingIds.has(note.id)) return note;
               const start = session.noteStarts?.[note.id] || { x: session.startX, y: session.startY };
+              // Apply snap delta only to primary note; other selected notes move freely
+              const isLeader = note.id === session.noteId;
+              const baseX = clampNumber(start.x + deltaX, bounds.minX, bounds.maxX);
+              const baseY = clampNumber(start.y + deltaY, bounds.minY, bounds.maxY);
               return {
                 ...note,
-                x: clampNumber(start.x + deltaX, bounds.minX, bounds.maxX),
-                y: clampNumber(start.y + deltaY, bounds.minY, bounds.maxY),
+                x: isLeader ? clampNumber(baseX + snapDX, bounds.minX, bounds.maxX) : baseX,
+                y: isLeader ? clampNumber(baseY + snapDY, bounds.minY, bounds.maxY) : baseY,
               };
             }),
             updatedAt: new Date().toISOString(),
@@ -2805,6 +2924,51 @@ function App() {
           const movingIds = new Set(session.selectedIds || [session.noteId]);
           const movingNotes = (current.notes || []).filter((note) => movingIds.has(note.id));
           const baseOrder = zone ? getNextZoneOrder(current, zone.id) : undefined;
+          const noteById = new Map((current.notes || []).map((n) => [n.id, n]));
+          const links = current.links || [];
+
+          // Auto-arrange: if single block released near a linked partner, snap to canonical pos
+          const ARRANGE_GAP = 24;
+          const arrangeOverride = {}; // noteId -> { x, y }
+          if (!zone && movingNotes.length === 1) {
+            const primary = movingNotes[0];
+            const linkedPartnerIds = links
+              .filter((l) => (l.fromId === primary.id || l.toId === primary.id))
+              .map((l) => (l.fromId === primary.id ? l.toId : l.fromId));
+            for (const partnerId of linkedPartnerIds) {
+              const partner = noteById.get(partnerId);
+              if (!partner || !Number.isFinite(partner.x)) continue;
+              const pc = getBlockCenter(partner);
+              const myC = getBlockCenter(primary);
+              const dist = Math.hypot(myC.x - pc.x, myC.y - pc.y);
+              if (dist < AUTO_ARRANGE_RADIUS) {
+                const dx = myC.x - pc.x;
+                const dy = myC.y - pc.y;
+                // Determine dominant axis and quadrant
+                let tx, ty;
+                if (Math.abs(dx) >= Math.abs(dy)) {
+                  // Arrange left/right
+                  tx = dx >= 0
+                    ? partner.x + MODULE_SIZE.width + ARRANGE_GAP
+                    : partner.x - MODULE_SIZE.width - ARRANGE_GAP;
+                  ty = partner.y + (MODULE_SIZE.height - MODULE_SIZE.height) / 2; // same top edge
+                } else {
+                  // Arrange above/below
+                  tx = partner.x + (MODULE_SIZE.width - MODULE_SIZE.width) / 2; // same left edge
+                  ty = dy >= 0
+                    ? partner.y + MODULE_SIZE.height + ARRANGE_GAP
+                    : partner.y - MODULE_SIZE.height - ARRANGE_GAP;
+                }
+                const bounds = getWorkbenchBounds();
+                arrangeOverride[primary.id] = {
+                  x: clampNumber(tx, bounds.minX, bounds.maxX),
+                  y: clampNumber(ty, bounds.minY, bounds.maxY),
+                };
+                break; // only arrange relative to first close partner
+              }
+            }
+          }
+
           const nextRecord = {
             ...current,
             notes: (current.notes || []).map((note) => {
@@ -2812,9 +2976,10 @@ function App() {
               const movingIndex = movingNotes.findIndex((item) => item.id === note.id);
               const order = zone ? baseOrder + Math.max(0, movingIndex) : undefined;
               const snapped = zone ? snapBlockToZone(zone, order, MODULE_SIZE.width, MODULE_SIZE.height) : null;
+              const arranged = arrangeOverride[note.id];
               return {
                 ...note,
-                ...(snapped || {}),
+                ...(snapped || arranged || {}),
                 zoneId: zone?.id,
                 zoneOrder: order,
               };
@@ -2898,6 +3063,7 @@ function App() {
       setLinkDragPreview(null);
       setSnapTargetZoneId(null);
       setMagneticZoneId(null);
+      setAlignGuides([]);
       dragSessionRef.current = null;
     }
 
@@ -4653,6 +4819,7 @@ function App() {
                     />
                   ))}
                   <MathModuleDragPreview preview={moduleDragPreview} />
+                  <MathAlignGuides guides={alignGuides} />
                 </>
               )}
               <SelectionMarkMenu
