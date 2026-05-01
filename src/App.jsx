@@ -3299,18 +3299,34 @@ function App() {
     setNotesOpen(true);
   }
 
+  function getGhostModulePosition(index = 0) {
+    const bounds = getWorkbenchBounds();
+    const shellRect = questionShellRef.current?.getBoundingClientRect?.();
+    const columns = typeof window === "undefined" || window.innerWidth < 940 ? 2 : 3;
+    const gapX = 16;
+    const gapY = 14;
+    const col = index % columns;
+    const row = Math.floor(index / columns);
+    const preferredX = shellRect ? shellRect.left + 24 : 260;
+    const preferredY = shellRect
+      ? shellRect.bottom + 26
+      : (typeof window === "undefined" ? 420 : Math.max(360, Math.min(window.innerHeight * 0.52, window.innerHeight - 200)));
+
+    return {
+      x: clampNumber(preferredX + col * (MODULE_SIZE.width + gapX), bounds.minX, bounds.maxX),
+      y: clampNumber(preferredY + row * (MODULE_SIZE.height + gapY), bounds.minY, bounds.maxY),
+    };
+  }
+
   function addWorkbenchBlock(type = activeNoteTag) {
     const tag = getMathChainTag(type);
-    // Use selected text from the page if available, then noteDraft, then hint
     const selectedText = (typeof window !== "undefined" && window.getSelection) ? window.getSelection().toString().trim() : "";
     const rawText = selectedText || noteDraft.trim() || tag.hint;
-    // Truncate to 200 chars for module content
     const text = rawText.length > 200 ? rawText.slice(0, 200) + "…" : rawText;
 
     updateActiveRecord((record) => {
       const existingNotes = record.notes || [];
 
-      // If zones exist, use the existing zone-snapping logic
       if (record.zones?.length) {
         const targetZone = record.zones[0];
         const order = getNextZoneOrder(record, targetZone.id);
@@ -3335,16 +3351,7 @@ function App() {
         };
       }
 
-      // No zones: place freely below the question card area
-      // Stagger blocks so they don't overlap
-      const n = existingNotes.length;
-      const baseX = typeof window === "undefined" ? 260 : Math.min(260, window.innerWidth - MODULE_SIZE.width - 40);
-      const baseY = typeof window === "undefined" ? 420 : Math.max(360, Math.min(window.innerHeight * 0.52, window.innerHeight - 200));
-      const col = n % 3;
-      const row = Math.floor(n / 3);
-      const x = clampNumber(baseX + col * (MODULE_SIZE.width + 16), 12, (typeof window === "undefined" ? 980 : window.innerWidth - MODULE_SIZE.width - 20));
-      const y = clampNumber(baseY + row * (MODULE_SIZE.height + 14), 80, (typeof window === "undefined" ? 620 : window.innerHeight - MODULE_SIZE.height - 80));
-
+      const position = getGhostModulePosition(existingNotes.length);
       return {
         ...record,
         notes: [
@@ -3354,8 +3361,8 @@ function App() {
             type,
             stage: tag.stage,
             order: existingNotes.length,
-            x,
-            y,
+            x: position.x,
+            y: position.y,
             text,
             createdAt: new Date().toISOString(),
           },
@@ -3371,22 +3378,6 @@ function App() {
 
   function arrangeWorkbenchBlocks() {
     updateActiveRecord((record) => {
-      const zones = record.zones?.length
-        ? record.zones
-        : [
-          {
-            id: createId("zone"),
-            title: "思考区",
-            ...getDefaultZoneLayout(0),
-            createdAt: new Date().toISOString(),
-          },
-        ];
-      const targetZone = {
-        ...zones[0],
-        title: zones[0].title || "思考区",
-        width: Math.max(zones[0].width || 0, 520),
-        height: Math.max(zones[0].height || 0, 320),
-      };
       const sortedNotes = [...(record.notes || [])].sort((a, b) => {
         const stageA = MATH_CHAIN_STAGES.findIndex((stage) => stage.id === getMathChainStage(a));
         const stageB = MATH_CHAIN_STAGES.findIndex((stage) => stage.id === getMathChainStage(b));
@@ -3395,9 +3386,32 @@ function App() {
       });
       const orderById = new Map(sortedNotes.map((note, index) => [note.id, index]));
 
+      if (!record.zones?.length) {
+        return {
+          ...record,
+          notes: (record.notes || []).map((note) => {
+            const order = orderById.get(note.id) || 0;
+            return {
+              ...note,
+              order,
+              zoneId: undefined,
+              zoneOrder: undefined,
+              ...getGhostModulePosition(order),
+            };
+          }),
+        };
+      }
+
+      const targetZone = {
+        ...record.zones[0],
+        title: record.zones[0].title || "整理区域 1",
+        width: Math.max(record.zones[0].width || 0, 520),
+        height: Math.max(record.zones[0].height || 0, 320),
+      };
+
       return {
         ...record,
-        zones: zones.map((zone, index) => (index === 0 ? targetZone : zone)),
+        zones: record.zones.map((zone, index) => (index === 0 ? targetZone : zone)),
         notes: (record.notes || []).map((note) => {
           const order = orderById.get(note.id) || 0;
           return {
